@@ -49,7 +49,8 @@ java-api: RStores.def Makefile
 	sdf2-to-java \
 		--imploded \
 		--input $< \
-		--name relation-stores \
+		--name relationstores \
+		--package nl.cwi.sen1 \
 		--output . \
 		--version ${VERSION}
 	mv relation-stores-${VERSION}.jar relation-stores.jar

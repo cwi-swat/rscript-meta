@@ -46,15 +46,15 @@ extern ATerm RS_patternRTypeRel;
 extern ATerm RS_patternRTypeBag;
 extern ATerm RS_patternRTypeSet;
 extern ATerm RS_patternRTypeTuple;
-extern ATerm RS_patternRTypeLoc;
-extern ATerm RS_patternRTypeStr;
-extern ATerm RS_patternRTypeInt;
+extern ATerm RS_patternRTypeLocation;
+extern ATerm RS_patternRTypeString;
+extern ATerm RS_patternRTypeInteger;
 extern ATerm RS_patternRElemTuple;
 extern ATerm RS_patternRElemBag;
 extern ATerm RS_patternRElemSet;
-extern ATerm RS_patternRElemLoc;
-extern ATerm RS_patternRElemStr;
-extern ATerm RS_patternRElemInt;
+extern ATerm RS_patternRElemLocation;
+extern ATerm RS_patternRElemString;
+extern ATerm RS_patternRElemInteger;
 
 extern void init_RStore_dict();
 

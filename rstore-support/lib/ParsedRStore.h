@@ -286,18 +286,18 @@ PRS_LexLayoutList PRS_makeLexLayoutListEmpty(void);
 PRS_LexLayoutList PRS_makeLexLayoutListSingle(PRS_LexLayout head);
 PRS_LexLayoutList PRS_makeLexLayoutListMany(PRS_LexLayout head,
 					    PRS_LexLayoutList tail);
-PRS_RElem PRS_makeRElemInt(PRS_OptLayout wsAfterInt,
-			   PRS_OptLayout wsAfterParenOpen,
-			   PRS_NatCon intValue,
-			   PRS_OptLayout wsAfterIntValue);
-PRS_RElem PRS_makeRElemStr(PRS_OptLayout wsAfterStr,
-			   PRS_OptLayout wsAfterParenOpen,
-			   PRS_StrCon strValue,
-			   PRS_OptLayout wsAfterStrValue);
-PRS_RElem PRS_makeRElemLoc(PRS_OptLayout wsAfterLoc,
-			   PRS_OptLayout wsAfterParenOpen,
-			   PRS_Location locValue,
-			   PRS_OptLayout wsAfterLocValue);
+PRS_RElem PRS_makeRElemInteger(PRS_OptLayout wsAfterInt,
+			       PRS_OptLayout wsAfterParenOpen,
+			       PRS_NatCon intValue,
+			       PRS_OptLayout wsAfterIntValue);
+PRS_RElem PRS_makeRElemString(PRS_OptLayout wsAfterStr,
+			      PRS_OptLayout wsAfterParenOpen,
+			      PRS_StrCon strValue,
+			      PRS_OptLayout wsAfterStrValue);
+PRS_RElem PRS_makeRElemLocation(PRS_OptLayout wsAfterLoc,
+				PRS_OptLayout wsAfterParenOpen,
+				PRS_Location locValue,
+				PRS_OptLayout wsAfterLocValue);
 PRS_RElem PRS_makeRElemSet(PRS_OptLayout wsAfterSet,
 			   PRS_OptLayout wsAfterParenOpen,
 			   PRS_OptLayout wsAfterBracketOpen,
@@ -313,9 +313,9 @@ PRS_RElem PRS_makeRElemTuple(PRS_OptLayout wsAfterTuple,
 			     PRS_OptLayout wsAfterBracketOpen,
 			     PRS_RElemList list, PRS_OptLayout wsAfterList,
 			     PRS_OptLayout wsAfterBracketClose);
-PRS_RType PRS_makeRTypeInt(void);
-PRS_RType PRS_makeRTypeStr(void);
-PRS_RType PRS_makeRTypeLoc(void);
+PRS_RType PRS_makeRTypeInteger(void);
+PRS_RType PRS_makeRTypeString(void);
+PRS_RType PRS_makeRTypeLocation(void);
 PRS_RType PRS_makeRTypeTuple(PRS_OptLayout wsAfterTuple,
 			     PRS_OptLayout wsAfterParenOpen,
 			     PRS_OptLayout wsAfterBracketOpen,
@@ -342,8 +342,8 @@ PRS_RType PRS_makeRTypeParameter(PRS_OptLayout wsAfterParameter,
 PRS_RTuple PRS_makeRTupleRtuple(PRS_OptLayout wsAfterRtuple,
 				PRS_OptLayout wsAfterParenOpen, PRS_StrCon id,
 				PRS_OptLayout wsAfterId,
-				PRS_OptLayout wsAfterComma, PRS_RType type,
-				PRS_OptLayout wsAfterType,
+				PRS_OptLayout wsAfterComma, PRS_RType rtype,
+				PRS_OptLayout wsAfterRtype,
 				PRS_OptLayout wsAfterComma1, PRS_RElem data,
 				PRS_OptLayout wsAfterData);
 PRS_RStore PRS_makeRStoreRstore(PRS_OptLayout wsAfterRstore,
@@ -481,9 +481,9 @@ PRS_LexLayoutList PRS_setLexLayoutListTail(PRS_LexLayoutList arg,
 /*{{{  PRS_RElem accessors */
 
 ATbool PRS_isValidRElem(PRS_RElem arg);
-inline ATbool PRS_isRElemInt(PRS_RElem arg);
-inline ATbool PRS_isRElemStr(PRS_RElem arg);
-inline ATbool PRS_isRElemLoc(PRS_RElem arg);
+inline ATbool PRS_isRElemInteger(PRS_RElem arg);
+inline ATbool PRS_isRElemString(PRS_RElem arg);
+inline ATbool PRS_isRElemLocation(PRS_RElem arg);
 inline ATbool PRS_isRElemSet(PRS_RElem arg);
 inline ATbool PRS_isRElemBag(PRS_RElem arg);
 inline ATbool PRS_isRElemTuple(PRS_RElem arg);
@@ -549,9 +549,9 @@ PRS_RElem PRS_setRElemWsAfterTuple(PRS_RElem arg, PRS_OptLayout wsAfterTuple);
 /*{{{  PRS_RType accessors */
 
 ATbool PRS_isValidRType(PRS_RType arg);
-inline ATbool PRS_isRTypeInt(PRS_RType arg);
-inline ATbool PRS_isRTypeStr(PRS_RType arg);
-inline ATbool PRS_isRTypeLoc(PRS_RType arg);
+inline ATbool PRS_isRTypeInteger(PRS_RType arg);
+inline ATbool PRS_isRTypeString(PRS_RType arg);
+inline ATbool PRS_isRTypeLocation(PRS_RType arg);
 inline ATbool PRS_isRTypeTuple(PRS_RType arg);
 inline ATbool PRS_isRTypeSet(PRS_RType arg);
 inline ATbool PRS_isRTypeBag(PRS_RType arg);
@@ -619,8 +619,8 @@ ATbool PRS_hasRTupleWsAfterParenOpen(PRS_RTuple arg);
 ATbool PRS_hasRTupleId(PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterId(PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterComma(PRS_RTuple arg);
-ATbool PRS_hasRTupleType(PRS_RTuple arg);
-ATbool PRS_hasRTupleWsAfterType(PRS_RTuple arg);
+ATbool PRS_hasRTupleRtype(PRS_RTuple arg);
+ATbool PRS_hasRTupleWsAfterRtype(PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterComma1(PRS_RTuple arg);
 ATbool PRS_hasRTupleData(PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterData(PRS_RTuple arg);
@@ -629,8 +629,8 @@ PRS_OptLayout PRS_getRTupleWsAfterParenOpen(PRS_RTuple arg);
 PRS_StrCon PRS_getRTupleId(PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterId(PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterComma(PRS_RTuple arg);
-PRS_RType PRS_getRTupleType(PRS_RTuple arg);
-PRS_OptLayout PRS_getRTupleWsAfterType(PRS_RTuple arg);
+PRS_RType PRS_getRTupleRtype(PRS_RTuple arg);
+PRS_OptLayout PRS_getRTupleWsAfterRtype(PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterComma1(PRS_RTuple arg);
 PRS_RElem PRS_getRTupleData(PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterData(PRS_RTuple arg);
@@ -642,9 +642,9 @@ PRS_RTuple PRS_setRTupleId(PRS_RTuple arg, PRS_StrCon id);
 PRS_RTuple PRS_setRTupleWsAfterId(PRS_RTuple arg, PRS_OptLayout wsAfterId);
 PRS_RTuple PRS_setRTupleWsAfterComma(PRS_RTuple arg,
 				     PRS_OptLayout wsAfterComma);
-PRS_RTuple PRS_setRTupleType(PRS_RTuple arg, PRS_RType type);
-PRS_RTuple PRS_setRTupleWsAfterType(PRS_RTuple arg,
-				    PRS_OptLayout wsAfterType);
+PRS_RTuple PRS_setRTupleRtype(PRS_RTuple arg, PRS_RType rtype);
+PRS_RTuple PRS_setRTupleWsAfterRtype(PRS_RTuple arg,
+				     PRS_OptLayout wsAfterRtype);
 PRS_RTuple PRS_setRTupleWsAfterComma1(PRS_RTuple arg,
 				      PRS_OptLayout wsAfterComma1);
 PRS_RTuple PRS_setRTupleData(PRS_RTuple arg, PRS_RElem data);
@@ -1032,8 +1032,8 @@ PRS_RTuple PRS_visitRTuple(PRS_RTuple arg,
 			   PRS_StrCon(*acceptId) (PRS_StrCon),
 			   PRS_OptLayout(*acceptWsAfterId) (PRS_OptLayout),
 			   PRS_OptLayout(*acceptWsAfterComma) (PRS_OptLayout),
-			   PRS_RType(*acceptType) (PRS_RType),
-			   PRS_OptLayout(*acceptWsAfterType) (PRS_OptLayout),
+			   PRS_RType(*acceptRtype) (PRS_RType),
+			   PRS_OptLayout(*acceptWsAfterRtype) (PRS_OptLayout),
 			   PRS_OptLayout(*acceptWsAfterComma1)
 			   (PRS_OptLayout),
 			   PRS_RElem(*acceptData) (PRS_RElem),

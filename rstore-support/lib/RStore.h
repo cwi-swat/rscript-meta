@@ -134,22 +134,22 @@ RS_RTupleList RS_makeRTupleList6(RS_RTuple elem1, RS_RTuple elem2,
 /*}}}  */
 /*{{{  constructors */
 
-RS_RElem RS_makeRElemInt(int intValue);
-RS_RElem RS_makeRElemStr(const char *strValue);
-RS_RElem RS_makeRElemLoc(RS_Location locValue);
+RS_RElem RS_makeRElemInteger(int intValue);
+RS_RElem RS_makeRElemString(const char *strValue);
+RS_RElem RS_makeRElemLocation(RS_Location locValue);
 RS_RElem RS_makeRElemSet(RS_RElemList list);
 RS_RElem RS_makeRElemBag(RS_RElemList list);
 RS_RElem RS_makeRElemTuple(RS_RElemList list);
-RS_RType RS_makeRTypeInt(void);
-RS_RType RS_makeRTypeStr(void);
-RS_RType RS_makeRTypeLoc(void);
+RS_RType RS_makeRTypeInteger(void);
+RS_RType RS_makeRTypeString(void);
+RS_RType RS_makeRTypeLocation(void);
 RS_RType RS_makeRTypeTuple(RS_RTypeList list);
 RS_RType RS_makeRTypeSet(RS_RType RType);
 RS_RType RS_makeRTypeBag(RS_RType RType);
 RS_RType RS_makeRTypeRel(RS_RTypeList list);
 RS_RType RS_makeRTypeUser(const char *StrCon);
 RS_RType RS_makeRTypeParameter(const char *StrCon);
-RS_RTuple RS_makeRTupleRtuple(const char *id, RS_RType type, RS_RElem data);
+RS_RTuple RS_makeRTupleRtuple(const char *id, RS_RType rtype, RS_RElem data);
 RS_RStore RS_makeRStoreRstore(RS_RTupleList list);
 RS_RElemList RS_makeRElemListEmpty(void);
 RS_RElemList RS_makeRElemListSingle(RS_RElem head);
@@ -189,9 +189,9 @@ ATbool RS_isEqualArea(RS_Area arg0, RS_Area arg1);
 /*{{{  RS_RElem accessors */
 
 ATbool RS_isValidRElem(RS_RElem arg);
-inline ATbool RS_isRElemInt(RS_RElem arg);
-inline ATbool RS_isRElemStr(RS_RElem arg);
-inline ATbool RS_isRElemLoc(RS_RElem arg);
+inline ATbool RS_isRElemInteger(RS_RElem arg);
+inline ATbool RS_isRElemString(RS_RElem arg);
+inline ATbool RS_isRElemLocation(RS_RElem arg);
 inline ATbool RS_isRElemSet(RS_RElem arg);
 inline ATbool RS_isRElemBag(RS_RElem arg);
 inline ATbool RS_isRElemTuple(RS_RElem arg);
@@ -212,9 +212,9 @@ RS_RElem RS_setRElemList(RS_RElem arg, RS_RElemList list);
 /*{{{  RS_RType accessors */
 
 ATbool RS_isValidRType(RS_RType arg);
-inline ATbool RS_isRTypeInt(RS_RType arg);
-inline ATbool RS_isRTypeStr(RS_RType arg);
-inline ATbool RS_isRTypeLoc(RS_RType arg);
+inline ATbool RS_isRTypeInteger(RS_RType arg);
+inline ATbool RS_isRTypeString(RS_RType arg);
+inline ATbool RS_isRTypeLocation(RS_RType arg);
 inline ATbool RS_isRTypeTuple(RS_RType arg);
 inline ATbool RS_isRTypeSet(RS_RType arg);
 inline ATbool RS_isRTypeBag(RS_RType arg);
@@ -237,13 +237,13 @@ RS_RType RS_setRTypeStrCon(RS_RType arg, const char *StrCon);
 ATbool RS_isValidRTuple(RS_RTuple arg);
 inline ATbool RS_isRTupleRtuple(RS_RTuple arg);
 ATbool RS_hasRTupleId(RS_RTuple arg);
-ATbool RS_hasRTupleType(RS_RTuple arg);
+ATbool RS_hasRTupleRtype(RS_RTuple arg);
 ATbool RS_hasRTupleData(RS_RTuple arg);
 char *RS_getRTupleId(RS_RTuple arg);
-RS_RType RS_getRTupleType(RS_RTuple arg);
+RS_RType RS_getRTupleRtype(RS_RTuple arg);
 RS_RElem RS_getRTupleData(RS_RTuple arg);
 RS_RTuple RS_setRTupleId(RS_RTuple arg, const char *id);
-RS_RTuple RS_setRTupleType(RS_RTuple arg, RS_RType type);
+RS_RTuple RS_setRTupleRtype(RS_RTuple arg, RS_RType rtype);
 RS_RTuple RS_setRTupleData(RS_RTuple arg, RS_RElem data);
 
 /*}}}  */
@@ -372,7 +372,7 @@ RS_RElem RS_visitRElem(RS_RElem arg, int (*acceptIntValue) (int),
 RS_RType RS_visitRType(RS_RType arg, RS_RTypeList(*acceptList) (RS_RTypeList),
 		       char *(*acceptStrCon) (char *));
 RS_RTuple RS_visitRTuple(RS_RTuple arg, char *(*acceptId) (char *),
-			 RS_RType(*acceptType) (RS_RType),
+			 RS_RType(*acceptRtype) (RS_RType),
 			 RS_RElem(*acceptData) (RS_RElem));
 RS_RStore RS_visitRStore(RS_RStore arg,
 			 RS_RTupleList(*acceptList) (RS_RTupleList));
