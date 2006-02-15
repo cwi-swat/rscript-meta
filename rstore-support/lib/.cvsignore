@@ -1,6 +1,10 @@
+*.dict
 *.adt
 *.def
+.deps
+.libs
+apigen.env
 Makefile
 Makefile.in
-moduleapi
+relation-stores
 nl
