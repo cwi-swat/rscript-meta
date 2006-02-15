@@ -1,0 +1,6 @@
+
+
+Wed Feb 15 17:01:40 CET 2006 <jurgenv@cwi.nl>
+ * Initial empty package. Will contain the data API of RStores,
+   a generic representation format for typed relational data and
+   such.
