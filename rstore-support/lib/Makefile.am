@@ -1,14 +1,14 @@
 # $Id$
 
-pkgdata_DATA = relation-stores.jar 
+#pkgdata_DATA = relation-stores.jar 
 
-EXTRA_DIST = relation-stores.jar 
+#EXTRA_DIST = relation-stores.jar 
 
 lib_LIBRARIES = libRStoreAPI.a 
 
 include_HEADERS = \
-	RStores.h \
-	RStores_dict.h \
+	RStore.h \
+	RStore_dict.h \
 	ParsedRStore.h \
 	ParsedRStore_dict.h 
 

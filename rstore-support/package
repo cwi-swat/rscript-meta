@@ -1,13 +1,13 @@
 package 
 identification
-   name=module-support
+   name=relation-stores
    version=1.0
    location=http://www.cwi.nl/projects/MetaEnv/
    info=http://www.cwi.nl/projects/MetaEnv/
-   description='Module support'
+   description='An API for relation stores'
 
 
-   keywords=module-support
+   keywords=Fact representation, relations, bags
 
 configuration interface
 
