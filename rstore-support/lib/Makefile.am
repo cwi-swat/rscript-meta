@@ -25,7 +25,7 @@ if MAINTAINER_MODE
 
 BASIC_MODULES = RStores StrCon NatCon Whitespace Locations Areas
 
-api: error-api location-api
+api: parsed-api imploded-api # java-api
 
 ABS_MODULES = \
 	$(foreach i, \
@@ -35,8 +35,6 @@ ABS_MODULES = \
 RStores.def: Makefile
 	@(echo "definition"; cat ${ABS_MODULES}) > $@
 
-error-api: parsed-api imploded-api java-api
-
 parsed-api: RStores.def Makefile  
 	sdf2-to-c --input $< --prefix PRS_ --output ParsedRStore
 	indent ParsedRStore.h
@@ -45,14 +43,15 @@ imploded-api: RStores.def Makefile
 	sdf2-to-c --imploded --input $< --prefix RS_ --output RStore
 	indent RStore.h
 
-java-api: RStores.def Makefile
-	sdf2-to-java \
-		--imploded \
-		--input $< \
-		--name relationstores \
-		--package nl.cwi.sen1 \
-		--output . \
-		--version ${VERSION}
-	mv relation-stores-${VERSION}.jar relation-stores.jar
+# The java API can not be generated yet because of a bug in apigen
+# java-api: RStores.def Makefile
+# 	sdf2-to-java \
+# 		--imploded \
+# 		--input $< \
+# 		--name relationstores \
+# 		--package nl.cwi.sen1 \
+# 		--output . \
+# 		--version ${VERSION}
+# 	mv relation-stores-${VERSION}.jar relation-stores.jar
 
 endif

@@ -452,27 +452,27 @@ RS_RTupleList RS_makeRTupleList6(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple ele
 /*}}}  */
 /*{{{  constructors */
 
-/*{{{  RS_RElem RS_makeRElemInteger(int intValue) */
+/*{{{  RS_RElem RS_makeRElemInt(int intValue) */
 
-RS_RElem RS_makeRElemInteger(int intValue)
+RS_RElem RS_makeRElemInt(int intValue)
 {
   return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun0, (ATerm) (ATerm) ATmakeInt(intValue));
 }
 
 /*}}}  */
-/*{{{  RS_RElem RS_makeRElemString(const char* strValue) */
+/*{{{  RS_RElem RS_makeRElemStr(const char* strValue) */
 
-RS_RElem RS_makeRElemString(const char* strValue)
+RS_RElem RS_makeRElemStr(const char* strValue)
 {
   return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun1, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(strValue, 0, ATtrue)));
 }
 
 /*}}}  */
-/*{{{  RS_RElem RS_makeRElemLocation(RS_Location locValue) */
+/*{{{  RS_RElem RS_makeRElemLocation(RS_Location location) */
 
-RS_RElem RS_makeRElemLocation(RS_Location locValue)
+RS_RElem RS_makeRElemLocation(RS_Location location)
 {
-  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun2, (ATerm) locValue);
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun2, (ATerm) location);
 }
 
 /*}}}  */
@@ -508,9 +508,9 @@ RS_RType RS_makeRTypeInteger(void)
 }
 
 /*}}}  */
-/*{{{  RS_RType RS_makeRTypeString(void) */
+/*{{{  RS_RType RS_makeRTypeStr(void) */
 
-RS_RType RS_makeRTypeString(void)
+RS_RType RS_makeRTypeStr(void)
 {
   return (RS_RType)(ATerm)ATmakeAppl0(RS_afun7);
 }
@@ -787,10 +787,10 @@ ATbool RS_isEqualArea(RS_Area arg0, RS_Area arg1)
 
 ATbool RS_isValidRElem(RS_RElem arg)
 {
-  if (RS_isRElemInteger(arg)) {
+  if (RS_isRElemInt(arg)) {
     return ATtrue;
   }
-  else if (RS_isRElemString(arg)) {
+  else if (RS_isRElemStr(arg)) {
     return ATtrue;
   }
   else if (RS_isRElemLocation(arg)) {
@@ -809,9 +809,9 @@ ATbool RS_isValidRElem(RS_RElem arg)
 }
 
 /*}}}  */
-/*{{{  inline ATbool RS_isRElemInteger(RS_RElem arg) */
+/*{{{  inline ATbool RS_isRElemInt(RS_RElem arg) */
 
-inline ATbool RS_isRElemInteger(RS_RElem arg)
+inline ATbool RS_isRElemInt(RS_RElem arg)
 {
   {
     static ATerm last_arg = NULL;
@@ -822,7 +822,7 @@ inline ATbool RS_isRElemInteger(RS_RElem arg)
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemInteger, NULL);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemInt, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -831,9 +831,9 @@ inline ATbool RS_isRElemInteger(RS_RElem arg)
 }
 
 /*}}}  */
-/*{{{  inline ATbool RS_isRElemString(RS_RElem arg) */
+/*{{{  inline ATbool RS_isRElemStr(RS_RElem arg) */
 
-inline ATbool RS_isRElemString(RS_RElem arg)
+inline ATbool RS_isRElemStr(RS_RElem arg)
 {
   {
     static ATerm last_arg = NULL;
@@ -844,7 +844,7 @@ inline ATbool RS_isRElemString(RS_RElem arg)
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemString, NULL);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemStr, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -945,7 +945,7 @@ inline ATbool RS_isRElemTuple(RS_RElem arg)
 
 ATbool RS_hasRElemIntValue(RS_RElem arg)
 {
-  if (RS_isRElemInteger(arg)) {
+  if (RS_isRElemInt(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -956,16 +956,16 @@ ATbool RS_hasRElemIntValue(RS_RElem arg)
 
 ATbool RS_hasRElemStrValue(RS_RElem arg)
 {
-  if (RS_isRElemString(arg)) {
+  if (RS_isRElemStr(arg)) {
     return ATtrue;
   }
   return ATfalse;
 }
 
 /*}}}  */
-/*{{{  ATbool RS_hasRElemLocValue(RS_RElem arg) */
+/*{{{  ATbool RS_hasRElemLocation(RS_RElem arg) */
 
-ATbool RS_hasRElemLocValue(RS_RElem arg)
+ATbool RS_hasRElemLocation(RS_RElem arg)
 {
   if (RS_isRElemLocation(arg)) {
     return ATtrue;
@@ -1009,9 +1009,9 @@ char* RS_getRElemStrValue(RS_RElem arg)
 }
 
 /*}}}  */
-/*{{{  RS_Location RS_getRElemLocValue(RS_RElem arg) */
+/*{{{  RS_Location RS_getRElemLocation(RS_RElem arg) */
 
-RS_Location RS_getRElemLocValue(RS_RElem arg)
+RS_Location RS_getRElemLocation(RS_RElem arg)
 {
   
     return (RS_Location)ATgetArgument((ATermAppl)arg, 0);
@@ -1037,7 +1037,7 @@ RS_RElemList RS_getRElemList(RS_RElem arg)
 
 RS_RElem RS_setRElemIntValue(RS_RElem arg, int intValue)
 {
-  if (RS_isRElemInteger(arg)) {
+  if (RS_isRElemInt(arg)) {
     return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) (ATerm) ATmakeInt(intValue)), 0);
   }
 
@@ -1050,7 +1050,7 @@ RS_RElem RS_setRElemIntValue(RS_RElem arg, int intValue)
 
 RS_RElem RS_setRElemStrValue(RS_RElem arg, const char* strValue)
 {
-  if (RS_isRElemString(arg)) {
+  if (RS_isRElemStr(arg)) {
     return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) (ATerm) ATmakeAppl(ATmakeAFun(strValue, 0, ATtrue))), 0);
   }
 
@@ -1059,15 +1059,15 @@ RS_RElem RS_setRElemStrValue(RS_RElem arg, const char* strValue)
 }
 
 /*}}}  */
-/*{{{  RS_RElem RS_setRElemLocValue(RS_RElem arg, RS_Location locValue) */
+/*{{{  RS_RElem RS_setRElemLocation(RS_RElem arg, RS_Location location) */
 
-RS_RElem RS_setRElemLocValue(RS_RElem arg, RS_Location locValue)
+RS_RElem RS_setRElemLocation(RS_RElem arg, RS_Location location)
 {
   if (RS_isRElemLocation(arg)) {
-    return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) locValue), 0);
+    return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) location), 0);
   }
 
-  ATabort("RElem has no LocValue: %t\n", arg);
+  ATabort("RElem has no Location: %t\n", arg);
   return (RS_RElem)NULL;
 }
 
@@ -1102,7 +1102,7 @@ ATbool RS_isValidRType(RS_RType arg)
   if (RS_isRTypeInteger(arg)) {
     return ATtrue;
   }
-  else if (RS_isRTypeString(arg)) {
+  else if (RS_isRTypeStr(arg)) {
     return ATtrue;
   }
   else if (RS_isRTypeLocation(arg)) {
@@ -1152,9 +1152,9 @@ inline ATbool RS_isRTypeInteger(RS_RType arg)
 }
 
 /*}}}  */
-/*{{{  inline ATbool RS_isRTypeString(RS_RType arg) */
+/*{{{  inline ATbool RS_isRTypeStr(RS_RType arg) */
 
-inline ATbool RS_isRTypeString(RS_RType arg)
+inline ATbool RS_isRTypeStr(RS_RType arg)
 {
   {
     static ATerm last_arg = NULL;
@@ -1165,7 +1165,7 @@ inline ATbool RS_isRTypeString(RS_RType arg)
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeString);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeStr);
       last_gc = ATgetGCCount();
     }
 
@@ -2703,21 +2703,21 @@ RS_Area RS_setAreaLength(RS_Area arg, int length)
 /*}}}  */
 /*{{{  sort visitors */
 
-/*{{{  RS_RElem RS_visitRElem(RS_RElem arg, int (*acceptIntValue)(int), char* (*acceptStrValue)(char*), RS_Location (*acceptLocValue)(RS_Location), RS_RElemList (*acceptList)(RS_RElemList)) */
+/*{{{  RS_RElem RS_visitRElem(RS_RElem arg, int (*acceptIntValue)(int), char* (*acceptStrValue)(char*), RS_Location (*acceptLocation)(RS_Location), RS_RElemList (*acceptList)(RS_RElemList)) */
 
-RS_RElem RS_visitRElem(RS_RElem arg, int (*acceptIntValue)(int), char* (*acceptStrValue)(char*), RS_Location (*acceptLocValue)(RS_Location), RS_RElemList (*acceptList)(RS_RElemList))
+RS_RElem RS_visitRElem(RS_RElem arg, int (*acceptIntValue)(int), char* (*acceptStrValue)(char*), RS_Location (*acceptLocation)(RS_Location), RS_RElemList (*acceptList)(RS_RElemList))
 {
-  if (RS_isRElemInteger(arg)) {
-    return RS_makeRElemInteger(
+  if (RS_isRElemInt(arg)) {
+    return RS_makeRElemInt(
         acceptIntValue ? acceptIntValue(RS_getRElemIntValue(arg)) : RS_getRElemIntValue(arg));
   }
-  if (RS_isRElemString(arg)) {
-    return RS_makeRElemString(
+  if (RS_isRElemStr(arg)) {
+    return RS_makeRElemStr(
         acceptStrValue ? acceptStrValue(RS_getRElemStrValue(arg)) : RS_getRElemStrValue(arg));
   }
   if (RS_isRElemLocation(arg)) {
     return RS_makeRElemLocation(
-        acceptLocValue ? acceptLocValue(RS_getRElemLocValue(arg)) : RS_getRElemLocValue(arg));
+        acceptLocation ? acceptLocation(RS_getRElemLocation(arg)) : RS_getRElemLocation(arg));
   }
   if (RS_isRElemSet(arg)) {
     return RS_makeRElemSet(
@@ -2743,8 +2743,8 @@ RS_RType RS_visitRType(RS_RType arg, RS_RTypeList (*acceptList)(RS_RTypeList), c
   if (RS_isRTypeInteger(arg)) {
     return RS_makeRTypeInteger();
   }
-  if (RS_isRTypeString(arg)) {
-    return RS_makeRTypeString();
+  if (RS_isRTypeStr(arg)) {
+    return RS_makeRTypeStr();
   }
   if (RS_isRTypeLocation(arg)) {
     return RS_makeRTypeLocation();
