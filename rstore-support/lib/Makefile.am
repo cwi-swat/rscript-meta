@@ -23,7 +23,7 @@ INCLUDES = -I${ATERM}/include
 if MAINTAINER_MODE
 #CFLAGS += -DDISABLE_DYNAMIC_CHECKING
 
-BASIC_MODULES = RStores StrCon NatCon Whitespace Locations Areas
+BASIC_MODULES = RStores StrCon NatCon IdentifierCon IntCon Whitespace Locations Areas
 
 api: parsed-api imploded-api # java-api
 
