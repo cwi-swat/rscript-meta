@@ -23,7 +23,7 @@ INCLUDES = -I${ATERM}/include
 if MAINTAINER_MODE
 #CFLAGS += -DDISABLE_DYNAMIC_CHECKING
 
-BASIC_MODULES = RStores StrCon NatCon IdentifierCon IntCon Whitespace Locations Areas
+BASIC_MODULES = RStores StrCon BoolCon NatCon IdentifierCon IntCon Whitespace Locations Areas
 
 api: parsed-api imploded-api # java-api
 
@@ -44,14 +44,15 @@ imploded-api: RStores.def Makefile
 	indent RStore.h
 
 # The java API can not be generated yet because of a bug in apigen
-# java-api: RStores.def Makefile
-# 	sdf2-to-java \
-# 		--imploded \
-# 		--input $< \
-# 		--name relationstores \
-# 		--package nl.cwi.sen1 \
-# 		--output . \
-# 		--version ${VERSION}
-# 	mv relation-stores-${VERSION}.jar relation-stores.jar
+java-api: RStores.def Makefile
+	sdf2-to-java \
+		--imploded \
+		--verbose \
+		--input $< \
+		--name relationstores \
+		--package nl.cwi.sen1 \
+		--output . \
+		--version ${VERSION}
+	mv relationstores-${VERSION}.jar relationstores.jar
 
 endif

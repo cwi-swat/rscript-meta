@@ -4,6 +4,7 @@
 #include <aterm2.h>
 
 extern AFun RS_afun8;
+extern AFun RS_afun21;
 extern AFun RS_afun17;
 extern AFun RS_afun0;
 extern AFun RS_afun11;
@@ -15,6 +16,7 @@ extern AFun RS_afun10;
 extern AFun RS_afun4;
 extern AFun RS_afun13;
 extern AFun RS_afun14;
+extern AFun RS_afun19;
 extern AFun RS_afun2;
 extern AFun RS_afun7;
 extern AFun RS_afun12;
@@ -22,6 +24,7 @@ extern AFun RS_afun15;
 extern AFun RS_afun18;
 extern AFun RS_afun6;
 extern AFun RS_afun1;
+extern AFun RS_afun20;
 
 extern ATerm RS_patternAreaArea;
 extern ATerm RS_patternLocationAreaInFile;
@@ -30,6 +33,8 @@ extern ATerm RS_patternLocationFile;
 extern ATerm RS_patternIntConIntCon;
 extern ATerm RS_patternIdConIdCon;
 extern ATerm RS_patternNatConNatCon;
+extern ATerm RS_patternBoolConFalse;
+extern ATerm RS_patternBoolConTrue;
 extern ATerm RS_patternStrConStrCon;
 extern ATerm RS_patternStrCharStrChar;
 extern ATerm RS_patternRTupleRtuplesMany;
@@ -49,16 +54,17 @@ extern ATerm RS_patternRTypeRelation;
 extern ATerm RS_patternRTypeBag;
 extern ATerm RS_patternRTypeSet;
 extern ATerm RS_patternRTypeTuple;
-extern ATerm RS_patternRTypeLocation;
-extern ATerm RS_patternRTypeString;
-extern ATerm RS_patternRTypeBoolean;
-extern ATerm RS_patternRTypeInteger;
+extern ATerm RS_patternRTypeLoc;
+extern ATerm RS_patternRTypeStr;
+extern ATerm RS_patternRTypeBool;
+extern ATerm RS_patternRTypeInt;
 extern ATerm RS_patternRElemTuple;
 extern ATerm RS_patternRElemBag;
 extern ATerm RS_patternRElemSet;
-extern ATerm RS_patternRElemLocation;
-extern ATerm RS_patternRElemString;
-extern ATerm RS_patternRElemInteger;
+extern ATerm RS_patternRElemLoc;
+extern ATerm RS_patternRElemBool;
+extern ATerm RS_patternRElemStr;
+extern ATerm RS_patternRElemInt;
 
 extern void init_RStore_dict();
 

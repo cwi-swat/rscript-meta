@@ -22,6 +22,7 @@ typedef struct _PRS_StrChar *PRS_StrChar;
 typedef struct _PRS_LexStrCon *PRS_LexStrCon;
 typedef struct _PRS_StrCon *PRS_StrCon;
 typedef struct _PRS_LexStrCharChars *PRS_LexStrCharChars;
+typedef struct _PRS_BoolCon *PRS_BoolCon;
 typedef struct _PRS_LexNatCon *PRS_LexNatCon;
 typedef struct _PRS_NatCon *PRS_NatCon;
 typedef struct _PRS_LexIdCon *PRS_LexIdCon;
@@ -66,6 +67,8 @@ void PRS_protectStrCon (PRS_StrCon * arg);
 void PRS_unprotectStrCon (PRS_StrCon * arg);
 void PRS_protectLexStrCharChars (PRS_LexStrCharChars * arg);
 void PRS_unprotectLexStrCharChars (PRS_LexStrCharChars * arg);
+void PRS_protectBoolCon (PRS_BoolCon * arg);
+void PRS_unprotectBoolCon (PRS_BoolCon * arg);
 void PRS_protectLexNatCon (PRS_LexNatCon * arg);
 void PRS_unprotectLexNatCon (PRS_LexNatCon * arg);
 void PRS_protectNatCon (PRS_NatCon * arg);
@@ -116,6 +119,8 @@ PRS_StrCon PRS_StrConFromTerm (ATerm t);
 ATerm PRS_StrConToTerm (PRS_StrCon arg);
 PRS_LexStrCharChars PRS_LexStrCharCharsFromTerm (ATerm t);
 ATerm PRS_LexStrCharCharsToTerm (PRS_LexStrCharChars arg);
+PRS_BoolCon PRS_BoolConFromTerm (ATerm t);
+ATerm PRS_BoolConToTerm (PRS_BoolCon arg);
 PRS_LexNatCon PRS_LexNatConFromTerm (ATerm t);
 ATerm PRS_LexNatConToTerm (PRS_LexNatCon arg);
 PRS_NatCon PRS_NatConFromTerm (ATerm t);
@@ -327,9 +332,10 @@ PRS_LexLayoutList PRS_makeLexLayoutListEmpty (void);
 PRS_LexLayoutList PRS_makeLexLayoutListSingle (PRS_LexLayout head);
 PRS_LexLayoutList PRS_makeLexLayoutListMany (PRS_LexLayout head,
 					     PRS_LexLayoutList tail);
-PRS_RElem PRS_makeRElemInteger (PRS_IntCon IntCon);
-PRS_RElem PRS_makeRElemString (PRS_StrCon StrCon);
-PRS_RElem PRS_makeRElemLocation (PRS_Location Location);
+PRS_RElem PRS_makeRElemInt (PRS_IntCon IntCon);
+PRS_RElem PRS_makeRElemStr (PRS_StrCon StrCon);
+PRS_RElem PRS_makeRElemBool (PRS_BoolCon BoolCon);
+PRS_RElem PRS_makeRElemLoc (PRS_Location Location);
 PRS_RElem PRS_makeRElemSet (PRS_OptLayout wsAfterBraceOpen,
 			    PRS_RElemElements elements,
 			    PRS_OptLayout wsAfterElements);
@@ -339,10 +345,10 @@ PRS_RElem PRS_makeRElemBag (PRS_OptLayout wsAfterBraceOpenBar,
 PRS_RElem PRS_makeRElemTuple (PRS_OptLayout wsAfterLessThan,
 			      PRS_RElemElements elements,
 			      PRS_OptLayout wsAfterElements);
-PRS_RType PRS_makeRTypeInteger (void);
-PRS_RType PRS_makeRTypeBoolean (void);
-PRS_RType PRS_makeRTypeString (void);
-PRS_RType PRS_makeRTypeLocation (void);
+PRS_RType PRS_makeRTypeInt (void);
+PRS_RType PRS_makeRTypeBool (void);
+PRS_RType PRS_makeRTypeStr (void);
+PRS_RType PRS_makeRTypeLoc (void);
 PRS_RType PRS_makeRTypeTuple (PRS_OptLayout wsAfterLessThan,
 			      PRS_RTypeColumnTypes columnTypes,
 			      PRS_OptLayout wsAfterColumnTypes);
@@ -358,13 +364,14 @@ PRS_RType PRS_makeRTypeRelation (PRS_OptLayout wsAfterRel,
 				 PRS_OptLayout wsAfterBracketOpen,
 				 PRS_RTypeColumnTypes columnTypes,
 				 PRS_OptLayout wsAfterColumnTypes);
-PRS_RType PRS_makeRTypeUserDefined (PRS_IdCon name);
-PRS_RType PRS_makeRTypeParameter (PRS_OptLayout wsAfterAmp, PRS_IdCon name);
+PRS_RType PRS_makeRTypeUserDefined (PRS_IdCon typeName);
+PRS_RType PRS_makeRTypeParameter (PRS_OptLayout wsAfterAmp,
+				  PRS_IdCon parameterName);
 PRS_RTuple PRS_makeRTupleRtuple (PRS_OptLayout wsAfterLessThan,
 				 PRS_IdCon variable,
 				 PRS_OptLayout wsAfterVariable,
-				 PRS_OptLayout wsAfterComma, PRS_RType type,
-				 PRS_OptLayout wsAfterType,
+				 PRS_OptLayout wsAfterComma, PRS_RType rtype,
+				 PRS_OptLayout wsAfterRtype,
 				 PRS_OptLayout wsAfterComma1, PRS_RElem value,
 				 PRS_OptLayout wsAfterValue);
 PRS_RStore PRS_makeRStoreRstore (PRS_OptLayout wsAfterRstore,
@@ -375,6 +382,9 @@ PRS_RStore PRS_makeRStoreRstore (PRS_OptLayout wsAfterRstore,
 				 PRS_OptLayout wsAfterBracketClose);
 PRS_Start PRS_makeStartRStore (PRS_OptLayout wsBefore, PRS_RStore topRStore,
 			       PRS_OptLayout wsAfter, int ambCnt);
+PRS_Start PRS_makeStartBoolCon (PRS_OptLayout wsBefore,
+				PRS_BoolCon topBoolCon, PRS_OptLayout wsAfter,
+				int ambCnt);
 PRS_RElemElements PRS_makeRElemElementsEmpty (void);
 PRS_RElemElements PRS_makeRElemElementsSingle (PRS_RElem head);
 PRS_RElemElements PRS_makeRElemElementsMany (PRS_RElem head,
@@ -406,6 +416,8 @@ PRS_LexStrCharChars PRS_makeLexStrCharCharsEmpty (void);
 PRS_LexStrCharChars PRS_makeLexStrCharCharsSingle (PRS_LexStrChar head);
 PRS_LexStrCharChars PRS_makeLexStrCharCharsMany (PRS_LexStrChar head,
 						 PRS_LexStrCharChars tail);
+PRS_BoolCon PRS_makeBoolConTrue (void);
+PRS_BoolCon PRS_makeBoolConFalse (void);
 PRS_LexNatCon PRS_makeLexNatConDigits (const char *list);
 PRS_NatCon PRS_makeNatConLexToCf (PRS_LexNatCon NatCon);
 PRS_LexIdCon PRS_makeLexIdConDefault (char head, const char *tail);
@@ -463,6 +475,7 @@ ATbool PRS_isEqualLexStrCon (PRS_LexStrCon arg0, PRS_LexStrCon arg1);
 ATbool PRS_isEqualStrCon (PRS_StrCon arg0, PRS_StrCon arg1);
 ATbool PRS_isEqualLexStrCharChars (PRS_LexStrCharChars arg0,
 				   PRS_LexStrCharChars arg1);
+ATbool PRS_isEqualBoolCon (PRS_BoolCon arg0, PRS_BoolCon arg1);
 ATbool PRS_isEqualLexNatCon (PRS_LexNatCon arg0, PRS_LexNatCon arg1);
 ATbool PRS_isEqualNatCon (PRS_NatCon arg0, PRS_NatCon arg1);
 ATbool PRS_isEqualLexIdCon (PRS_LexIdCon arg0, PRS_LexIdCon arg1);
@@ -496,14 +509,16 @@ PRS_LexLayoutList PRS_setLexLayoutListHead (PRS_LexLayoutList arg,
 PRS_LexLayoutList PRS_setLexLayoutListTail (PRS_LexLayoutList arg,
 					    PRS_LexLayoutList tail);
 ATbool PRS_isValidRElem (PRS_RElem arg);
-inline ATbool PRS_isRElemInteger (PRS_RElem arg);
-inline ATbool PRS_isRElemString (PRS_RElem arg);
-inline ATbool PRS_isRElemLocation (PRS_RElem arg);
+inline ATbool PRS_isRElemInt (PRS_RElem arg);
+inline ATbool PRS_isRElemStr (PRS_RElem arg);
+inline ATbool PRS_isRElemBool (PRS_RElem arg);
+inline ATbool PRS_isRElemLoc (PRS_RElem arg);
 inline ATbool PRS_isRElemSet (PRS_RElem arg);
 inline ATbool PRS_isRElemBag (PRS_RElem arg);
 inline ATbool PRS_isRElemTuple (PRS_RElem arg);
 ATbool PRS_hasRElemIntCon (PRS_RElem arg);
 ATbool PRS_hasRElemStrCon (PRS_RElem arg);
+ATbool PRS_hasRElemBoolCon (PRS_RElem arg);
 ATbool PRS_hasRElemLocation (PRS_RElem arg);
 ATbool PRS_hasRElemWsAfterBraceOpen (PRS_RElem arg);
 ATbool PRS_hasRElemElements (PRS_RElem arg);
@@ -512,6 +527,7 @@ ATbool PRS_hasRElemWsAfterBraceOpenBar (PRS_RElem arg);
 ATbool PRS_hasRElemWsAfterLessThan (PRS_RElem arg);
 PRS_IntCon PRS_getRElemIntCon (PRS_RElem arg);
 PRS_StrCon PRS_getRElemStrCon (PRS_RElem arg);
+PRS_BoolCon PRS_getRElemBoolCon (PRS_RElem arg);
 PRS_Location PRS_getRElemLocation (PRS_RElem arg);
 PRS_OptLayout PRS_getRElemWsAfterBraceOpen (PRS_RElem arg);
 PRS_RElemElements PRS_getRElemElements (PRS_RElem arg);
@@ -520,6 +536,7 @@ PRS_OptLayout PRS_getRElemWsAfterBraceOpenBar (PRS_RElem arg);
 PRS_OptLayout PRS_getRElemWsAfterLessThan (PRS_RElem arg);
 PRS_RElem PRS_setRElemIntCon (PRS_RElem arg, PRS_IntCon IntCon);
 PRS_RElem PRS_setRElemStrCon (PRS_RElem arg, PRS_StrCon StrCon);
+PRS_RElem PRS_setRElemBoolCon (PRS_RElem arg, PRS_BoolCon BoolCon);
 PRS_RElem PRS_setRElemLocation (PRS_RElem arg, PRS_Location Location);
 PRS_RElem PRS_setRElemWsAfterBraceOpen (PRS_RElem arg,
 					PRS_OptLayout wsAfterBraceOpen);
@@ -531,10 +548,10 @@ PRS_RElem PRS_setRElemWsAfterBraceOpenBar (PRS_RElem arg,
 PRS_RElem PRS_setRElemWsAfterLessThan (PRS_RElem arg,
 				       PRS_OptLayout wsAfterLessThan);
 ATbool PRS_isValidRType (PRS_RType arg);
-inline ATbool PRS_isRTypeInteger (PRS_RType arg);
-inline ATbool PRS_isRTypeBoolean (PRS_RType arg);
-inline ATbool PRS_isRTypeString (PRS_RType arg);
-inline ATbool PRS_isRTypeLocation (PRS_RType arg);
+inline ATbool PRS_isRTypeInt (PRS_RType arg);
+inline ATbool PRS_isRTypeBool (PRS_RType arg);
+inline ATbool PRS_isRTypeStr (PRS_RType arg);
+inline ATbool PRS_isRTypeLoc (PRS_RType arg);
 inline ATbool PRS_isRTypeTuple (PRS_RType arg);
 inline ATbool PRS_isRTypeSet (PRS_RType arg);
 inline ATbool PRS_isRTypeBag (PRS_RType arg);
@@ -550,8 +567,9 @@ ATbool PRS_hasRTypeElementType (PRS_RType arg);
 ATbool PRS_hasRTypeWsAfterElementType (PRS_RType arg);
 ATbool PRS_hasRTypeWsAfterBag (PRS_RType arg);
 ATbool PRS_hasRTypeWsAfterRel (PRS_RType arg);
-ATbool PRS_hasRTypeName (PRS_RType arg);
+ATbool PRS_hasRTypeTypeName (PRS_RType arg);
 ATbool PRS_hasRTypeWsAfterAmp (PRS_RType arg);
+ATbool PRS_hasRTypeParameterName (PRS_RType arg);
 PRS_OptLayout PRS_getRTypeWsAfterLessThan (PRS_RType arg);
 PRS_RTypeColumnTypes PRS_getRTypeColumnTypes (PRS_RType arg);
 PRS_OptLayout PRS_getRTypeWsAfterColumnTypes (PRS_RType arg);
@@ -561,8 +579,9 @@ PRS_RType PRS_getRTypeElementType (PRS_RType arg);
 PRS_OptLayout PRS_getRTypeWsAfterElementType (PRS_RType arg);
 PRS_OptLayout PRS_getRTypeWsAfterBag (PRS_RType arg);
 PRS_OptLayout PRS_getRTypeWsAfterRel (PRS_RType arg);
-PRS_IdCon PRS_getRTypeName (PRS_RType arg);
+PRS_IdCon PRS_getRTypeTypeName (PRS_RType arg);
 PRS_OptLayout PRS_getRTypeWsAfterAmp (PRS_RType arg);
+PRS_IdCon PRS_getRTypeParameterName (PRS_RType arg);
 PRS_RType PRS_setRTypeWsAfterLessThan (PRS_RType arg,
 				       PRS_OptLayout wsAfterLessThan);
 PRS_RType PRS_setRTypeColumnTypes (PRS_RType arg,
@@ -577,16 +596,17 @@ PRS_RType PRS_setRTypeWsAfterElementType (PRS_RType arg,
 					  PRS_OptLayout wsAfterElementType);
 PRS_RType PRS_setRTypeWsAfterBag (PRS_RType arg, PRS_OptLayout wsAfterBag);
 PRS_RType PRS_setRTypeWsAfterRel (PRS_RType arg, PRS_OptLayout wsAfterRel);
-PRS_RType PRS_setRTypeName (PRS_RType arg, PRS_IdCon name);
+PRS_RType PRS_setRTypeTypeName (PRS_RType arg, PRS_IdCon typeName);
 PRS_RType PRS_setRTypeWsAfterAmp (PRS_RType arg, PRS_OptLayout wsAfterAmp);
+PRS_RType PRS_setRTypeParameterName (PRS_RType arg, PRS_IdCon parameterName);
 ATbool PRS_isValidRTuple (PRS_RTuple arg);
 inline ATbool PRS_isRTupleRtuple (PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterLessThan (PRS_RTuple arg);
 ATbool PRS_hasRTupleVariable (PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterVariable (PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterComma (PRS_RTuple arg);
-ATbool PRS_hasRTupleType (PRS_RTuple arg);
-ATbool PRS_hasRTupleWsAfterType (PRS_RTuple arg);
+ATbool PRS_hasRTupleRtype (PRS_RTuple arg);
+ATbool PRS_hasRTupleWsAfterRtype (PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterComma1 (PRS_RTuple arg);
 ATbool PRS_hasRTupleValue (PRS_RTuple arg);
 ATbool PRS_hasRTupleWsAfterValue (PRS_RTuple arg);
@@ -594,8 +614,8 @@ PRS_OptLayout PRS_getRTupleWsAfterLessThan (PRS_RTuple arg);
 PRS_IdCon PRS_getRTupleVariable (PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterVariable (PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterComma (PRS_RTuple arg);
-PRS_RType PRS_getRTupleType (PRS_RTuple arg);
-PRS_OptLayout PRS_getRTupleWsAfterType (PRS_RTuple arg);
+PRS_RType PRS_getRTupleRtype (PRS_RTuple arg);
+PRS_OptLayout PRS_getRTupleWsAfterRtype (PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterComma1 (PRS_RTuple arg);
 PRS_RElem PRS_getRTupleValue (PRS_RTuple arg);
 PRS_OptLayout PRS_getRTupleWsAfterValue (PRS_RTuple arg);
@@ -606,9 +626,9 @@ PRS_RTuple PRS_setRTupleWsAfterVariable (PRS_RTuple arg,
 					 PRS_OptLayout wsAfterVariable);
 PRS_RTuple PRS_setRTupleWsAfterComma (PRS_RTuple arg,
 				      PRS_OptLayout wsAfterComma);
-PRS_RTuple PRS_setRTupleType (PRS_RTuple arg, PRS_RType type);
-PRS_RTuple PRS_setRTupleWsAfterType (PRS_RTuple arg,
-				     PRS_OptLayout wsAfterType);
+PRS_RTuple PRS_setRTupleRtype (PRS_RTuple arg, PRS_RType rtype);
+PRS_RTuple PRS_setRTupleWsAfterRtype (PRS_RTuple arg,
+				      PRS_OptLayout wsAfterRtype);
 PRS_RTuple PRS_setRTupleWsAfterComma1 (PRS_RTuple arg,
 				       PRS_OptLayout wsAfterComma1);
 PRS_RTuple PRS_setRTupleValue (PRS_RTuple arg, PRS_RElem value);
@@ -642,18 +662,22 @@ PRS_RStore PRS_setRStoreWsAfterBracketClose (PRS_RStore arg,
 					     wsAfterBracketClose);
 ATbool PRS_isValidStart (PRS_Start arg);
 inline ATbool PRS_isStartRStore (PRS_Start arg);
+inline ATbool PRS_isStartBoolCon (PRS_Start arg);
 ATbool PRS_hasStartWsBefore (PRS_Start arg);
 ATbool PRS_hasStartTopRStore (PRS_Start arg);
 ATbool PRS_hasStartWsAfter (PRS_Start arg);
 ATbool PRS_hasStartAmbCnt (PRS_Start arg);
+ATbool PRS_hasStartTopBoolCon (PRS_Start arg);
 PRS_OptLayout PRS_getStartWsBefore (PRS_Start arg);
 PRS_RStore PRS_getStartTopRStore (PRS_Start arg);
 PRS_OptLayout PRS_getStartWsAfter (PRS_Start arg);
 int PRS_getStartAmbCnt (PRS_Start arg);
+PRS_BoolCon PRS_getStartTopBoolCon (PRS_Start arg);
 PRS_Start PRS_setStartWsBefore (PRS_Start arg, PRS_OptLayout wsBefore);
 PRS_Start PRS_setStartTopRStore (PRS_Start arg, PRS_RStore topRStore);
 PRS_Start PRS_setStartWsAfter (PRS_Start arg, PRS_OptLayout wsAfter);
 PRS_Start PRS_setStartAmbCnt (PRS_Start arg, int ambCnt);
+PRS_Start PRS_setStartTopBoolCon (PRS_Start arg, PRS_BoolCon topBoolCon);
 ATbool PRS_isValidRElemElements (PRS_RElemElements arg);
 inline ATbool PRS_isRElemElementsEmpty (PRS_RElemElements arg);
 inline ATbool PRS_isRElemElementsSingle (PRS_RElemElements arg);
@@ -765,6 +789,9 @@ PRS_LexStrCharChars PRS_setLexStrCharCharsHead (PRS_LexStrCharChars arg,
 						PRS_LexStrChar head);
 PRS_LexStrCharChars PRS_setLexStrCharCharsTail (PRS_LexStrCharChars arg,
 						PRS_LexStrCharChars tail);
+ATbool PRS_isValidBoolCon (PRS_BoolCon arg);
+inline ATbool PRS_isBoolConTrue (PRS_BoolCon arg);
+inline ATbool PRS_isBoolConFalse (PRS_BoolCon arg);
 ATbool PRS_isValidLexNatCon (PRS_LexNatCon arg);
 inline ATbool PRS_isLexNatConDigits (PRS_LexNatCon arg);
 ATbool PRS_hasLexNatConList (PRS_LexNatCon arg);
@@ -919,6 +946,7 @@ PRS_LexLayoutList PRS_visitLexLayoutList (PRS_LexLayoutList arg,
 PRS_RElem PRS_visitRElem (PRS_RElem arg,
 			  PRS_IntCon (*acceptIntCon) (PRS_IntCon),
 			  PRS_StrCon (*acceptStrCon) (PRS_StrCon),
+			  PRS_BoolCon (*acceptBoolCon) (PRS_BoolCon),
 			  PRS_Location (*acceptLocation) (PRS_Location),
 			  PRS_OptLayout (*acceptWsAfterBraceOpen)
 			  (PRS_OptLayout),
@@ -944,8 +972,9 @@ PRS_RType PRS_visitRType (PRS_RType arg,
 			  (PRS_OptLayout),
 			  PRS_OptLayout (*acceptWsAfterBag) (PRS_OptLayout),
 			  PRS_OptLayout (*acceptWsAfterRel) (PRS_OptLayout),
-			  PRS_IdCon (*acceptName) (PRS_IdCon),
-			  PRS_OptLayout (*acceptWsAfterAmp) (PRS_OptLayout));
+			  PRS_IdCon (*acceptTypeName) (PRS_IdCon),
+			  PRS_OptLayout (*acceptWsAfterAmp) (PRS_OptLayout),
+			  PRS_IdCon (*acceptParameterName) (PRS_IdCon));
 PRS_RTuple PRS_visitRTuple (PRS_RTuple arg,
 			    PRS_OptLayout (*acceptWsAfterLessThan)
 			    (PRS_OptLayout),
@@ -954,8 +983,8 @@ PRS_RTuple PRS_visitRTuple (PRS_RTuple arg,
 			    (PRS_OptLayout),
 			    PRS_OptLayout (*acceptWsAfterComma)
 			    (PRS_OptLayout),
-			    PRS_RType (*acceptType) (PRS_RType),
-			    PRS_OptLayout (*acceptWsAfterType)
+			    PRS_RType (*acceptRtype) (PRS_RType),
+			    PRS_OptLayout (*acceptWsAfterRtype)
 			    (PRS_OptLayout),
 			    PRS_OptLayout (*acceptWsAfterComma1)
 			    (PRS_OptLayout),
@@ -979,7 +1008,8 @@ PRS_Start PRS_visitStart (PRS_Start arg,
 			  PRS_OptLayout (*acceptWsBefore) (PRS_OptLayout),
 			  PRS_RStore (*acceptTopRStore) (PRS_RStore),
 			  PRS_OptLayout (*acceptWsAfter) (PRS_OptLayout),
-			  int (*acceptAmbCnt) (int));
+			  int (*acceptAmbCnt) (int),
+			  PRS_BoolCon (*acceptTopBoolCon) (PRS_BoolCon));
 PRS_RElemElements PRS_visitRElemElements (PRS_RElemElements arg,
 					  PRS_RElem (*acceptHead) (PRS_RElem),
 					  PRS_OptLayout (*acceptWsAfterHead)
@@ -1018,6 +1048,7 @@ PRS_StrCon PRS_visitStrCon (PRS_StrCon arg,
 PRS_LexStrCharChars PRS_visitLexStrCharChars (PRS_LexStrCharChars arg,
 					      PRS_LexStrChar (*acceptHead)
 					      (PRS_LexStrChar));
+PRS_BoolCon PRS_visitBoolCon (PRS_BoolCon arg);
 PRS_LexNatCon PRS_visitLexNatCon (PRS_LexNatCon arg,
 				  char *(*acceptList) (char *));
 PRS_NatCon PRS_visitNatCon (PRS_NatCon arg,

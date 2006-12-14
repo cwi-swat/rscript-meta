@@ -15,6 +15,7 @@ typedef struct _RS_RTypeColumnTypes *RS_RTypeColumnTypes;
 typedef struct _RS_RTupleRtuples *RS_RTupleRtuples;
 typedef struct _RS_StrChar *RS_StrChar;
 typedef struct _RS_StrCon *RS_StrCon;
+typedef struct _RS_BoolCon *RS_BoolCon;
 typedef struct _RS_NatCon *RS_NatCon;
 typedef struct _RS_IdCon *RS_IdCon;
 typedef struct _RS_IntCon *RS_IntCon;
@@ -41,6 +42,8 @@ void RS_protectStrChar (RS_StrChar * arg);
 void RS_unprotectStrChar (RS_StrChar * arg);
 void RS_protectStrCon (RS_StrCon * arg);
 void RS_unprotectStrCon (RS_StrCon * arg);
+void RS_protectBoolCon (RS_BoolCon * arg);
+void RS_unprotectBoolCon (RS_BoolCon * arg);
 void RS_protectNatCon (RS_NatCon * arg);
 void RS_unprotectNatCon (RS_NatCon * arg);
 void RS_protectIdCon (RS_IdCon * arg);
@@ -69,6 +72,8 @@ RS_StrChar RS_StrCharFromTerm (ATerm t);
 ATerm RS_StrCharToTerm (RS_StrChar arg);
 RS_StrCon RS_StrConFromTerm (ATerm t);
 ATerm RS_StrConToTerm (RS_StrCon arg);
+RS_BoolCon RS_BoolConFromTerm (ATerm t);
+ATerm RS_BoolConToTerm (RS_BoolCon arg);
 RS_NatCon RS_NatConFromTerm (ATerm t);
 ATerm RS_NatConToTerm (RS_NatCon arg);
 RS_IdCon RS_IdConFromTerm (ATerm t);
@@ -145,23 +150,24 @@ RS_RTupleRtuples RS_makeRTupleRtuples5 (RS_RTuple elem1, RS_RTuple elem2,
 RS_RTupleRtuples RS_makeRTupleRtuples6 (RS_RTuple elem1, RS_RTuple elem2,
 					RS_RTuple elem3, RS_RTuple elem4,
 					RS_RTuple elem5, RS_RTuple elem6);
-RS_RElem RS_makeRElemInteger (RS_IntCon IntCon);
-RS_RElem RS_makeRElemString (const char *StrCon);
-RS_RElem RS_makeRElemLocation (RS_Location Location);
+RS_RElem RS_makeRElemInt (RS_IntCon IntCon);
+RS_RElem RS_makeRElemStr (const char *StrCon);
+RS_RElem RS_makeRElemBool (RS_BoolCon BoolCon);
+RS_RElem RS_makeRElemLoc (RS_Location Location);
 RS_RElem RS_makeRElemSet (RS_RElemElements elements);
 RS_RElem RS_makeRElemBag (RS_RElemElements elements);
 RS_RElem RS_makeRElemTuple (RS_RElemElements elements);
-RS_RType RS_makeRTypeInteger (void);
-RS_RType RS_makeRTypeBoolean (void);
-RS_RType RS_makeRTypeString (void);
-RS_RType RS_makeRTypeLocation (void);
+RS_RType RS_makeRTypeInt (void);
+RS_RType RS_makeRTypeBool (void);
+RS_RType RS_makeRTypeStr (void);
+RS_RType RS_makeRTypeLoc (void);
 RS_RType RS_makeRTypeTuple (RS_RTypeColumnTypes columnTypes);
 RS_RType RS_makeRTypeSet (RS_RType elementType);
 RS_RType RS_makeRTypeBag (RS_RType elementType);
 RS_RType RS_makeRTypeRelation (RS_RTypeColumnTypes columnTypes);
-RS_RType RS_makeRTypeUserDefined (RS_IdCon name);
-RS_RType RS_makeRTypeParameter (RS_IdCon name);
-RS_RTuple RS_makeRTupleRtuple (RS_IdCon variable, RS_RType type,
+RS_RType RS_makeRTypeUserDefined (RS_IdCon typeName);
+RS_RType RS_makeRTypeParameter (RS_IdCon parameterName);
+RS_RTuple RS_makeRTupleRtuple (RS_IdCon variable, RS_RType rtype,
 			       RS_RElem value);
 RS_RStore RS_makeRStoreRstore (RS_RTupleRtuples rtuples);
 RS_RElemElements RS_makeRElemElementsEmpty (void);
@@ -178,6 +184,8 @@ RS_RTupleRtuples RS_makeRTupleRtuplesMany (RS_RTuple head,
 					   RS_RTupleRtuples tail);
 RS_StrChar RS_makeStrCharStrChar (const char *string);
 RS_StrCon RS_makeStrConStrCon (const char *string);
+RS_BoolCon RS_makeBoolConTrue (void);
+RS_BoolCon RS_makeBoolConFalse (void);
 RS_NatCon RS_makeNatConNatCon (const char *string);
 RS_IdCon RS_makeIdConIdCon (const char *string);
 RS_IntCon RS_makeIntConIntCon (const char *string);
@@ -196,35 +204,40 @@ ATbool RS_isEqualRTypeColumnTypes (RS_RTypeColumnTypes arg0,
 ATbool RS_isEqualRTupleRtuples (RS_RTupleRtuples arg0, RS_RTupleRtuples arg1);
 ATbool RS_isEqualStrChar (RS_StrChar arg0, RS_StrChar arg1);
 ATbool RS_isEqualStrCon (RS_StrCon arg0, RS_StrCon arg1);
+ATbool RS_isEqualBoolCon (RS_BoolCon arg0, RS_BoolCon arg1);
 ATbool RS_isEqualNatCon (RS_NatCon arg0, RS_NatCon arg1);
 ATbool RS_isEqualIdCon (RS_IdCon arg0, RS_IdCon arg1);
 ATbool RS_isEqualIntCon (RS_IntCon arg0, RS_IntCon arg1);
 ATbool RS_isEqualLocation (RS_Location arg0, RS_Location arg1);
 ATbool RS_isEqualArea (RS_Area arg0, RS_Area arg1);
 ATbool RS_isValidRElem (RS_RElem arg);
-inline ATbool RS_isRElemInteger (RS_RElem arg);
-inline ATbool RS_isRElemString (RS_RElem arg);
-inline ATbool RS_isRElemLocation (RS_RElem arg);
+inline ATbool RS_isRElemInt (RS_RElem arg);
+inline ATbool RS_isRElemStr (RS_RElem arg);
+inline ATbool RS_isRElemBool (RS_RElem arg);
+inline ATbool RS_isRElemLoc (RS_RElem arg);
 inline ATbool RS_isRElemSet (RS_RElem arg);
 inline ATbool RS_isRElemBag (RS_RElem arg);
 inline ATbool RS_isRElemTuple (RS_RElem arg);
 ATbool RS_hasRElemIntCon (RS_RElem arg);
 ATbool RS_hasRElemStrCon (RS_RElem arg);
+ATbool RS_hasRElemBoolCon (RS_RElem arg);
 ATbool RS_hasRElemLocation (RS_RElem arg);
 ATbool RS_hasRElemElements (RS_RElem arg);
 RS_IntCon RS_getRElemIntCon (RS_RElem arg);
 char *RS_getRElemStrCon (RS_RElem arg);
+RS_BoolCon RS_getRElemBoolCon (RS_RElem arg);
 RS_Location RS_getRElemLocation (RS_RElem arg);
 RS_RElemElements RS_getRElemElements (RS_RElem arg);
 RS_RElem RS_setRElemIntCon (RS_RElem arg, RS_IntCon IntCon);
 RS_RElem RS_setRElemStrCon (RS_RElem arg, const char *StrCon);
+RS_RElem RS_setRElemBoolCon (RS_RElem arg, RS_BoolCon BoolCon);
 RS_RElem RS_setRElemLocation (RS_RElem arg, RS_Location Location);
 RS_RElem RS_setRElemElements (RS_RElem arg, RS_RElemElements elements);
 ATbool RS_isValidRType (RS_RType arg);
-inline ATbool RS_isRTypeInteger (RS_RType arg);
-inline ATbool RS_isRTypeBoolean (RS_RType arg);
-inline ATbool RS_isRTypeString (RS_RType arg);
-inline ATbool RS_isRTypeLocation (RS_RType arg);
+inline ATbool RS_isRTypeInt (RS_RType arg);
+inline ATbool RS_isRTypeBool (RS_RType arg);
+inline ATbool RS_isRTypeStr (RS_RType arg);
+inline ATbool RS_isRTypeLoc (RS_RType arg);
 inline ATbool RS_isRTypeTuple (RS_RType arg);
 inline ATbool RS_isRTypeSet (RS_RType arg);
 inline ATbool RS_isRTypeBag (RS_RType arg);
@@ -233,24 +246,27 @@ inline ATbool RS_isRTypeUserDefined (RS_RType arg);
 inline ATbool RS_isRTypeParameter (RS_RType arg);
 ATbool RS_hasRTypeColumnTypes (RS_RType arg);
 ATbool RS_hasRTypeElementType (RS_RType arg);
-ATbool RS_hasRTypeName (RS_RType arg);
+ATbool RS_hasRTypeTypeName (RS_RType arg);
+ATbool RS_hasRTypeParameterName (RS_RType arg);
 RS_RTypeColumnTypes RS_getRTypeColumnTypes (RS_RType arg);
 RS_RType RS_getRTypeElementType (RS_RType arg);
-RS_IdCon RS_getRTypeName (RS_RType arg);
+RS_IdCon RS_getRTypeTypeName (RS_RType arg);
+RS_IdCon RS_getRTypeParameterName (RS_RType arg);
 RS_RType RS_setRTypeColumnTypes (RS_RType arg,
 				 RS_RTypeColumnTypes columnTypes);
 RS_RType RS_setRTypeElementType (RS_RType arg, RS_RType elementType);
-RS_RType RS_setRTypeName (RS_RType arg, RS_IdCon name);
+RS_RType RS_setRTypeTypeName (RS_RType arg, RS_IdCon typeName);
+RS_RType RS_setRTypeParameterName (RS_RType arg, RS_IdCon parameterName);
 ATbool RS_isValidRTuple (RS_RTuple arg);
 inline ATbool RS_isRTupleRtuple (RS_RTuple arg);
 ATbool RS_hasRTupleVariable (RS_RTuple arg);
-ATbool RS_hasRTupleType (RS_RTuple arg);
+ATbool RS_hasRTupleRtype (RS_RTuple arg);
 ATbool RS_hasRTupleValue (RS_RTuple arg);
 RS_IdCon RS_getRTupleVariable (RS_RTuple arg);
-RS_RType RS_getRTupleType (RS_RTuple arg);
+RS_RType RS_getRTupleRtype (RS_RTuple arg);
 RS_RElem RS_getRTupleValue (RS_RTuple arg);
 RS_RTuple RS_setRTupleVariable (RS_RTuple arg, RS_IdCon variable);
-RS_RTuple RS_setRTupleType (RS_RTuple arg, RS_RType type);
+RS_RTuple RS_setRTupleRtype (RS_RTuple arg, RS_RType rtype);
 RS_RTuple RS_setRTupleValue (RS_RTuple arg, RS_RElem value);
 ATbool RS_isValidRStore (RS_RStore arg);
 inline ATbool RS_isRStoreRstore (RS_RStore arg);
@@ -303,6 +319,9 @@ inline ATbool RS_isStrConStrCon (RS_StrCon arg);
 ATbool RS_hasStrConString (RS_StrCon arg);
 char *RS_getStrConString (RS_StrCon arg);
 RS_StrCon RS_setStrConString (RS_StrCon arg, const char *string);
+ATbool RS_isValidBoolCon (RS_BoolCon arg);
+inline ATbool RS_isBoolConTrue (RS_BoolCon arg);
+inline ATbool RS_isBoolConFalse (RS_BoolCon arg);
 ATbool RS_isValidNatCon (RS_NatCon arg);
 inline ATbool RS_isNatConNatCon (RS_NatCon arg);
 ATbool RS_hasNatConString (RS_NatCon arg);
@@ -350,16 +369,18 @@ RS_Area RS_setAreaOffset (RS_Area arg, int offset);
 RS_Area RS_setAreaLength (RS_Area arg, int length);
 RS_RElem RS_visitRElem (RS_RElem arg, RS_IntCon (*acceptIntCon) (RS_IntCon),
 			char *(*acceptStrCon) (char *),
+			RS_BoolCon (*acceptBoolCon) (RS_BoolCon),
 			RS_Location (*acceptLocation) (RS_Location),
 			RS_RElemElements (*acceptElements)
 			(RS_RElemElements));
 RS_RType RS_visitRType (RS_RType arg,
 			RS_RTypeColumnTypes (*acceptColumnTypes)
 			(RS_RTypeColumnTypes),
-			RS_IdCon (*acceptName) (RS_IdCon));
+			RS_IdCon (*acceptTypeName) (RS_IdCon),
+			RS_IdCon (*acceptParameterName) (RS_IdCon));
 RS_RTuple RS_visitRTuple (RS_RTuple arg,
 			  RS_IdCon (*acceptVariable) (RS_IdCon),
-			  RS_RType (*acceptType) (RS_RType),
+			  RS_RType (*acceptRtype) (RS_RType),
 			  RS_RElem (*acceptValue) (RS_RElem));
 RS_RStore RS_visitRStore (RS_RStore arg,
 			  RS_RTupleRtuples (*acceptRtuples)
@@ -373,6 +394,7 @@ RS_RTupleRtuples RS_visitRTupleRtuples (RS_RTupleRtuples arg,
 					RS_RTuple (*acceptHead) (RS_RTuple));
 RS_StrChar RS_visitStrChar (RS_StrChar arg, char *(*acceptString) (char *));
 RS_StrCon RS_visitStrCon (RS_StrCon arg, char *(*acceptString) (char *));
+RS_BoolCon RS_visitBoolCon (RS_BoolCon arg);
 RS_NatCon RS_visitNatCon (RS_NatCon arg, char *(*acceptString) (char *));
 RS_IdCon RS_visitIdCon (RS_IdCon arg, char *(*acceptString) (char *));
 RS_IntCon RS_visitIntCon (RS_IntCon arg, char *(*acceptString) (char *));

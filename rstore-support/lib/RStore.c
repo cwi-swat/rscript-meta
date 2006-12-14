@@ -68,6 +68,7 @@ typedef struct ATerm _RS_RTypeColumnTypes;
 typedef struct ATerm _RS_RTupleRtuples;
 typedef struct ATerm _RS_StrChar;
 typedef struct ATerm _RS_StrCon;
+typedef struct ATerm _RS_BoolCon;
 typedef struct ATerm _RS_NatCon;
 typedef struct ATerm _RS_IdCon;
 typedef struct ATerm _RS_IntCon;
@@ -222,6 +223,22 @@ void RS_protectStrCon(RS_StrCon *arg) {
  * \param[in] arg pointer to a RS_StrCon
  */
 void RS_unprotectStrCon(RS_StrCon *arg) {
+  ATunprotect((ATerm*)((void*) arg));
+}
+
+/**
+ * Protect a RS_BoolCon from the ATerm garbage collector. Every RS_BoolCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
+ * \param[in] arg pointer to a RS_BoolCon
+ */
+void RS_protectBoolCon(RS_BoolCon *arg) {
+  ATprotect((ATerm*)((void*) arg));
+}
+
+/**
+ * Unprotect a RS_BoolCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
+ * \param[in] arg pointer to a RS_BoolCon
+ */
+void RS_unprotectBoolCon(RS_BoolCon *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -464,6 +481,24 @@ RS_StrCon RS_StrConFromTerm(ATerm t) {
  * \return ATerm that represents the RS_StrCon
  */
 ATerm RS_StrConToTerm(RS_StrCon arg) {
+  return (ATerm)arg;
+}
+
+/**
+ * Transforms an ATerm to a RS_BoolCon. This is just a wrapper for a cast, so no structural validation is done!
+ * \param[in] t ATerm to be converted
+ * \return RS_BoolCon that was encoded by \arg
+ */
+RS_BoolCon RS_BoolConFromTerm(ATerm t) {
+  return (RS_BoolCon)t;
+}
+
+/**
+ * Transforms a RS_BoolConto an ATerm. This is just a wrapper for a cast.
+ * \param[in] arg RS_BoolCon to be converted
+ * \return ATerm that represents the RS_BoolCon
+ */
+ATerm RS_BoolConToTerm(RS_BoolCon arg) {
   return (ATerm)arg;
 }
 
@@ -948,28 +983,36 @@ RS_RTupleRtuples RS_makeRTupleRtuples6(RS_RTuple elem1, RS_RTuple elem2, RS_RTup
 }
 
 /**
- * Constructs a integer of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
- * \param[in] IntCon a child of the new integer
- * \return A pointer to a integer, either newly constructed or shared
+ * Constructs a int of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
+ * \param[in] IntCon a child of the new int
+ * \return A pointer to a int, either newly constructed or shared
  */
-RS_RElem RS_makeRElemInteger(RS_IntCon IntCon) {
+RS_RElem RS_makeRElemInt(RS_IntCon IntCon) {
   return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun0, (ATerm) IntCon);
 }
 /**
- * Constructs a string of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
- * \param[in] StrCon a child of the new string
- * \return A pointer to a string, either newly constructed or shared
+ * Constructs a str of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
+ * \param[in] StrCon a child of the new str
+ * \return A pointer to a str, either newly constructed or shared
  */
-RS_RElem RS_makeRElemString(const char* StrCon) {
+RS_RElem RS_makeRElemStr(const char* StrCon) {
   return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun1, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(StrCon, 0, ATtrue)));
 }
 /**
- * Constructs a location of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
- * \param[in] Location a child of the new location
- * \return A pointer to a location, either newly constructed or shared
+ * Constructs a bool of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
+ * \param[in] BoolCon a child of the new bool
+ * \return A pointer to a bool, either newly constructed or shared
  */
-RS_RElem RS_makeRElemLocation(RS_Location Location) {
-  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun2, (ATerm) Location);
+RS_RElem RS_makeRElemBool(RS_BoolCon BoolCon) {
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun2, (ATerm) BoolCon);
+}
+/**
+ * Constructs a loc of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
+ * \param[in] Location a child of the new loc
+ * \return A pointer to a loc, either newly constructed or shared
+ */
+RS_RElem RS_makeRElemLoc(RS_Location Location) {
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun3, (ATerm) Location);
 }
 /**
  * Constructs a set of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
@@ -977,7 +1020,7 @@ RS_RElem RS_makeRElemLocation(RS_Location Location) {
  * \return A pointer to a set, either newly constructed or shared
  */
 RS_RElem RS_makeRElemSet(RS_RElemElements elements) {
-  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun3, (ATerm) elements);
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun4, (ATerm) elements);
 }
 /**
  * Constructs a bag of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
@@ -985,7 +1028,7 @@ RS_RElem RS_makeRElemSet(RS_RElemElements elements) {
  * \return A pointer to a bag, either newly constructed or shared
  */
 RS_RElem RS_makeRElemBag(RS_RElemElements elements) {
-  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun4, (ATerm) elements);
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun5, (ATerm) elements);
 }
 /**
  * Constructs a tuple of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
@@ -993,35 +1036,35 @@ RS_RElem RS_makeRElemBag(RS_RElemElements elements) {
  * \return A pointer to a tuple, either newly constructed or shared
  */
 RS_RElem RS_makeRElemTuple(RS_RElemElements elements) {
-  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun5, (ATerm) elements);
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun6, (ATerm) elements);
 }
 /**
- * Constructs a integer of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
- * \return A pointer to a integer, either newly constructed or shared
+ * Constructs a int of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
+ * \return A pointer to a int, either newly constructed or shared
  */
-RS_RType RS_makeRTypeInteger(void) {
-  return (RS_RType)(ATerm)ATmakeAppl0(RS_afun6);
-}
-/**
- * Constructs a boolean of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
- * \return A pointer to a boolean, either newly constructed or shared
- */
-RS_RType RS_makeRTypeBoolean(void) {
+RS_RType RS_makeRTypeInt(void) {
   return (RS_RType)(ATerm)ATmakeAppl0(RS_afun7);
 }
 /**
- * Constructs a string of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
- * \return A pointer to a string, either newly constructed or shared
+ * Constructs a bool of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
+ * \return A pointer to a bool, either newly constructed or shared
  */
-RS_RType RS_makeRTypeString(void) {
+RS_RType RS_makeRTypeBool(void) {
   return (RS_RType)(ATerm)ATmakeAppl0(RS_afun8);
 }
 /**
- * Constructs a location of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
- * \return A pointer to a location, either newly constructed or shared
+ * Constructs a str of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
+ * \return A pointer to a str, either newly constructed or shared
  */
-RS_RType RS_makeRTypeLocation(void) {
+RS_RType RS_makeRTypeStr(void) {
   return (RS_RType)(ATerm)ATmakeAppl0(RS_afun9);
+}
+/**
+ * Constructs a loc of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
+ * \return A pointer to a loc, either newly constructed or shared
+ */
+RS_RType RS_makeRTypeLoc(void) {
+  return (RS_RType)(ATerm)ATmakeAppl0(RS_afun10);
 }
 /**
  * Constructs a tuple of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
@@ -1029,7 +1072,7 @@ RS_RType RS_makeRTypeLocation(void) {
  * \return A pointer to a tuple, either newly constructed or shared
  */
 RS_RType RS_makeRTypeTuple(RS_RTypeColumnTypes columnTypes) {
-  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun5, (ATerm) columnTypes);
+  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun6, (ATerm) columnTypes);
 }
 /**
  * Constructs a set of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
@@ -1037,7 +1080,7 @@ RS_RType RS_makeRTypeTuple(RS_RTypeColumnTypes columnTypes) {
  * \return A pointer to a set, either newly constructed or shared
  */
 RS_RType RS_makeRTypeSet(RS_RType elementType) {
-  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun3, (ATerm) elementType);
+  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun4, (ATerm) elementType);
 }
 /**
  * Constructs a bag of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
@@ -1045,7 +1088,7 @@ RS_RType RS_makeRTypeSet(RS_RType elementType) {
  * \return A pointer to a bag, either newly constructed or shared
  */
 RS_RType RS_makeRTypeBag(RS_RType elementType) {
-  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun4, (ATerm) elementType);
+  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun5, (ATerm) elementType);
 }
 /**
  * Constructs a relation of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
@@ -1053,33 +1096,33 @@ RS_RType RS_makeRTypeBag(RS_RType elementType) {
  * \return A pointer to a relation, either newly constructed or shared
  */
 RS_RType RS_makeRTypeRelation(RS_RTypeColumnTypes columnTypes) {
-  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun10, (ATerm) columnTypes);
+  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun11, (ATerm) columnTypes);
 }
 /**
  * Constructs a user-defined of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
- * \param[in] name a child of the new user-defined
+ * \param[in] typeName a child of the new user-defined
  * \return A pointer to a user-defined, either newly constructed or shared
  */
-RS_RType RS_makeRTypeUserDefined(RS_IdCon name) {
-  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun11, (ATerm) name);
+RS_RType RS_makeRTypeUserDefined(RS_IdCon typeName) {
+  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun12, (ATerm) typeName);
 }
 /**
  * Constructs a parameter of type RS_RType. Like all ATerm types, RS_RTypes are maximally shared.
- * \param[in] name a child of the new parameter
+ * \param[in] parameterName a child of the new parameter
  * \return A pointer to a parameter, either newly constructed or shared
  */
-RS_RType RS_makeRTypeParameter(RS_IdCon name) {
-  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun12, (ATerm) name);
+RS_RType RS_makeRTypeParameter(RS_IdCon parameterName) {
+  return (RS_RType)(ATerm)ATmakeAppl1(RS_afun13, (ATerm) parameterName);
 }
 /**
  * Constructs a rtuple of type RS_RTuple. Like all ATerm types, RS_RTuples are maximally shared.
  * \param[in] variable a child of the new rtuple
- * \param[in] type a child of the new rtuple
+ * \param[in] rtype a child of the new rtuple
  * \param[in] value a child of the new rtuple
  * \return A pointer to a rtuple, either newly constructed or shared
  */
-RS_RTuple RS_makeRTupleRtuple(RS_IdCon variable, RS_RType type, RS_RElem value) {
-  return (RS_RTuple)(ATerm)ATmakeAppl3(RS_afun13, (ATerm) variable, (ATerm) type, (ATerm) value);
+RS_RTuple RS_makeRTupleRtuple(RS_IdCon variable, RS_RType rtype, RS_RElem value) {
+  return (RS_RTuple)(ATerm)ATmakeAppl3(RS_afun14, (ATerm) variable, (ATerm) rtype, (ATerm) value);
 }
 /**
  * Constructs a rstore of type RS_RStore. Like all ATerm types, RS_RStores are maximally shared.
@@ -1087,7 +1130,7 @@ RS_RTuple RS_makeRTupleRtuple(RS_IdCon variable, RS_RType type, RS_RElem value) 
  * \return A pointer to a rstore, either newly constructed or shared
  */
 RS_RStore RS_makeRStoreRstore(RS_RTupleRtuples rtuples) {
-  return (RS_RStore)(ATerm)ATmakeAppl1(RS_afun14, (ATerm) rtuples);
+  return (RS_RStore)(ATerm)ATmakeAppl1(RS_afun15, (ATerm) rtuples);
 }
 /**
  * Constructs a empty of type RS_RElemElements. Like all ATerm types, RS_RElemElementss are maximally shared.
@@ -1178,6 +1221,20 @@ RS_StrCon RS_makeStrConStrCon(const char* string) {
   return (RS_StrCon)(ATerm) (ATerm) ATmakeAppl(ATmakeAFun(string, 0, ATtrue));
 }
 /**
+ * Constructs a true of type RS_BoolCon. Like all ATerm types, RS_BoolCons are maximally shared.
+ * \return A pointer to a true, either newly constructed or shared
+ */
+RS_BoolCon RS_makeBoolConTrue(void) {
+  return (RS_BoolCon)(ATerm)ATmakeAppl0(RS_afun16);
+}
+/**
+ * Constructs a false of type RS_BoolCon. Like all ATerm types, RS_BoolCons are maximally shared.
+ * \return A pointer to a false, either newly constructed or shared
+ */
+RS_BoolCon RS_makeBoolConFalse(void) {
+  return (RS_BoolCon)(ATerm)ATmakeAppl0(RS_afun17);
+}
+/**
  * Constructs a NatCon of type RS_NatCon. Like all ATerm types, RS_NatCons are maximally shared.
  * \param[in] string a child of the new NatCon
  * \return A pointer to a NatCon, either newly constructed or shared
@@ -1207,7 +1264,7 @@ RS_IntCon RS_makeIntConIntCon(const char* string) {
  * \return A pointer to a file, either newly constructed or shared
  */
 RS_Location RS_makeLocationFile(const char* filename) {
-  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun15, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)));
+  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun18, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)));
 }
 /**
  * Constructs a area of type RS_Location. Like all ATerm types, RS_Locations are maximally shared.
@@ -1215,7 +1272,7 @@ RS_Location RS_makeLocationFile(const char* filename) {
  * \return A pointer to a area, either newly constructed or shared
  */
 RS_Location RS_makeLocationArea(RS_Area Area) {
-  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun16, (ATerm) Area);
+  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun19, (ATerm) Area);
 }
 /**
  * Constructs a area-in-file of type RS_Location. Like all ATerm types, RS_Locations are maximally shared.
@@ -1224,7 +1281,7 @@ RS_Location RS_makeLocationArea(RS_Area Area) {
  * \return A pointer to a area-in-file, either newly constructed or shared
  */
 RS_Location RS_makeLocationAreaInFile(const char* filename, RS_Area Area) {
-  return (RS_Location)(ATerm)ATmakeAppl2(RS_afun17, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)), (ATerm) Area);
+  return (RS_Location)(ATerm)ATmakeAppl2(RS_afun20, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)), (ATerm) Area);
 }
 /**
  * Constructs a area of type RS_Area. Like all ATerm types, RS_Areas are maximally shared.
@@ -1237,7 +1294,7 @@ RS_Location RS_makeLocationAreaInFile(const char* filename, RS_Area Area) {
  * \return A pointer to a area, either newly constructed or shared
  */
 RS_Area RS_makeAreaArea(int beginLine, int beginColumn, int endLine, int endColumn, int offset, int length) {
-  return (RS_Area)(ATerm)ATmakeAppl6(RS_afun18, (ATerm) (ATerm) ATmakeInt(beginLine), (ATerm) (ATerm) ATmakeInt(beginColumn), (ATerm) (ATerm) ATmakeInt(endLine), (ATerm) (ATerm) ATmakeInt(endColumn), (ATerm) (ATerm) ATmakeInt(offset), (ATerm) (ATerm) ATmakeInt(length));
+  return (RS_Area)(ATerm)ATmakeAppl6(RS_afun21, (ATerm) (ATerm) ATmakeInt(beginLine), (ATerm) (ATerm) ATmakeInt(beginColumn), (ATerm) (ATerm) ATmakeInt(endLine), (ATerm) (ATerm) ATmakeInt(endColumn), (ATerm) (ATerm) ATmakeInt(offset), (ATerm) (ATerm) ATmakeInt(length));
 }
 
 /**
@@ -1331,6 +1388,16 @@ ATbool RS_isEqualStrCon(RS_StrCon arg0, RS_StrCon arg1) {
 }
 
 /**
+ * Tests equality of two RS_BoolCons. A constant time operation.
+ * \param[in] arg0 first RS_BoolCon to be compared
+ * \param[in] arg1 second RS_BoolCon to be compared
+ * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
+ */
+ATbool RS_isEqualBoolCon(RS_BoolCon arg0, RS_BoolCon arg1) {
+  return ATisEqual((ATerm)arg0, (ATerm)arg1);
+}
+
+/**
  * Tests equality of two RS_NatCons. A constant time operation.
  * \param[in] arg0 first RS_NatCon to be compared
  * \param[in] arg1 second RS_NatCon to be compared
@@ -1386,13 +1453,16 @@ ATbool RS_isEqualArea(RS_Area arg0, RS_Area arg1) {
  * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
  */
 ATbool RS_isValidRElem(RS_RElem arg) {
-  if (RS_isRElemInteger(arg)) {
+  if (RS_isRElemInt(arg)) {
     return ATtrue;
   }
-  else if (RS_isRElemString(arg)) {
+  else if (RS_isRElemStr(arg)) {
     return ATtrue;
   }
-  else if (RS_isRElemLocation(arg)) {
+  else if (RS_isRElemBool(arg)) {
+    return ATtrue;
+  }
+  else if (RS_isRElemLoc(arg)) {
     return ATtrue;
   }
   else if (RS_isRElemSet(arg)) {
@@ -1408,11 +1478,11 @@ ATbool RS_isValidRElem(RS_RElem arg) {
 }
 
 /**
- * Assert whether a RS_RElem is a integer. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a int. . May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
- * \return ATtrue if #arg corresponds to the signature of a integer, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a int, or ATfalse otherwise
  */
-inline ATbool RS_isRElemInteger(RS_RElem arg) {
+inline ATbool RS_isRElemInt(RS_RElem arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1422,7 +1492,7 @@ inline ATbool RS_isRElemInteger(RS_RElem arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemInteger, NULL);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemInt, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -1431,11 +1501,11 @@ inline ATbool RS_isRElemInteger(RS_RElem arg) {
 }
 
 /**
- * Assert whether a RS_RElem is a string. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a str. . May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
- * \return ATtrue if #arg corresponds to the signature of a string, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a str, or ATfalse otherwise
  */
-inline ATbool RS_isRElemString(RS_RElem arg) {
+inline ATbool RS_isRElemStr(RS_RElem arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1445,7 +1515,7 @@ inline ATbool RS_isRElemString(RS_RElem arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemString, NULL);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemStr, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -1454,11 +1524,11 @@ inline ATbool RS_isRElemString(RS_RElem arg) {
 }
 
 /**
- * Assert whether a RS_RElem is a location. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a bool. . May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
- * \return ATtrue if #arg corresponds to the signature of a location, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a bool, or ATfalse otherwise
  */
-inline ATbool RS_isRElemLocation(RS_RElem arg) {
+inline ATbool RS_isRElemBool(RS_RElem arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1468,7 +1538,30 @@ inline ATbool RS_isRElemLocation(RS_RElem arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemLocation, NULL);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemBool, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a RS_RElem is a loc. . May not be used to assert correctness of the RS_RElem
+ * \param[in] arg input RS_RElem
+ * \return ATtrue if #arg corresponds to the signature of a loc, or ATfalse otherwise
+ */
+inline ATbool RS_isRElemLoc(RS_RElem arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemLoc, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -1551,7 +1644,7 @@ inline ATbool RS_isRElemTuple(RS_RElem arg) {
  * \return ATtrue if the RS_RElem had a IntCon, or ATfalse otherwise
  */
 ATbool RS_hasRElemIntCon(RS_RElem arg) {
-  if (RS_isRElemInteger(arg)) {
+  if (RS_isRElemInt(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -1563,7 +1656,19 @@ ATbool RS_hasRElemIntCon(RS_RElem arg) {
  * \return ATtrue if the RS_RElem had a StrCon, or ATfalse otherwise
  */
 ATbool RS_hasRElemStrCon(RS_RElem arg) {
-  if (RS_isRElemString(arg)) {
+  if (RS_isRElemStr(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Assert whether a RS_RElem has a BoolCon. 
+ * \param[in] arg input RS_RElem
+ * \return ATtrue if the RS_RElem had a BoolCon, or ATfalse otherwise
+ */
+ATbool RS_hasRElemBoolCon(RS_RElem arg) {
+  if (RS_isRElemBool(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -1575,7 +1680,7 @@ ATbool RS_hasRElemStrCon(RS_RElem arg) {
  * \return ATtrue if the RS_RElem had a Location, or ATfalse otherwise
  */
 ATbool RS_hasRElemLocation(RS_RElem arg) {
-  if (RS_isRElemLocation(arg)) {
+  if (RS_isRElemLoc(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -1620,6 +1725,16 @@ char* RS_getRElemStrCon(RS_RElem arg) {
 }
 
 /**
+ * Get the BoolCon RS_BoolCon of a RS_RElem. Note that the precondition is that this RS_RElem actually has a BoolCon
+ * \param[in] arg input RS_RElem
+ * \return the BoolCon of #arg, if it exist or an undefined value if it does not
+ */
+RS_BoolCon RS_getRElemBoolCon(RS_RElem arg) {
+  
+    return (RS_BoolCon)ATgetArgument((ATermAppl)arg, 0);
+}
+
+/**
  * Get the Location RS_Location of a RS_RElem. Note that the precondition is that this RS_RElem actually has a Location
  * \param[in] arg input RS_RElem
  * \return the Location of #arg, if it exist or an undefined value if it does not
@@ -1652,7 +1767,7 @@ RS_RElemElements RS_getRElemElements(RS_RElem arg) {
  * \return A new RS_RElem with IntCon at the right place, or a core dump if #arg did not have a IntCon
  */
 RS_RElem RS_setRElemIntCon(RS_RElem arg, RS_IntCon IntCon) {
-  if (RS_isRElemInteger(arg)) {
+  if (RS_isRElemInt(arg)) {
     return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) IntCon), 0);
   }
 
@@ -1667,11 +1782,26 @@ RS_RElem RS_setRElemIntCon(RS_RElem arg, RS_IntCon IntCon) {
  * \return A new RS_RElem with StrCon at the right place, or a core dump if #arg did not have a StrCon
  */
 RS_RElem RS_setRElemStrCon(RS_RElem arg, const char* StrCon) {
-  if (RS_isRElemString(arg)) {
+  if (RS_isRElemStr(arg)) {
     return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) (ATerm) ATmakeAppl(ATmakeAFun(StrCon, 0, ATtrue))), 0);
   }
 
   ATabort("RElem has no StrCon: %t\n", arg);
+  return (RS_RElem)NULL;
+}
+
+/**
+ * Set the BoolCon of a RS_RElem. The precondition being that this RS_RElem actually has a BoolCon
+ * \param[in] arg input RS_RElem
+ * \param[in] BoolCon new RS_BoolCon to set in #arg
+ * \return A new RS_RElem with BoolCon at the right place, or a core dump if #arg did not have a BoolCon
+ */
+RS_RElem RS_setRElemBoolCon(RS_RElem arg, RS_BoolCon BoolCon) {
+  if (RS_isRElemBool(arg)) {
+    return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) BoolCon), 0);
+  }
+
+  ATabort("RElem has no BoolCon: %t\n", arg);
   return (RS_RElem)NULL;
 }
 
@@ -1682,7 +1812,7 @@ RS_RElem RS_setRElemStrCon(RS_RElem arg, const char* StrCon) {
  * \return A new RS_RElem with Location at the right place, or a core dump if #arg did not have a Location
  */
 RS_RElem RS_setRElemLocation(RS_RElem arg, RS_Location Location) {
-  if (RS_isRElemLocation(arg)) {
+  if (RS_isRElemLoc(arg)) {
     return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) Location), 0);
   }
 
@@ -1717,16 +1847,16 @@ RS_RElem RS_setRElemElements(RS_RElem arg, RS_RElemElements elements) {
  * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
  */
 ATbool RS_isValidRType(RS_RType arg) {
-  if (RS_isRTypeInteger(arg)) {
+  if (RS_isRTypeInt(arg)) {
     return ATtrue;
   }
-  else if (RS_isRTypeBoolean(arg)) {
+  else if (RS_isRTypeBool(arg)) {
     return ATtrue;
   }
-  else if (RS_isRTypeString(arg)) {
+  else if (RS_isRTypeStr(arg)) {
     return ATtrue;
   }
-  else if (RS_isRTypeLocation(arg)) {
+  else if (RS_isRTypeLoc(arg)) {
     return ATtrue;
   }
   else if (RS_isRTypeTuple(arg)) {
@@ -1751,11 +1881,11 @@ ATbool RS_isValidRType(RS_RType arg) {
 }
 
 /**
- * Assert whether a RS_RType is a integer. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a int. . May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
- * \return ATtrue if #arg corresponds to the signature of a integer, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a int, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeInteger(RS_RType arg) {
+inline ATbool RS_isRTypeInt(RS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1765,7 +1895,7 @@ inline ATbool RS_isRTypeInteger(RS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeInteger);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeInt);
       last_gc = ATgetGCCount();
     }
 
@@ -1774,11 +1904,11 @@ inline ATbool RS_isRTypeInteger(RS_RType arg) {
 }
 
 /**
- * Assert whether a RS_RType is a boolean. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a bool. . May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
- * \return ATtrue if #arg corresponds to the signature of a boolean, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a bool, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeBoolean(RS_RType arg) {
+inline ATbool RS_isRTypeBool(RS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1788,7 +1918,7 @@ inline ATbool RS_isRTypeBoolean(RS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeBoolean);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeBool);
       last_gc = ATgetGCCount();
     }
 
@@ -1797,11 +1927,11 @@ inline ATbool RS_isRTypeBoolean(RS_RType arg) {
 }
 
 /**
- * Assert whether a RS_RType is a string. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a str. . May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
- * \return ATtrue if #arg corresponds to the signature of a string, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a str, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeString(RS_RType arg) {
+inline ATbool RS_isRTypeStr(RS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1811,7 +1941,7 @@ inline ATbool RS_isRTypeString(RS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeString);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeStr);
       last_gc = ATgetGCCount();
     }
 
@@ -1820,11 +1950,11 @@ inline ATbool RS_isRTypeString(RS_RType arg) {
 }
 
 /**
- * Assert whether a RS_RType is a location. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a loc. . May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
- * \return ATtrue if #arg corresponds to the signature of a location, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a loc, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeLocation(RS_RType arg) {
+inline ATbool RS_isRTypeLoc(RS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -1834,7 +1964,7 @@ inline ATbool RS_isRTypeLocation(RS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeLocation);
+      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeLoc);
       last_gc = ATgetGCCount();
     }
 
@@ -2011,15 +2141,24 @@ ATbool RS_hasRTypeElementType(RS_RType arg) {
 }
 
 /**
- * Assert whether a RS_RType has a name. 
+ * Assert whether a RS_RType has a type-name. 
  * \param[in] arg input RS_RType
- * \return ATtrue if the RS_RType had a name, or ATfalse otherwise
+ * \return ATtrue if the RS_RType had a type-name, or ATfalse otherwise
  */
-ATbool RS_hasRTypeName(RS_RType arg) {
+ATbool RS_hasRTypeTypeName(RS_RType arg) {
   if (RS_isRTypeUserDefined(arg)) {
     return ATtrue;
   }
-  else if (RS_isRTypeParameter(arg)) {
+  return ATfalse;
+}
+
+/**
+ * Assert whether a RS_RType has a parameter-name. 
+ * \param[in] arg input RS_RType
+ * \return ATtrue if the RS_RType had a parameter-name, or ATfalse otherwise
+ */
+ATbool RS_hasRTypeParameterName(RS_RType arg) {
+  if (RS_isRTypeParameter(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -2052,15 +2191,22 @@ RS_RType RS_getRTypeElementType(RS_RType arg) {
 }
 
 /**
- * Get the name RS_IdCon of a RS_RType. Note that the precondition is that this RS_RType actually has a name
+ * Get the type-name RS_IdCon of a RS_RType. Note that the precondition is that this RS_RType actually has a type-name
  * \param[in] arg input RS_RType
- * \return the name of #arg, if it exist or an undefined value if it does not
+ * \return the type-name of #arg, if it exist or an undefined value if it does not
  */
-RS_IdCon RS_getRTypeName(RS_RType arg) {
-  if (RS_isRTypeUserDefined(arg)) {
+RS_IdCon RS_getRTypeTypeName(RS_RType arg) {
+  
     return (RS_IdCon)ATgetArgument((ATermAppl)arg, 0);
-  }
-  else 
+}
+
+/**
+ * Get the parameter-name RS_IdCon of a RS_RType. Note that the precondition is that this RS_RType actually has a parameter-name
+ * \param[in] arg input RS_RType
+ * \return the parameter-name of #arg, if it exist or an undefined value if it does not
+ */
+RS_IdCon RS_getRTypeParameterName(RS_RType arg) {
+  
     return (RS_IdCon)ATgetArgument((ATermAppl)arg, 0);
 }
 
@@ -2101,20 +2247,32 @@ RS_RType RS_setRTypeElementType(RS_RType arg, RS_RType elementType) {
 }
 
 /**
- * Set the name of a RS_RType. The precondition being that this RS_RType actually has a name
+ * Set the type-name of a RS_RType. The precondition being that this RS_RType actually has a type-name
  * \param[in] arg input RS_RType
- * \param[in] name new RS_IdCon to set in #arg
- * \return A new RS_RType with name at the right place, or a core dump if #arg did not have a name
+ * \param[in] typeName new RS_IdCon to set in #arg
+ * \return A new RS_RType with typeName at the right place, or a core dump if #arg did not have a typeName
  */
-RS_RType RS_setRTypeName(RS_RType arg, RS_IdCon name) {
+RS_RType RS_setRTypeTypeName(RS_RType arg, RS_IdCon typeName) {
   if (RS_isRTypeUserDefined(arg)) {
-    return (RS_RType)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) name), 0);
-  }
-  else if (RS_isRTypeParameter(arg)) {
-    return (RS_RType)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) name), 0);
+    return (RS_RType)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) typeName), 0);
   }
 
-  ATabort("RType has no Name: %t\n", arg);
+  ATabort("RType has no TypeName: %t\n", arg);
+  return (RS_RType)NULL;
+}
+
+/**
+ * Set the parameter-name of a RS_RType. The precondition being that this RS_RType actually has a parameter-name
+ * \param[in] arg input RS_RType
+ * \param[in] parameterName new RS_IdCon to set in #arg
+ * \return A new RS_RType with parameterName at the right place, or a core dump if #arg did not have a parameterName
+ */
+RS_RType RS_setRTypeParameterName(RS_RType arg, RS_IdCon parameterName) {
+  if (RS_isRTypeParameter(arg)) {
+    return (RS_RType)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) parameterName), 0);
+  }
+
+  ATabort("RType has no ParameterName: %t\n", arg);
   return (RS_RType)NULL;
 }
 
@@ -2156,11 +2314,11 @@ ATbool RS_hasRTupleVariable(RS_RTuple arg) {
 }
 
 /**
- * Assert whether a RS_RTuple has a type. 
+ * Assert whether a RS_RTuple has a rtype. 
  * \param[in] arg input RS_RTuple
- * \return ATtrue if the RS_RTuple had a type, or ATfalse otherwise
+ * \return ATtrue if the RS_RTuple had a rtype, or ATfalse otherwise
  */
-ATbool RS_hasRTupleType(RS_RTuple arg) {
+ATbool RS_hasRTupleRtype(RS_RTuple arg) {
   if (RS_isRTupleRtuple(arg)) {
     return ATtrue;
   }
@@ -2190,11 +2348,11 @@ RS_IdCon RS_getRTupleVariable(RS_RTuple arg) {
 }
 
 /**
- * Get the type RS_RType of a RS_RTuple. Note that the precondition is that this RS_RTuple actually has a type
+ * Get the rtype RS_RType of a RS_RTuple. Note that the precondition is that this RS_RTuple actually has a rtype
  * \param[in] arg input RS_RTuple
- * \return the type of #arg, if it exist or an undefined value if it does not
+ * \return the rtype of #arg, if it exist or an undefined value if it does not
  */
-RS_RType RS_getRTupleType(RS_RTuple arg) {
+RS_RType RS_getRTupleRtype(RS_RTuple arg) {
   
     return (RS_RType)ATgetArgument((ATermAppl)arg, 1);
 }
@@ -2225,17 +2383,17 @@ RS_RTuple RS_setRTupleVariable(RS_RTuple arg, RS_IdCon variable) {
 }
 
 /**
- * Set the type of a RS_RTuple. The precondition being that this RS_RTuple actually has a type
+ * Set the rtype of a RS_RTuple. The precondition being that this RS_RTuple actually has a rtype
  * \param[in] arg input RS_RTuple
- * \param[in] type new RS_RType to set in #arg
- * \return A new RS_RTuple with type at the right place, or a core dump if #arg did not have a type
+ * \param[in] rtype new RS_RType to set in #arg
+ * \return A new RS_RTuple with rtype at the right place, or a core dump if #arg did not have a rtype
  */
-RS_RTuple RS_setRTupleType(RS_RTuple arg, RS_RType type) {
+RS_RTuple RS_setRTupleRtype(RS_RTuple arg, RS_RType rtype) {
   if (RS_isRTupleRtuple(arg)) {
-    return (RS_RTuple)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) type), 1);
+    return (RS_RTuple)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) rtype), 1);
   }
 
-  ATabort("RTuple has no Type: %t\n", arg);
+  ATabort("RTuple has no Rtype: %t\n", arg);
   return (RS_RTuple)NULL;
 }
 
@@ -2948,6 +3106,67 @@ RS_StrCon RS_setStrConString(RS_StrCon arg, const char* string) {
 }
 
 /**
+ * Assert whether a RS_BoolCon is any of the valid alternatives, or not. This analysis does not go any deeper than the top level
+ * \param[in] arg input RS_BoolCon
+ * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
+ */
+ATbool RS_isValidBoolCon(RS_BoolCon arg) {
+  if (RS_isBoolConTrue(arg)) {
+    return ATtrue;
+  }
+  else if (RS_isBoolConFalse(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Assert whether a RS_BoolCon is a true. . May not be used to assert correctness of the RS_BoolCon
+ * \param[in] arg input RS_BoolCon
+ * \return ATtrue if #arg corresponds to the signature of a true, or ATfalse otherwise
+ */
+inline ATbool RS_isBoolConTrue(RS_BoolCon arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, RS_patternBoolConTrue);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a RS_BoolCon is a false. . May not be used to assert correctness of the RS_BoolCon
+ * \param[in] arg input RS_BoolCon
+ * \return ATtrue if #arg corresponds to the signature of a false, or ATfalse otherwise
+ */
+inline ATbool RS_isBoolConFalse(RS_BoolCon arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, RS_patternBoolConFalse);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
  * Assert whether a RS_NatCon is any of the valid alternatives, or not. This analysis does not go any deeper than the top level
  * \param[in] arg input RS_NatCon
  * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
@@ -3563,17 +3782,21 @@ RS_Area RS_setAreaLength(RS_Area arg, int length) {
  * Apply functions to the children of a RS_RElem. 
  * \return A new RS_RElem with new children where the argument functions might have applied
  */
-RS_RElem RS_visitRElem(RS_RElem arg, RS_IntCon (*acceptIntCon)(RS_IntCon), char* (*acceptStrCon)(char*), RS_Location (*acceptLocation)(RS_Location), RS_RElemElements (*acceptElements)(RS_RElemElements)) {
-  if (RS_isRElemInteger(arg)) {
-    return RS_makeRElemInteger(
+RS_RElem RS_visitRElem(RS_RElem arg, RS_IntCon (*acceptIntCon)(RS_IntCon), char* (*acceptStrCon)(char*), RS_BoolCon (*acceptBoolCon)(RS_BoolCon), RS_Location (*acceptLocation)(RS_Location), RS_RElemElements (*acceptElements)(RS_RElemElements)) {
+  if (RS_isRElemInt(arg)) {
+    return RS_makeRElemInt(
         acceptIntCon ? acceptIntCon(RS_getRElemIntCon(arg)) : RS_getRElemIntCon(arg));
   }
-  if (RS_isRElemString(arg)) {
-    return RS_makeRElemString(
+  if (RS_isRElemStr(arg)) {
+    return RS_makeRElemStr(
         acceptStrCon ? acceptStrCon(RS_getRElemStrCon(arg)) : RS_getRElemStrCon(arg));
   }
-  if (RS_isRElemLocation(arg)) {
-    return RS_makeRElemLocation(
+  if (RS_isRElemBool(arg)) {
+    return RS_makeRElemBool(
+        acceptBoolCon ? acceptBoolCon(RS_getRElemBoolCon(arg)) : RS_getRElemBoolCon(arg));
+  }
+  if (RS_isRElemLoc(arg)) {
+    return RS_makeRElemLoc(
         acceptLocation ? acceptLocation(RS_getRElemLocation(arg)) : RS_getRElemLocation(arg));
   }
   if (RS_isRElemSet(arg)) {
@@ -3595,18 +3818,18 @@ RS_RElem RS_visitRElem(RS_RElem arg, RS_IntCon (*acceptIntCon)(RS_IntCon), char*
  * Apply functions to the children of a RS_RType. 
  * \return A new RS_RType with new children where the argument functions might have applied
  */
-RS_RType RS_visitRType(RS_RType arg, RS_RTypeColumnTypes (*acceptColumnTypes)(RS_RTypeColumnTypes), RS_IdCon (*acceptName)(RS_IdCon)) {
-  if (RS_isRTypeInteger(arg)) {
-    return RS_makeRTypeInteger();
+RS_RType RS_visitRType(RS_RType arg, RS_RTypeColumnTypes (*acceptColumnTypes)(RS_RTypeColumnTypes), RS_IdCon (*acceptTypeName)(RS_IdCon), RS_IdCon (*acceptParameterName)(RS_IdCon)) {
+  if (RS_isRTypeInt(arg)) {
+    return RS_makeRTypeInt();
   }
-  if (RS_isRTypeBoolean(arg)) {
-    return RS_makeRTypeBoolean();
+  if (RS_isRTypeBool(arg)) {
+    return RS_makeRTypeBool();
   }
-  if (RS_isRTypeString(arg)) {
-    return RS_makeRTypeString();
+  if (RS_isRTypeStr(arg)) {
+    return RS_makeRTypeStr();
   }
-  if (RS_isRTypeLocation(arg)) {
-    return RS_makeRTypeLocation();
+  if (RS_isRTypeLoc(arg)) {
+    return RS_makeRTypeLoc();
   }
   if (RS_isRTypeTuple(arg)) {
     return RS_makeRTypeTuple(
@@ -3614,11 +3837,11 @@ RS_RType RS_visitRType(RS_RType arg, RS_RTypeColumnTypes (*acceptColumnTypes)(RS
   }
   if (RS_isRTypeSet(arg)) {
     return RS_makeRTypeSet(
-        RS_visitRType(RS_getRTypeElementType(arg), acceptColumnTypes, acceptName));
+        RS_visitRType(RS_getRTypeElementType(arg), acceptColumnTypes, acceptTypeName, acceptParameterName));
   }
   if (RS_isRTypeBag(arg)) {
     return RS_makeRTypeBag(
-        RS_visitRType(RS_getRTypeElementType(arg), acceptColumnTypes, acceptName));
+        RS_visitRType(RS_getRTypeElementType(arg), acceptColumnTypes, acceptTypeName, acceptParameterName));
   }
   if (RS_isRTypeRelation(arg)) {
     return RS_makeRTypeRelation(
@@ -3626,11 +3849,11 @@ RS_RType RS_visitRType(RS_RType arg, RS_RTypeColumnTypes (*acceptColumnTypes)(RS
   }
   if (RS_isRTypeUserDefined(arg)) {
     return RS_makeRTypeUserDefined(
-        acceptName ? acceptName(RS_getRTypeName(arg)) : RS_getRTypeName(arg));
+        acceptTypeName ? acceptTypeName(RS_getRTypeTypeName(arg)) : RS_getRTypeTypeName(arg));
   }
   if (RS_isRTypeParameter(arg)) {
     return RS_makeRTypeParameter(
-        acceptName ? acceptName(RS_getRTypeName(arg)) : RS_getRTypeName(arg));
+        acceptParameterName ? acceptParameterName(RS_getRTypeParameterName(arg)) : RS_getRTypeParameterName(arg));
   }
   ATabort("not a RType: %t\n", arg);
   return (RS_RType)NULL;
@@ -3639,11 +3862,11 @@ RS_RType RS_visitRType(RS_RType arg, RS_RTypeColumnTypes (*acceptColumnTypes)(RS
  * Apply functions to the children of a RS_RTuple. 
  * \return A new RS_RTuple with new children where the argument functions might have applied
  */
-RS_RTuple RS_visitRTuple(RS_RTuple arg, RS_IdCon (*acceptVariable)(RS_IdCon), RS_RType (*acceptType)(RS_RType), RS_RElem (*acceptValue)(RS_RElem)) {
+RS_RTuple RS_visitRTuple(RS_RTuple arg, RS_IdCon (*acceptVariable)(RS_IdCon), RS_RType (*acceptRtype)(RS_RType), RS_RElem (*acceptValue)(RS_RElem)) {
   if (RS_isRTupleRtuple(arg)) {
     return RS_makeRTupleRtuple(
         acceptVariable ? acceptVariable(RS_getRTupleVariable(arg)) : RS_getRTupleVariable(arg),
-        acceptType ? acceptType(RS_getRTupleType(arg)) : RS_getRTupleType(arg),
+        acceptRtype ? acceptRtype(RS_getRTupleRtype(arg)) : RS_getRTupleRtype(arg),
         acceptValue ? acceptValue(RS_getRTupleValue(arg)) : RS_getRTupleValue(arg));
   }
   ATabort("not a RTuple: %t\n", arg);
@@ -3744,6 +3967,20 @@ RS_StrCon RS_visitStrCon(RS_StrCon arg, char* (*acceptString)(char*)) {
   }
   ATabort("not a StrCon: %t\n", arg);
   return (RS_StrCon)NULL;
+}
+/**
+ * Apply functions to the children of a RS_BoolCon. 
+ * \return A new RS_BoolCon with new children where the argument functions might have applied
+ */
+RS_BoolCon RS_visitBoolCon(RS_BoolCon arg) {
+  if (RS_isBoolConTrue(arg)) {
+    return RS_makeBoolConTrue();
+  }
+  if (RS_isBoolConFalse(arg)) {
+    return RS_makeBoolConFalse();
+  }
+  ATabort("not a BoolCon: %t\n", arg);
+  return (RS_BoolCon)NULL;
 }
 /**
  * Apply functions to the children of a RS_NatCon. 

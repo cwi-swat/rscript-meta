@@ -75,6 +75,7 @@ typedef struct ATerm _PRS_StrChar;
 typedef struct ATerm _PRS_LexStrCon;
 typedef struct ATerm _PRS_StrCon;
 typedef struct ATerm _PRS_LexStrCharChars;
+typedef struct ATerm _PRS_BoolCon;
 typedef struct ATerm _PRS_LexNatCon;
 typedef struct ATerm _PRS_NatCon;
 typedef struct ATerm _PRS_LexIdCon;
@@ -345,6 +346,22 @@ void PRS_protectLexStrCharChars(PRS_LexStrCharChars *arg) {
  * \param[in] arg pointer to a PRS_LexStrCharChars
  */
 void PRS_unprotectLexStrCharChars(PRS_LexStrCharChars *arg) {
+  ATunprotect((ATerm*)((void*) arg));
+}
+
+/**
+ * Protect a PRS_BoolCon from the ATerm garbage collector. Every PRS_BoolCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
+ * \param[in] arg pointer to a PRS_BoolCon
+ */
+void PRS_protectBoolCon(PRS_BoolCon *arg) {
+  ATprotect((ATerm*)((void*) arg));
+}
+
+/**
+ * Unprotect a PRS_BoolCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
+ * \param[in] arg pointer to a PRS_BoolCon
+ */
+void PRS_unprotectBoolCon(PRS_BoolCon *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -777,6 +794,24 @@ PRS_LexStrCharChars PRS_LexStrCharCharsFromTerm(ATerm t) {
  * \return ATerm that represents the PRS_LexStrCharChars
  */
 ATerm PRS_LexStrCharCharsToTerm(PRS_LexStrCharChars arg) {
+  return (ATerm)arg;
+}
+
+/**
+ * Transforms an ATerm to a PRS_BoolCon. This is just a wrapper for a cast, so no structural validation is done!
+ * \param[in] t ATerm to be converted
+ * \return PRS_BoolCon that was encoded by \arg
+ */
+PRS_BoolCon PRS_BoolConFromTerm(ATerm t) {
+  return (PRS_BoolCon)t;
+}
+
+/**
+ * Transforms a PRS_BoolConto an ATerm. This is just a wrapper for a cast.
+ * \param[in] arg PRS_BoolCon to be converted
+ * \return ATerm that represents the PRS_BoolCon
+ */
+ATerm PRS_BoolConToTerm(PRS_BoolCon arg) {
   return (ATerm)arg;
 }
 
@@ -1781,28 +1816,36 @@ PRS_LexLayoutList PRS_makeLexLayoutListMany(PRS_LexLayout head, PRS_LexLayoutLis
   return (PRS_LexLayoutList)(ATerm)ATinsert((ATermList)tail, (ATerm) head);
 }
 /**
- * Constructs a integer of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
- * \param[in] IntCon a child of the new integer
- * \return A pointer to a integer, either newly constructed or shared
+ * Constructs a int of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
+ * \param[in] IntCon a child of the new int
+ * \return A pointer to a int, either newly constructed or shared
  */
-PRS_RElem PRS_makeRElemInteger(PRS_IntCon IntCon) {
+PRS_RElem PRS_makeRElemInt(PRS_IntCon IntCon) {
   return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun10)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun15)))))), (ATerm)ATmakeList1((ATerm) IntCon));
 }
 /**
- * Constructs a string of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
- * \param[in] StrCon a child of the new string
- * \return A pointer to a string, either newly constructed or shared
+ * Constructs a str of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
+ * \param[in] StrCon a child of the new str
+ * \return A pointer to a str, either newly constructed or shared
  */
-PRS_RElem PRS_makeRElemString(PRS_StrCon StrCon) {
+PRS_RElem PRS_makeRElemStr(PRS_StrCon StrCon) {
   return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun17)))))), (ATerm)ATmakeList1((ATerm) StrCon));
 }
 /**
- * Constructs a location of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
- * \param[in] Location a child of the new location
- * \return A pointer to a location, either newly constructed or shared
+ * Constructs a bool of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
+ * \param[in] BoolCon a child of the new bool
+ * \return A pointer to a bool, either newly constructed or shared
  */
-PRS_RElem PRS_makeRElemLocation(PRS_Location Location) {
-  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun19)))))), (ATerm)ATmakeList1((ATerm) Location));
+PRS_RElem PRS_makeRElemBool(PRS_BoolCon BoolCon) {
+  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun19)))))), (ATerm)ATmakeList1((ATerm) BoolCon));
+}
+/**
+ * Constructs a loc of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
+ * \param[in] Location a child of the new loc
+ * \return A pointer to a loc, either newly constructed or shared
+ */
+PRS_RElem PRS_makeRElemLoc(PRS_Location Location) {
+  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun20)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun21)))))), (ATerm)ATmakeList1((ATerm) Location));
 }
 /**
  * Constructs a set of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
@@ -1812,7 +1855,7 @@ PRS_RElem PRS_makeRElemLocation(PRS_Location Location) {
  * \return A pointer to a set, either newly constructed or shared
  */
 PRS_RElem PRS_makeRElemSet(PRS_OptLayout wsAfterBraceOpen, PRS_RElemElements elements, PRS_OptLayout wsAfterElements) {
-  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun21))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun22, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun24))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun25)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(125)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun21)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(125)))), (ATerm) wsAfterElements), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun22, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm) elements)), (ATerm) wsAfterBraceOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(123)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun24)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(123)))));
+  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun24, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun26))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun27)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(125)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(125)))), (ATerm) wsAfterElements), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun24, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm) elements)), (ATerm) wsAfterBraceOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(123)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun26)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(123)))));
 }
 /**
  * Constructs a bag of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
@@ -1822,7 +1865,7 @@ PRS_RElem PRS_makeRElemSet(PRS_OptLayout wsAfterBraceOpen, PRS_RElemElements ele
  * \return A pointer to a bag, either newly constructed or shared
  */
 PRS_RElem PRS_makeRElemBag(PRS_OptLayout wsAfterBraceOpenBar, PRS_RElemElements elements, PRS_OptLayout wsAfterElements) {
-  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun27))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun22, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun28))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun29)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(125)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(124)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun27)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(125)), (ATerm)ATmakeInt(124)))), (ATerm) wsAfterElements), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun22, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm) elements)), (ATerm) wsAfterBraceOpenBar), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(124)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(123)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun28)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(124)), (ATerm)ATmakeInt(123)))));
+  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun29))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun24, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun30))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun31)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(125)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(124)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun29)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(125)), (ATerm)ATmakeInt(124)))), (ATerm) wsAfterElements), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun24, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm) elements)), (ATerm) wsAfterBraceOpenBar), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(124)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(123)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun30)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(124)), (ATerm)ATmakeInt(123)))));
 }
 /**
  * Constructs a tuple of type PRS_RElem. Like all ATerm types, PRS_RElems are maximally shared.
@@ -1832,35 +1875,35 @@ PRS_RElem PRS_makeRElemBag(PRS_OptLayout wsAfterBraceOpenBar, PRS_RElemElements 
  * \return A pointer to a tuple, either newly constructed or shared
  */
 PRS_RElem PRS_makeRElemTuple(PRS_OptLayout wsAfterLessThan, PRS_RElemElements elements, PRS_OptLayout wsAfterElements) {
-  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun30))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun31, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun32))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun33)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun30)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm) wsAfterElements), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun31, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm) elements)), (ATerm) wsAfterLessThan), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun32)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))));
+  return (PRS_RElem)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun32))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun33, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun34))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun35)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun32)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm) wsAfterElements), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun33, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm) elements)), (ATerm) wsAfterLessThan), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun34)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))));
 }
 /**
- * Constructs a integer of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
- * \return A pointer to a integer, either newly constructed or shared
+ * Constructs a int of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
+ * \return A pointer to a int, either newly constructed or shared
  */
-PRS_RType PRS_makeRTypeInteger(void) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun34))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun15)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(110)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun34)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(110)), (ATerm)ATmakeInt(105)))));
+PRS_RType PRS_makeRTypeInt(void) {
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun15))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun15)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(110)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun15)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(110)), (ATerm)ATmakeInt(105)))));
 }
 /**
- * Constructs a boolean of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
- * \return A pointer to a boolean, either newly constructed or shared
+ * Constructs a bool of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
+ * \return A pointer to a bool, either newly constructed or shared
  */
-PRS_RType PRS_makeRTypeBoolean(void) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun37)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(98)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun36)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(98)))));
+PRS_RType PRS_makeRTypeBool(void) {
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun19))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun19)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(98)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun19)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(98)))));
 }
 /**
- * Constructs a string of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
- * \return A pointer to a string, either newly constructed or shared
+ * Constructs a str of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
+ * \return A pointer to a str, either newly constructed or shared
  */
-PRS_RType PRS_makeRTypeString(void) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun38))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun17)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun38)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(115)))));
+PRS_RType PRS_makeRTypeStr(void) {
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun17))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun17)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun17)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(115)))));
 }
 /**
- * Constructs a location of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
- * \return A pointer to a location, either newly constructed or shared
+ * Constructs a loc of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
+ * \return A pointer to a loc, either newly constructed or shared
  */
-PRS_RType PRS_makeRTypeLocation(void) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun39))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun19)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(99)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun39)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(99)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(108)))));
+PRS_RType PRS_makeRTypeLoc(void) {
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun21))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun21)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(99)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun21)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(99)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(108)))));
 }
 /**
  * Constructs a tuple of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
@@ -1870,7 +1913,7 @@ PRS_RType PRS_makeRTypeLocation(void) {
  * \return A pointer to a tuple, either newly constructed or shared
  */
 PRS_RType PRS_makeRTypeTuple(PRS_OptLayout wsAfterLessThan, PRS_RTypeColumnTypes columnTypes, PRS_OptLayout wsAfterColumnTypes) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun30))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun31, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun32))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun33)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun30)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm) wsAfterColumnTypes), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun31, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm) columnTypes)), (ATerm) wsAfterLessThan), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun32)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))));
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun32))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun33, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun34))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun35)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun32)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm) wsAfterColumnTypes), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun33, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm) columnTypes)), (ATerm) wsAfterLessThan), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun34)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))));
 }
 /**
  * Constructs a set of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
@@ -1881,7 +1924,7 @@ PRS_RType PRS_makeRTypeTuple(PRS_OptLayout wsAfterLessThan, PRS_RTypeColumnTypes
  * \return A pointer to a set, either newly constructed or shared
  */
 PRS_RType PRS_makeRTypeSet(PRS_OptLayout wsAfterSet, PRS_OptLayout wsAfterBracketOpen, PRS_RType elementType, PRS_OptLayout wsAfterElementType) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun25)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterElementType), (ATerm) elementType), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterSet), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(115)))));
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun27))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun27)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterElementType), (ATerm) elementType), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterSet), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun27)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(115)))));
 }
 /**
  * Constructs a bag of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
@@ -1892,7 +1935,7 @@ PRS_RType PRS_makeRTypeSet(PRS_OptLayout wsAfterSet, PRS_OptLayout wsAfterBracke
  * \return A pointer to a bag, either newly constructed or shared
  */
 PRS_RType PRS_makeRTypeBag(PRS_OptLayout wsAfterBag, PRS_OptLayout wsAfterBracketOpen, PRS_RType elementType, PRS_OptLayout wsAfterElementType) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun29))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun29)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterElementType), (ATerm) elementType), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterBag), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(103)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(98)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun29)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(103)), (ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(98)))));
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun31))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun31)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterElementType), (ATerm) elementType), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterBag), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(103)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(98)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun31)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(103)), (ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(98)))));
 }
 /**
  * Constructs a relation of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
@@ -1903,24 +1946,24 @@ PRS_RType PRS_makeRTypeBag(PRS_OptLayout wsAfterBag, PRS_OptLayout wsAfterBracke
  * \return A pointer to a relation, either newly constructed or shared
  */
 PRS_RType PRS_makeRTypeRelation(PRS_OptLayout wsAfterRel, PRS_OptLayout wsAfterBracketOpen, PRS_RTypeColumnTypes columnTypes, PRS_OptLayout wsAfterColumnTypes) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun31, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun42))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun43)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterColumnTypes), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun31, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm) columnTypes)), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterRel), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun42)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)))));
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun33, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun39))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun40)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterColumnTypes), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun33, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm) columnTypes)), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterRel), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun39)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)))));
 }
 /**
  * Constructs a user-defined of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
- * \param[in] name a child of the new user-defined
+ * \param[in] typeName a child of the new user-defined
  * \return A pointer to a user-defined, either newly constructed or shared
  */
-PRS_RType PRS_makeRTypeUserDefined(PRS_IdCon name) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun44)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun45)))))), (ATerm)ATmakeList1((ATerm) name));
+PRS_RType PRS_makeRTypeUserDefined(PRS_IdCon typeName) {
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun41)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun42)))))), (ATerm)ATmakeList1((ATerm) typeName));
 }
 /**
  * Constructs a parameter of type PRS_RType. Like all ATerm types, PRS_RTypes are maximally shared.
  * \param[in] wsAfterAmp a child of the new parameter
- * \param[in] name a child of the new parameter
+ * \param[in] parameterName a child of the new parameter
  * \return A pointer to a parameter, either newly constructed or shared
  */
-PRS_RType PRS_makeRTypeParameter(PRS_OptLayout wsAfterAmp, PRS_IdCon name) {
-  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun44)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun46))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun47)))))), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm) name), (ATerm) wsAfterAmp), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(38)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun46)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(38)))));
+PRS_RType PRS_makeRTypeParameter(PRS_OptLayout wsAfterAmp, PRS_IdCon parameterName) {
+  return (PRS_RType)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun41)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun43))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun44)))))), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm) parameterName), (ATerm) wsAfterAmp), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(38)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun43)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(38)))));
 }
 /**
  * Constructs a rtuple of type PRS_RTuple. Like all ATerm types, PRS_RTuples are maximally shared.
@@ -1928,15 +1971,15 @@ PRS_RType PRS_makeRTypeParameter(PRS_OptLayout wsAfterAmp, PRS_IdCon name) {
  * \param[in] variable a child of the new rtuple
  * \param[in] wsAfterVariable a child of the new rtuple
  * \param[in] wsAfterComma a child of the new rtuple
- * \param[in] type a child of the new rtuple
- * \param[in] wsAfterType a child of the new rtuple
+ * \param[in] rtype a child of the new rtuple
+ * \param[in] wsAfterRtype a child of the new rtuple
  * \param[in] wsAfterComma1 a child of the new rtuple
  * \param[in] value a child of the new rtuple
  * \param[in] wsAfterValue a child of the new rtuple
  * \return A pointer to a rtuple, either newly constructed or shared
  */
-PRS_RTuple PRS_makeRTupleRtuple(PRS_OptLayout wsAfterLessThan, PRS_IdCon variable, PRS_OptLayout wsAfterVariable, PRS_OptLayout wsAfterComma, PRS_RType type, PRS_OptLayout wsAfterType, PRS_OptLayout wsAfterComma1, PRS_RElem value, PRS_OptLayout wsAfterValue) {
-  return (PRS_RTuple)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun30))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun35)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun44)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun32))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun48))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun49)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun30)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm) wsAfterValue), (ATerm) value), (ATerm) wsAfterComma1), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterType), (ATerm) type), (ATerm) wsAfterComma), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterVariable), (ATerm) variable), (ATerm) wsAfterLessThan), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun32)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))));
+PRS_RTuple PRS_makeRTupleRtuple(PRS_OptLayout wsAfterLessThan, PRS_IdCon variable, PRS_OptLayout wsAfterVariable, PRS_OptLayout wsAfterComma, PRS_RType rtype, PRS_OptLayout wsAfterRtype, PRS_OptLayout wsAfterComma1, PRS_RElem value, PRS_OptLayout wsAfterValue) {
+  return (PRS_RTuple)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun32))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun11)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun36)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun41)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun34))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun45))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun46)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun32)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(62)))), (ATerm) wsAfterValue), (ATerm) value), (ATerm) wsAfterComma1), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterRtype), (ATerm) rtype), (ATerm) wsAfterComma), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterVariable), (ATerm) variable), (ATerm) wsAfterLessThan), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun34)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(60)))));
 }
 /**
  * Constructs a rstore of type PRS_RStore. Like all ATerm types, PRS_RStores are maximally shared.
@@ -1949,7 +1992,7 @@ PRS_RTuple PRS_makeRTupleRtuple(PRS_OptLayout wsAfterLessThan, PRS_IdCon variabl
  * \return A pointer to a rstore, either newly constructed or shared
  */
 PRS_RStore PRS_makeRStoreRstore(PRS_OptLayout wsAfterRstore, PRS_OptLayout wsAfterParenOpen, PRS_OptLayout wsAfterBracketOpen, PRS_RTupleRtuples rtuples, PRS_OptLayout wsAfterRtuples, PRS_OptLayout wsAfterBracketClose) {
-  return (PRS_RStore)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun22, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun52))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun53))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun52)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterBracketClose), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun40)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterRtuples), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun22, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))))), (ATerm) rtuples)), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun41)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterRstore), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun52)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(115)), (ATerm)ATmakeInt(114)))));
+  return (PRS_RStore)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun24, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun45)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun49))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun50))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun49)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterBracketClose), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun37)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(93)))), (ATerm) wsAfterRtuples), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl2(PRS_afun24, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun45)), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))))), (ATerm) rtuples)), (ATerm) wsAfterBracketOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun38)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(91)))), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterRstore), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(111)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun49)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(111)), (ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(115)), (ATerm)ATmakeInt(114)))));
 }
 /**
  * Constructs a RStore of type PRS_Start. Like all ATerm types, PRS_Starts are maximally shared.
@@ -1960,7 +2003,18 @@ PRS_RStore PRS_makeRStoreRstore(PRS_OptLayout wsAfterRstore, PRS_OptLayout wsAft
  * \return A pointer to a RStore, either newly constructed or shared
  */
 PRS_Start PRS_makeStartRStore(PRS_OptLayout wsBefore, PRS_RStore topRStore, PRS_OptLayout wsAfter, int ambCnt) {
-  return (PRS_Start)(ATerm)ATmakeAppl2(PRS_afun54, (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun53)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun55)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm) wsAfter), (ATerm) topRStore), (ATerm) wsBefore)), (ATerm) (ATerm) ATmakeInt(ambCnt));
+  return (PRS_Start)(ATerm)ATmakeAppl2(PRS_afun51, (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun50)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun52)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm) wsAfter), (ATerm) topRStore), (ATerm) wsBefore)), (ATerm) (ATerm) ATmakeInt(ambCnt));
+}
+/**
+ * Constructs a BoolCon of type PRS_Start. Like all ATerm types, PRS_Starts are maximally shared.
+ * \param[in] wsBefore a child of the new BoolCon
+ * \param[in] topBoolCon a child of the new BoolCon
+ * \param[in] wsAfter a child of the new BoolCon
+ * \param[in] ambCnt a child of the new BoolCon
+ * \return A pointer to a BoolCon, either newly constructed or shared
+ */
+PRS_Start PRS_makeStartBoolCon(PRS_OptLayout wsBefore, PRS_BoolCon topBoolCon, PRS_OptLayout wsAfter, int ambCnt) {
+  return (PRS_Start)(ATerm)ATmakeAppl2(PRS_afun51, (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun52)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm) wsAfter), (ATerm) topBoolCon), (ATerm) wsBefore)), (ATerm) (ATerm) ATmakeInt(ambCnt));
 }
 /**
  * Constructs a empty of type PRS_RElemElements. Like all ATerm types, PRS_RElemElementss are maximally shared.
@@ -1989,7 +2043,7 @@ PRS_RElemElements PRS_makeRElemElementsMany(PRS_RElem head, PRS_OptLayout wsAfte
   if (PRS_isRElemElementsEmpty(tail)) {
     return PRS_makeRElemElementsSingle(head);
   }
-  return (PRS_RElemElements)(ATerm)ATinsert(ATinsert(ATinsert(ATinsert((ATermList)tail, (ATerm) wsAfterSep), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterHead), (ATerm) head);
+  return (PRS_RElemElements)(ATerm)ATinsert(ATinsert(ATinsert(ATinsert((ATermList)tail, (ATerm) wsAfterSep), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterHead), (ATerm) head);
 }
 /**
  * Constructs a empty of type PRS_RTypeColumnTypes. Like all ATerm types, PRS_RTypeColumnTypess are maximally shared.
@@ -2018,7 +2072,7 @@ PRS_RTypeColumnTypes PRS_makeRTypeColumnTypesMany(PRS_RType head, PRS_OptLayout 
   if (PRS_isRTypeColumnTypesEmpty(tail)) {
     return PRS_makeRTypeColumnTypesSingle(head);
   }
-  return (PRS_RTypeColumnTypes)(ATerm)ATinsert(ATinsert(ATinsert(ATinsert((ATermList)tail, (ATerm) wsAfterSep), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterHead), (ATerm) head);
+  return (PRS_RTypeColumnTypes)(ATerm)ATinsert(ATinsert(ATinsert(ATinsert((ATermList)tail, (ATerm) wsAfterSep), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterHead), (ATerm) head);
 }
 /**
  * Constructs a empty of type PRS_RTupleRtuples. Like all ATerm types, PRS_RTupleRtupless are maximally shared.
@@ -2047,35 +2101,35 @@ PRS_RTupleRtuples PRS_makeRTupleRtuplesMany(PRS_RTuple head, PRS_OptLayout wsAft
   if (PRS_isRTupleRtuplesEmpty(tail)) {
     return PRS_makeRTupleRtuplesSingle(head);
   }
-  return (PRS_RTupleRtuples)(ATerm)ATinsert(ATinsert(ATinsert(ATinsert((ATermList)tail, (ATerm) wsAfterSep), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterHead), (ATerm) head);
+  return (PRS_RTupleRtuples)(ATerm)ATinsert(ATinsert(ATinsert(ATinsert((ATermList)tail, (ATerm) wsAfterSep), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterHead), (ATerm) head);
 }
 /**
  * Constructs a newline of type PRS_LexStrChar. Like all ATerm types, PRS_LexStrChars are maximally shared.
  * \return A pointer to a newline, either newly constructed or shared
  */
 PRS_LexStrChar PRS_makeLexStrCharNewline(void) {
-  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun56))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun58)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(110)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun56)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(110)), (ATerm)ATmakeInt(92)))));
+  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun53))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun55)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(110)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun53)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(110)), (ATerm)ATmakeInt(92)))));
 }
 /**
  * Constructs a tab of type PRS_LexStrChar. Like all ATerm types, PRS_LexStrChars are maximally shared.
  * \return A pointer to a tab, either newly constructed or shared
  */
 PRS_LexStrChar PRS_makeLexStrCharTab(void) {
-  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun59))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun60)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun59)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(92)))));
+  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun56))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun57)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun56)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(116)), (ATerm)ATmakeInt(92)))));
 }
 /**
  * Constructs a quote of type PRS_LexStrChar. Like all ATerm types, PRS_LexStrChars are maximally shared.
  * \return A pointer to a quote, either newly constructed or shared
  */
 PRS_LexStrChar PRS_makeLexStrCharQuote(void) {
-  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun61))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun62)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(34)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun61)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(34)), (ATerm)ATmakeInt(92)))));
+  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun58))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun59)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(34)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun58)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(34)), (ATerm)ATmakeInt(92)))));
 }
 /**
  * Constructs a backslash of type PRS_LexStrChar. Like all ATerm types, PRS_LexStrChars are maximally shared.
  * \return A pointer to a backslash, either newly constructed or shared
  */
 PRS_LexStrChar PRS_makeLexStrCharBackslash(void) {
-  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun63))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun64)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun63)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(92)), (ATerm)ATmakeInt(92)))));
+  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun60))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun61)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun60)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeInt(92)), (ATerm)ATmakeInt(92)))));
 }
 /**
  * Constructs a decimal of type PRS_LexStrChar. Like all ATerm types, PRS_LexStrChars are maximally shared.
@@ -2085,7 +2139,7 @@ PRS_LexStrChar PRS_makeLexStrCharBackslash(void) {
  * \return A pointer to a decimal, either newly constructed or shared
  */
 PRS_LexStrChar PRS_makeLexStrCharDecimal(char a, char b, char c) {
-  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun66))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun67)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm) ((ATerm) PRS_byteToChar(c))), (ATerm) ((ATerm) PRS_byteToChar(b))), (ATerm) ((ATerm) PRS_byteToChar(a))), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun66)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))));
+  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun63))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun64)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm) ((ATerm) PRS_byteToChar(c))), (ATerm) ((ATerm) PRS_byteToChar(b))), (ATerm) ((ATerm) PRS_byteToChar(a))), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun63)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(92)))));
 }
 /**
  * Constructs a normal of type PRS_LexStrChar. Like all ATerm types, PRS_LexStrChars are maximally shared.
@@ -2093,7 +2147,7 @@ PRS_LexStrChar PRS_makeLexStrCharDecimal(char a, char b, char c) {
  * \return A pointer to a normal, either newly constructed or shared
  */
 PRS_LexStrChar PRS_makeLexStrCharNormal(char ch) {
-  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(93), (ATerm)ATmakeInt(255))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(35), (ATerm)ATmakeInt(91))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(32), (ATerm)ATmakeInt(33))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun68)))))), (ATerm)ATmakeList1((ATerm) ((ATerm) PRS_byteToChar(ch))));
+  return (PRS_LexStrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(93), (ATerm)ATmakeInt(255))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(35), (ATerm)ATmakeInt(91))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(32), (ATerm)ATmakeInt(33))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun65)))))), (ATerm)ATmakeList1((ATerm) ((ATerm) PRS_byteToChar(ch))));
 }
 /**
  * Constructs a Lex-to-cf of type PRS_StrChar. Like all ATerm types, PRS_StrChars are maximally shared.
@@ -2101,7 +2155,7 @@ PRS_LexStrChar PRS_makeLexStrCharNormal(char ch) {
  * \return A pointer to a Lex-to-cf, either newly constructed or shared
  */
 PRS_StrChar PRS_makeStrCharLexToCf(PRS_LexStrChar StrChar) {
-  return (PRS_StrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm) StrChar));
+  return (PRS_StrChar)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm) StrChar));
 }
 /**
  * Constructs a default of type PRS_LexStrCon. Like all ATerm types, PRS_LexStrCons are maximally shared.
@@ -2109,7 +2163,7 @@ PRS_StrChar PRS_makeStrCharLexToCf(PRS_LexStrChar StrChar) {
  * \return A pointer to a default, either newly constructed or shared
  */
 PRS_LexStrCon PRS_makeLexStrConDefault(PRS_LexStrCharChars chars) {
-  return (PRS_LexStrCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(34)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun69, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(34)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun70)))))), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(34)), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun69, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun57))))), (ATerm) chars)), (ATerm)ATmakeInt(34)));
+  return (PRS_LexStrCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(34)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun66, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(34)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun67)))))), (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(34)), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun66, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun54))))), (ATerm) chars)), (ATerm)ATmakeInt(34)));
 }
 /**
  * Constructs a Lex-to-cf of type PRS_StrCon. Like all ATerm types, PRS_StrCons are maximally shared.
@@ -2144,12 +2198,26 @@ PRS_LexStrCharChars PRS_makeLexStrCharCharsMany(PRS_LexStrChar head, PRS_LexStrC
   return (PRS_LexStrCharChars)(ATerm)ATinsert((ATermList)tail, (ATerm) head);
 }
 /**
+ * Constructs a true of type PRS_BoolCon. Like all ATerm types, PRS_BoolCons are maximally shared.
+ * \return A pointer to a true, either newly constructed or shared
+ */
+PRS_BoolCon PRS_makeBoolConTrue(void) {
+  return (PRS_BoolCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun68))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun68)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(117)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(116)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun68)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(117)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(116)))));
+}
+/**
+ * Constructs a false of type PRS_BoolCon. Like all ATerm types, PRS_BoolCons are maximally shared.
+ * \return A pointer to a false, either newly constructed or shared
+ */
+PRS_BoolCon PRS_makeBoolConFalse(void) {
+  return (PRS_BoolCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun69))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun69)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(115)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(102)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun69)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(115)), (ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(102)))));
+}
+/**
  * Constructs a digits of type PRS_LexNatCon. Like all ATerm types, PRS_LexNatCons are maximally shared.
  * \param[in] list a child of the new digits
  * \return A pointer to a digits, either newly constructed or shared
  */
 PRS_LexNatCon PRS_makeLexNatConDigits(const char* list) {
-  return (PRS_LexNatCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun7, (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun72)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun7, (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))))), (ATerm) ((ATerm) PRS_stringToChars(list)))));
+  return (PRS_LexNatCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun7, (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun71)))))), (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun7, (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))))))), (ATerm) ((ATerm) PRS_stringToChars(list)))));
 }
 /**
  * Constructs a Lex-to-cf of type PRS_NatCon. Like all ATerm types, PRS_NatCons are maximally shared.
@@ -2157,7 +2225,7 @@ PRS_LexNatCon PRS_makeLexNatConDigits(const char* list) {
  * \return A pointer to a Lex-to-cf, either newly constructed or shared
  */
 PRS_NatCon PRS_makeNatConLexToCf(PRS_LexNatCon NatCon) {
-  return (PRS_NatCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71))), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm) NatCon));
+  return (PRS_NatCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70))), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm) NatCon));
 }
 /**
  * Constructs a default of type PRS_LexIdCon. Like all ATerm types, PRS_LexIdCons are maximally shared.
@@ -2166,7 +2234,7 @@ PRS_NatCon PRS_makeNatConLexToCf(PRS_LexNatCon NatCon) {
  * \return A pointer to a default, either newly constructed or shared
  */
 PRS_LexIdCon PRS_makeLexIdConDefault(char head, const char* tail) {
-  return (PRS_LexIdCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun69, (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(97), (ATerm)ATmakeInt(122))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(65), (ATerm)ATmakeInt(90))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))), (ATerm)ATmakeInt(45)))))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(97), (ATerm)ATmakeInt(122))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(65), (ATerm)ATmakeInt(90))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun44))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun70)))))), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun69, (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(97), (ATerm)ATmakeInt(122))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(65), (ATerm)ATmakeInt(90))), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))), (ATerm)ATmakeInt(45)))))), (ATerm) ((ATerm) PRS_stringToChars(tail)))), (ATerm) ((ATerm) PRS_byteToChar(head))));
+  return (PRS_LexIdCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun66, (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(97), (ATerm)ATmakeInt(122))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(65), (ATerm)ATmakeInt(90))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))), (ATerm)ATmakeInt(45)))))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(97), (ATerm)ATmakeInt(122))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(65), (ATerm)ATmakeInt(90))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun41))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun67)))))), (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl1(PRS_afun8, (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun66, (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(97), (ATerm)ATmakeInt(122))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(65), (ATerm)ATmakeInt(90))), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(48), (ATerm)ATmakeInt(57))), (ATerm)ATmakeInt(45)))))), (ATerm) ((ATerm) PRS_stringToChars(tail)))), (ATerm) ((ATerm) PRS_byteToChar(head))));
 }
 /**
  * Constructs a Lex-to-cf of type PRS_IdCon. Like all ATerm types, PRS_IdCons are maximally shared.
@@ -2174,7 +2242,7 @@ PRS_LexIdCon PRS_makeLexIdConDefault(char head, const char* tail) {
  * \return A pointer to a Lex-to-cf, either newly constructed or shared
  */
 PRS_IdCon PRS_makeIdConLexToCf(PRS_LexIdCon IdCon) {
-  return (PRS_IdCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun44)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun44))), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm) IdCon));
+  return (PRS_IdCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun41)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun41))), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm) IdCon));
 }
 /**
  * Constructs a positive of type PRS_LexIntCon. Like all ATerm types, PRS_LexIntCons are maximally shared.
@@ -2182,7 +2250,7 @@ PRS_IdCon PRS_makeIdConLexToCf(PRS_LexIdCon IdCon) {
  * \return A pointer to a positive, either newly constructed or shared
  */
 PRS_LexIntCon PRS_makeLexIntConPositive(PRS_LexNatCon digits) {
-  return (PRS_LexIntCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun10))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun73)))))), (ATerm)ATmakeList1((ATerm) digits));
+  return (PRS_LexIntCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun10))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun72)))))), (ATerm)ATmakeList1((ATerm) digits));
 }
 /**
  * Constructs a negative of type PRS_LexIntCon. Like all ATerm types, PRS_LexIntCons are maximally shared.
@@ -2190,7 +2258,7 @@ PRS_LexIntCon PRS_makeLexIntConPositive(PRS_LexNatCon digits) {
  * \return A pointer to a negative, either newly constructed or shared
  */
 PRS_LexIntCon PRS_makeLexIntConNegative(PRS_LexNatCon digits) {
-  return (PRS_LexIntCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(45)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun10))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun74)))))), (ATerm)ATinsert(ATmakeList1((ATerm) digits), (ATerm)ATmakeInt(45)));
+  return (PRS_LexIntCon)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(45)))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun10))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun73)))))), (ATerm)ATinsert(ATmakeList1((ATerm) digits), (ATerm)ATmakeInt(45)));
 }
 /**
  * Constructs a Lex-to-cf of type PRS_IntCon. Like all ATerm types, PRS_IntCons are maximally shared.
@@ -2206,7 +2274,7 @@ PRS_IntCon PRS_makeIntConLexToCf(PRS_LexIntCon IntCon) {
  * \return A pointer to a whitespace, either newly constructed or shared
  */
 PRS_LexLayout PRS_makeLexLayoutWhitespace(char ch) {
-  return (PRS_LexLayout)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(32)), (ATerm)ATmakeInt(13)), (ATerm)ATmakeAppl2(PRS_afun65, (ATerm)ATmakeInt(9), (ATerm)ATmakeInt(10))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl0(PRS_afun4)), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun75)))))), (ATerm)ATmakeList1((ATerm) ((ATerm) PRS_byteToChar(ch))));
+  return (PRS_LexLayout)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(32)), (ATerm)ATmakeInt(13)), (ATerm)ATmakeAppl2(PRS_afun62, (ATerm)ATmakeInt(9), (ATerm)ATmakeInt(10))))), (ATerm)ATmakeAppl1(PRS_afun6, (ATerm)ATmakeAppl0(PRS_afun4)), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun74)))))), (ATerm)ATmakeList1((ATerm) ((ATerm) PRS_byteToChar(ch))));
 }
 /**
  * Constructs a file of type PRS_Location. Like all ATerm types, PRS_Locations are maximally shared.
@@ -2217,7 +2285,7 @@ PRS_LexLayout PRS_makeLexLayoutWhitespace(char ch) {
  * \return A pointer to a file, either newly constructed or shared
  */
 PRS_Location PRS_makeLocationFile(PRS_OptLayout wsAfterFile, PRS_OptLayout wsAfterParenOpen, PRS_StrCon filename, PRS_OptLayout wsAfterFilename) {
-  return (PRS_Location)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun76))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun76)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterFilename), (ATerm) filename), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterFile), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(102)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun76)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(105)), (ATerm)ATmakeInt(102)))));
+  return (PRS_Location)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun75))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun20))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun75)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterFilename), (ATerm) filename), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterFile), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(102)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun75)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(105)), (ATerm)ATmakeInt(102)))));
 }
 /**
  * Constructs a area of type PRS_Location. Like all ATerm types, PRS_Locations are maximally shared.
@@ -2228,7 +2296,7 @@ PRS_Location PRS_makeLocationFile(PRS_OptLayout wsAfterFile, PRS_OptLayout wsAft
  * \return A pointer to a area, either newly constructed or shared
  */
 PRS_Location PRS_makeLocationArea(PRS_OptLayout wsAfterA, PRS_OptLayout wsAfterParenOpen, PRS_Area Area, PRS_OptLayout wsAfterArea) {
-  return (PRS_Location)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun77)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun78))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun78)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterArea), (ATerm) Area), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterA), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun78)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(97)))));
+  return (PRS_Location)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun76)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun77))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun20))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun77)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterArea), (ATerm) Area), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterA), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun77)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(97)))));
 }
 /**
  * Constructs a area-in-file of type PRS_Location. Like all ATerm types, PRS_Locations are maximally shared.
@@ -2242,7 +2310,7 @@ PRS_Location PRS_makeLocationArea(PRS_OptLayout wsAfterA, PRS_OptLayout wsAfterP
  * \return A pointer to a area-in-file, either newly constructed or shared
  */
 PRS_Location PRS_makeLocationAreaInFile(PRS_OptLayout wsAfterAreaInFile, PRS_OptLayout wsAfterParenOpen, PRS_StrCon filename, PRS_OptLayout wsAfterFilename, PRS_OptLayout wsAfterComma, PRS_Area Area, PRS_OptLayout wsAfterArea) {
-  return (PRS_Location)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun77)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun79))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun18))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun79)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterArea), (ATerm) Area), (ATerm) wsAfterComma), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterFilename), (ATerm) filename), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterAreaInFile), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(102)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(45)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(110)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(45)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun79)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(105)), (ATerm)ATmakeInt(102)), (ATerm)ATmakeInt(45)), (ATerm)ATmakeInt(110)), (ATerm)ATmakeInt(105)), (ATerm)ATmakeInt(45)), (ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(97)))));
+  return (PRS_Location)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun76)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun16)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun78))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun20))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun78)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterArea), (ATerm) Area), (ATerm) wsAfterComma), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterFilename), (ATerm) filename), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterAreaInFile), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(108)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(102)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(45)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(110)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(105)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(45)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun78)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(108)), (ATerm)ATmakeInt(105)), (ATerm)ATmakeInt(102)), (ATerm)ATmakeInt(45)), (ATerm)ATmakeInt(110)), (ATerm)ATmakeInt(105)), (ATerm)ATmakeInt(45)), (ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(97)))));
 }
 /**
  * Constructs a area of type PRS_Area. Like all ATerm types, PRS_Areas are maximally shared.
@@ -2268,7 +2336,7 @@ PRS_Location PRS_makeLocationAreaInFile(PRS_OptLayout wsAfterAreaInFile, PRS_Opt
  * \return A pointer to a area, either newly constructed or shared
  */
 PRS_Area PRS_makeAreaArea(PRS_OptLayout wsAfterArea, PRS_OptLayout wsAfterParenOpen, PRS_NatCon beginLine, PRS_OptLayout wsAfterBeginLine, PRS_OptLayout wsAfterComma, PRS_NatCon beginColumn, PRS_OptLayout wsAfterBeginColumn, PRS_OptLayout wsAfterComma1, PRS_NatCon endLine, PRS_OptLayout wsAfterEndLine, PRS_OptLayout wsAfterComma2, PRS_NatCon endColumn, PRS_OptLayout wsAfterEndColumn, PRS_OptLayout wsAfterComma3, PRS_NatCon offset, PRS_OptLayout wsAfterOffset, PRS_OptLayout wsAfterComma4, PRS_NatCon length, PRS_OptLayout wsAfterLength) {
-  return (PRS_Area)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun71)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun78))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun77))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun78)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun50)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterLength), (ATerm) length), (ATerm) wsAfterComma4), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterOffset), (ATerm) offset), (ATerm) wsAfterComma3), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterEndColumn), (ATerm) endColumn), (ATerm) wsAfterComma2), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterEndLine), (ATerm) endLine), (ATerm) wsAfterComma1), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterBeginColumn), (ATerm) beginColumn), (ATerm) wsAfterComma), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun23)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterBeginLine), (ATerm) beginLine), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun51)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterArea), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun26, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun20, (ATerm)ATmakeAppl0(PRS_afun78)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(97)))));
+  return (PRS_Area)(ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun70)))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun3, (ATerm)ATmakeAppl0(PRS_afun4)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun77))), (ATerm)ATmakeAppl1(PRS_afun2, (ATerm)ATmakeAppl1(PRS_afun9, (ATerm)ATmakeAppl0(PRS_afun76))), (ATerm)ATmakeAppl1(PRS_afun12, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun13, (ATerm)ATmakeAppl1(PRS_afun14, (ATerm)ATmakeAppl0(PRS_afun77)))))), (ATerm)ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun47)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(41)))), (ATerm) wsAfterLength), (ATerm) length), (ATerm) wsAfterComma4), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterOffset), (ATerm) offset), (ATerm) wsAfterComma3), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterEndColumn), (ATerm) endColumn), (ATerm) wsAfterComma2), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterEndLine), (ATerm) endLine), (ATerm) wsAfterComma1), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterBeginColumn), (ATerm) beginColumn), (ATerm) wsAfterComma), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun25)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(44)))), (ATerm) wsAfterBeginLine), (ATerm) beginLine), (ATerm) wsAfterParenOpen), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun48)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATmakeList1((ATerm)ATmakeInt(40)))), (ATerm) wsAfterArea), (ATerm)ATmakeAppl2(PRS_afun0, (ATerm)ATmakeAppl3(PRS_afun1, (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(101)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(114)))), (ATerm)ATmakeAppl1(PRS_afun28, (ATerm)ATmakeList1((ATerm)ATmakeInt(97)))), (ATerm)ATmakeAppl1(PRS_afun22, (ATerm)ATmakeAppl0(PRS_afun77)), (ATerm)ATmakeAppl0(PRS_afun5)), (ATerm)ATinsert(ATinsert(ATinsert(ATmakeList1((ATerm)ATmakeInt(97)), (ATerm)ATmakeInt(101)), (ATerm)ATmakeInt(114)), (ATerm)ATmakeInt(97)))));
 }
 
 /**
@@ -2428,6 +2496,16 @@ ATbool PRS_isEqualStrCon(PRS_StrCon arg0, PRS_StrCon arg1) {
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
 ATbool PRS_isEqualLexStrCharChars(PRS_LexStrCharChars arg0, PRS_LexStrCharChars arg1) {
+  return ATisEqual((ATerm)arg0, (ATerm)arg1);
+}
+
+/**
+ * Tests equality of two PRS_BoolCons. A constant time operation.
+ * \param[in] arg0 first PRS_BoolCon to be compared
+ * \param[in] arg1 second PRS_BoolCon to be compared
+ * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
+ */
+ATbool PRS_isEqualBoolCon(PRS_BoolCon arg0, PRS_BoolCon arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -2856,13 +2934,16 @@ PRS_LexLayoutList PRS_setLexLayoutListTail(PRS_LexLayoutList arg, PRS_LexLayoutL
  * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
  */
 ATbool PRS_isValidRElem(PRS_RElem arg) {
-  if (PRS_isRElemInteger(arg)) {
+  if (PRS_isRElemInt(arg)) {
     return ATtrue;
   }
-  else if (PRS_isRElemString(arg)) {
+  else if (PRS_isRElemStr(arg)) {
     return ATtrue;
   }
-  else if (PRS_isRElemLocation(arg)) {
+  else if (PRS_isRElemBool(arg)) {
+    return ATtrue;
+  }
+  else if (PRS_isRElemLoc(arg)) {
     return ATtrue;
   }
   else if (PRS_isRElemSet(arg)) {
@@ -2878,11 +2959,11 @@ ATbool PRS_isValidRElem(PRS_RElem arg) {
 }
 
 /**
- * Assert whether a PRS_RElem is a integer. . May not be used to assert correctness of the PRS_RElem
+ * Assert whether a PRS_RElem is a int. . May not be used to assert correctness of the PRS_RElem
  * \param[in] arg input PRS_RElem
- * \return ATtrue if #arg corresponds to the signature of a integer, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a int, or ATfalse otherwise
  */
-inline ATbool PRS_isRElemInteger(PRS_RElem arg) {
+inline ATbool PRS_isRElemInt(PRS_RElem arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -2892,7 +2973,7 @@ inline ATbool PRS_isRElemInteger(PRS_RElem arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemInteger, NULL);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemInt, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -2901,11 +2982,11 @@ inline ATbool PRS_isRElemInteger(PRS_RElem arg) {
 }
 
 /**
- * Assert whether a PRS_RElem is a string. . May not be used to assert correctness of the PRS_RElem
+ * Assert whether a PRS_RElem is a str. . May not be used to assert correctness of the PRS_RElem
  * \param[in] arg input PRS_RElem
- * \return ATtrue if #arg corresponds to the signature of a string, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a str, or ATfalse otherwise
  */
-inline ATbool PRS_isRElemString(PRS_RElem arg) {
+inline ATbool PRS_isRElemStr(PRS_RElem arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -2915,7 +2996,7 @@ inline ATbool PRS_isRElemString(PRS_RElem arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemString, NULL);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemStr, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -2924,11 +3005,11 @@ inline ATbool PRS_isRElemString(PRS_RElem arg) {
 }
 
 /**
- * Assert whether a PRS_RElem is a location. . May not be used to assert correctness of the PRS_RElem
+ * Assert whether a PRS_RElem is a bool. . May not be used to assert correctness of the PRS_RElem
  * \param[in] arg input PRS_RElem
- * \return ATtrue if #arg corresponds to the signature of a location, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a bool, or ATfalse otherwise
  */
-inline ATbool PRS_isRElemLocation(PRS_RElem arg) {
+inline ATbool PRS_isRElemBool(PRS_RElem arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -2938,7 +3019,30 @@ inline ATbool PRS_isRElemLocation(PRS_RElem arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemLocation, NULL);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemBool, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a PRS_RElem is a loc. . May not be used to assert correctness of the PRS_RElem
+ * \param[in] arg input PRS_RElem
+ * \return ATtrue if #arg corresponds to the signature of a loc, or ATfalse otherwise
+ */
+inline ATbool PRS_isRElemLoc(PRS_RElem arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRElemLoc, NULL);
       last_gc = ATgetGCCount();
     }
 
@@ -3021,7 +3125,7 @@ inline ATbool PRS_isRElemTuple(PRS_RElem arg) {
  * \return ATtrue if the PRS_RElem had a IntCon, or ATfalse otherwise
  */
 ATbool PRS_hasRElemIntCon(PRS_RElem arg) {
-  if (PRS_isRElemInteger(arg)) {
+  if (PRS_isRElemInt(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -3033,7 +3137,19 @@ ATbool PRS_hasRElemIntCon(PRS_RElem arg) {
  * \return ATtrue if the PRS_RElem had a StrCon, or ATfalse otherwise
  */
 ATbool PRS_hasRElemStrCon(PRS_RElem arg) {
-  if (PRS_isRElemString(arg)) {
+  if (PRS_isRElemStr(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Assert whether a PRS_RElem has a BoolCon. 
+ * \param[in] arg input PRS_RElem
+ * \return ATtrue if the PRS_RElem had a BoolCon, or ATfalse otherwise
+ */
+ATbool PRS_hasRElemBoolCon(PRS_RElem arg) {
+  if (PRS_isRElemBool(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -3045,7 +3161,7 @@ ATbool PRS_hasRElemStrCon(PRS_RElem arg) {
  * \return ATtrue if the PRS_RElem had a Location, or ATfalse otherwise
  */
 ATbool PRS_hasRElemLocation(PRS_RElem arg) {
-  if (PRS_isRElemLocation(arg)) {
+  if (PRS_isRElemLoc(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -3144,6 +3260,16 @@ PRS_StrCon PRS_getRElemStrCon(PRS_RElem arg) {
 }
 
 /**
+ * Get the BoolCon PRS_BoolCon of a PRS_RElem. Note that the precondition is that this PRS_RElem actually has a BoolCon
+ * \param[in] arg input PRS_RElem
+ * \return the BoolCon of #arg, if it exist or an undefined value if it does not
+ */
+PRS_BoolCon PRS_getRElemBoolCon(PRS_RElem arg) {
+  
+    return (PRS_BoolCon)ATgetFirst((ATermList)ATgetArgument((ATermAppl)arg, 1));
+}
+
+/**
  * Get the Location PRS_Location of a PRS_RElem. Note that the precondition is that this PRS_RElem actually has a Location
  * \param[in] arg input PRS_RElem
  * \return the Location of #arg, if it exist or an undefined value if it does not
@@ -3222,7 +3348,7 @@ PRS_OptLayout PRS_getRElemWsAfterLessThan(PRS_RElem arg) {
  * \return A new PRS_RElem with IntCon at the right place, or a core dump if #arg did not have a IntCon
  */
 PRS_RElem PRS_setRElemIntCon(PRS_RElem arg, PRS_IntCon IntCon) {
-  if (PRS_isRElemInteger(arg)) {
+  if (PRS_isRElemInt(arg)) {
     return (PRS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) IntCon), 0), 1);
   }
 
@@ -3237,11 +3363,26 @@ PRS_RElem PRS_setRElemIntCon(PRS_RElem arg, PRS_IntCon IntCon) {
  * \return A new PRS_RElem with StrCon at the right place, or a core dump if #arg did not have a StrCon
  */
 PRS_RElem PRS_setRElemStrCon(PRS_RElem arg, PRS_StrCon StrCon) {
-  if (PRS_isRElemString(arg)) {
+  if (PRS_isRElemStr(arg)) {
     return (PRS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) StrCon), 0), 1);
   }
 
   ATabort("RElem has no StrCon: %t\n", arg);
+  return (PRS_RElem)NULL;
+}
+
+/**
+ * Set the BoolCon of a PRS_RElem. The precondition being that this PRS_RElem actually has a BoolCon
+ * \param[in] arg input PRS_RElem
+ * \param[in] BoolCon new PRS_BoolCon to set in #arg
+ * \return A new PRS_RElem with BoolCon at the right place, or a core dump if #arg did not have a BoolCon
+ */
+PRS_RElem PRS_setRElemBoolCon(PRS_RElem arg, PRS_BoolCon BoolCon) {
+  if (PRS_isRElemBool(arg)) {
+    return (PRS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) BoolCon), 0), 1);
+  }
+
+  ATabort("RElem has no BoolCon: %t\n", arg);
   return (PRS_RElem)NULL;
 }
 
@@ -3252,7 +3393,7 @@ PRS_RElem PRS_setRElemStrCon(PRS_RElem arg, PRS_StrCon StrCon) {
  * \return A new PRS_RElem with Location at the right place, or a core dump if #arg did not have a Location
  */
 PRS_RElem PRS_setRElemLocation(PRS_RElem arg, PRS_Location Location) {
-  if (PRS_isRElemLocation(arg)) {
+  if (PRS_isRElemLoc(arg)) {
     return (PRS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) Location), 0), 1);
   }
 
@@ -3353,16 +3494,16 @@ PRS_RElem PRS_setRElemWsAfterLessThan(PRS_RElem arg, PRS_OptLayout wsAfterLessTh
  * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
  */
 ATbool PRS_isValidRType(PRS_RType arg) {
-  if (PRS_isRTypeInteger(arg)) {
+  if (PRS_isRTypeInt(arg)) {
     return ATtrue;
   }
-  else if (PRS_isRTypeBoolean(arg)) {
+  else if (PRS_isRTypeBool(arg)) {
     return ATtrue;
   }
-  else if (PRS_isRTypeString(arg)) {
+  else if (PRS_isRTypeStr(arg)) {
     return ATtrue;
   }
-  else if (PRS_isRTypeLocation(arg)) {
+  else if (PRS_isRTypeLoc(arg)) {
     return ATtrue;
   }
   else if (PRS_isRTypeTuple(arg)) {
@@ -3387,11 +3528,11 @@ ATbool PRS_isValidRType(PRS_RType arg) {
 }
 
 /**
- * Assert whether a PRS_RType is a integer. . May not be used to assert correctness of the PRS_RType
+ * Assert whether a PRS_RType is a int. . May not be used to assert correctness of the PRS_RType
  * \param[in] arg input PRS_RType
- * \return ATtrue if #arg corresponds to the signature of a integer, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a int, or ATfalse otherwise
  */
-inline ATbool PRS_isRTypeInteger(PRS_RType arg) {
+inline ATbool PRS_isRTypeInt(PRS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -3401,7 +3542,7 @@ inline ATbool PRS_isRTypeInteger(PRS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeInteger);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeInt);
       last_gc = ATgetGCCount();
     }
 
@@ -3410,11 +3551,11 @@ inline ATbool PRS_isRTypeInteger(PRS_RType arg) {
 }
 
 /**
- * Assert whether a PRS_RType is a boolean. . May not be used to assert correctness of the PRS_RType
+ * Assert whether a PRS_RType is a bool. . May not be used to assert correctness of the PRS_RType
  * \param[in] arg input PRS_RType
- * \return ATtrue if #arg corresponds to the signature of a boolean, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a bool, or ATfalse otherwise
  */
-inline ATbool PRS_isRTypeBoolean(PRS_RType arg) {
+inline ATbool PRS_isRTypeBool(PRS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -3424,7 +3565,7 @@ inline ATbool PRS_isRTypeBoolean(PRS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeBoolean);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeBool);
       last_gc = ATgetGCCount();
     }
 
@@ -3433,11 +3574,11 @@ inline ATbool PRS_isRTypeBoolean(PRS_RType arg) {
 }
 
 /**
- * Assert whether a PRS_RType is a string. . May not be used to assert correctness of the PRS_RType
+ * Assert whether a PRS_RType is a str. . May not be used to assert correctness of the PRS_RType
  * \param[in] arg input PRS_RType
- * \return ATtrue if #arg corresponds to the signature of a string, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a str, or ATfalse otherwise
  */
-inline ATbool PRS_isRTypeString(PRS_RType arg) {
+inline ATbool PRS_isRTypeStr(PRS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -3447,7 +3588,7 @@ inline ATbool PRS_isRTypeString(PRS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeString);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeStr);
       last_gc = ATgetGCCount();
     }
 
@@ -3456,11 +3597,11 @@ inline ATbool PRS_isRTypeString(PRS_RType arg) {
 }
 
 /**
- * Assert whether a PRS_RType is a location. . May not be used to assert correctness of the PRS_RType
+ * Assert whether a PRS_RType is a loc. . May not be used to assert correctness of the PRS_RType
  * \param[in] arg input PRS_RType
- * \return ATtrue if #arg corresponds to the signature of a location, or ATfalse otherwise
+ * \return ATtrue if #arg corresponds to the signature of a loc, or ATfalse otherwise
  */
-inline ATbool PRS_isRTypeLocation(PRS_RType arg) {
+inline ATbool PRS_isRTypeLoc(PRS_RType arg) {
   {
     static ATerm last_arg = NULL;
     static int last_gc = -1;
@@ -3470,7 +3611,7 @@ inline ATbool PRS_isRTypeLocation(PRS_RType arg) {
 
     if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
       last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeLocation);
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternRTypeLoc);
       last_gc = ATgetGCCount();
     }
 
@@ -3743,15 +3884,12 @@ ATbool PRS_hasRTypeWsAfterRel(PRS_RType arg) {
 }
 
 /**
- * Assert whether a PRS_RType has a name. 
+ * Assert whether a PRS_RType has a type-name. 
  * \param[in] arg input PRS_RType
- * \return ATtrue if the PRS_RType had a name, or ATfalse otherwise
+ * \return ATtrue if the PRS_RType had a type-name, or ATfalse otherwise
  */
-ATbool PRS_hasRTypeName(PRS_RType arg) {
+ATbool PRS_hasRTypeTypeName(PRS_RType arg) {
   if (PRS_isRTypeUserDefined(arg)) {
-    return ATtrue;
-  }
-  else if (PRS_isRTypeParameter(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -3763,6 +3901,18 @@ ATbool PRS_hasRTypeName(PRS_RType arg) {
  * \return ATtrue if the PRS_RType had a ws-after-&, or ATfalse otherwise
  */
 ATbool PRS_hasRTypeWsAfterAmp(PRS_RType arg) {
+  if (PRS_isRTypeParameter(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Assert whether a PRS_RType has a parameter-name. 
+ * \param[in] arg input PRS_RType
+ * \return ATtrue if the PRS_RType had a parameter-name, or ATfalse otherwise
+ */
+ATbool PRS_hasRTypeParameterName(PRS_RType arg) {
   if (PRS_isRTypeParameter(arg)) {
     return ATtrue;
   }
@@ -3878,16 +4028,13 @@ PRS_OptLayout PRS_getRTypeWsAfterRel(PRS_RType arg) {
 }
 
 /**
- * Get the name PRS_IdCon of a PRS_RType. Note that the precondition is that this PRS_RType actually has a name
+ * Get the type-name PRS_IdCon of a PRS_RType. Note that the precondition is that this PRS_RType actually has a type-name
  * \param[in] arg input PRS_RType
- * \return the name of #arg, if it exist or an undefined value if it does not
+ * \return the type-name of #arg, if it exist or an undefined value if it does not
  */
-PRS_IdCon PRS_getRTypeName(PRS_RType arg) {
-  if (PRS_isRTypeUserDefined(arg)) {
+PRS_IdCon PRS_getRTypeTypeName(PRS_RType arg) {
+  
     return (PRS_IdCon)ATgetFirst((ATermList)ATgetArgument((ATermAppl)arg, 1));
-  }
-  else 
-    return (PRS_IdCon)ATelementAt((ATermList)ATgetArgument((ATermAppl)arg, 1), 2);
 }
 
 /**
@@ -3898,6 +4045,16 @@ PRS_IdCon PRS_getRTypeName(PRS_RType arg) {
 PRS_OptLayout PRS_getRTypeWsAfterAmp(PRS_RType arg) {
   
     return (PRS_OptLayout)ATelementAt((ATermList)ATgetArgument((ATermAppl)arg, 1), 1);
+}
+
+/**
+ * Get the parameter-name PRS_IdCon of a PRS_RType. Note that the precondition is that this PRS_RType actually has a parameter-name
+ * \param[in] arg input PRS_RType
+ * \return the parameter-name of #arg, if it exist or an undefined value if it does not
+ */
+PRS_IdCon PRS_getRTypeParameterName(PRS_RType arg) {
+  
+    return (PRS_IdCon)ATelementAt((ATermList)ATgetArgument((ATermAppl)arg, 1), 2);
 }
 
 /**
@@ -4054,20 +4211,17 @@ PRS_RType PRS_setRTypeWsAfterRel(PRS_RType arg, PRS_OptLayout wsAfterRel) {
 }
 
 /**
- * Set the name of a PRS_RType. The precondition being that this PRS_RType actually has a name
+ * Set the type-name of a PRS_RType. The precondition being that this PRS_RType actually has a type-name
  * \param[in] arg input PRS_RType
- * \param[in] name new PRS_IdCon to set in #arg
- * \return A new PRS_RType with name at the right place, or a core dump if #arg did not have a name
+ * \param[in] typeName new PRS_IdCon to set in #arg
+ * \return A new PRS_RType with typeName at the right place, or a core dump if #arg did not have a typeName
  */
-PRS_RType PRS_setRTypeName(PRS_RType arg, PRS_IdCon name) {
+PRS_RType PRS_setRTypeTypeName(PRS_RType arg, PRS_IdCon typeName) {
   if (PRS_isRTypeUserDefined(arg)) {
-    return (PRS_RType)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) name), 0), 1);
-  }
-  else if (PRS_isRTypeParameter(arg)) {
-    return (PRS_RType)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) name), 2), 1);
+    return (PRS_RType)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) typeName), 0), 1);
   }
 
-  ATabort("RType has no Name: %t\n", arg);
+  ATabort("RType has no TypeName: %t\n", arg);
   return (PRS_RType)NULL;
 }
 
@@ -4083,6 +4237,21 @@ PRS_RType PRS_setRTypeWsAfterAmp(PRS_RType arg, PRS_OptLayout wsAfterAmp) {
   }
 
   ATabort("RType has no WsAfterAmp: %t\n", arg);
+  return (PRS_RType)NULL;
+}
+
+/**
+ * Set the parameter-name of a PRS_RType. The precondition being that this PRS_RType actually has a parameter-name
+ * \param[in] arg input PRS_RType
+ * \param[in] parameterName new PRS_IdCon to set in #arg
+ * \return A new PRS_RType with parameterName at the right place, or a core dump if #arg did not have a parameterName
+ */
+PRS_RType PRS_setRTypeParameterName(PRS_RType arg, PRS_IdCon parameterName) {
+  if (PRS_isRTypeParameter(arg)) {
+    return (PRS_RType)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) parameterName), 2), 1);
+  }
+
+  ATabort("RType has no ParameterName: %t\n", arg);
   return (PRS_RType)NULL;
 }
 
@@ -4160,11 +4329,11 @@ ATbool PRS_hasRTupleWsAfterComma(PRS_RTuple arg) {
 }
 
 /**
- * Assert whether a PRS_RTuple has a type. 
+ * Assert whether a PRS_RTuple has a rtype. 
  * \param[in] arg input PRS_RTuple
- * \return ATtrue if the PRS_RTuple had a type, or ATfalse otherwise
+ * \return ATtrue if the PRS_RTuple had a rtype, or ATfalse otherwise
  */
-ATbool PRS_hasRTupleType(PRS_RTuple arg) {
+ATbool PRS_hasRTupleRtype(PRS_RTuple arg) {
   if (PRS_isRTupleRtuple(arg)) {
     return ATtrue;
   }
@@ -4172,11 +4341,11 @@ ATbool PRS_hasRTupleType(PRS_RTuple arg) {
 }
 
 /**
- * Assert whether a PRS_RTuple has a ws-after-type. 
+ * Assert whether a PRS_RTuple has a ws-after-rtype. 
  * \param[in] arg input PRS_RTuple
- * \return ATtrue if the PRS_RTuple had a ws-after-type, or ATfalse otherwise
+ * \return ATtrue if the PRS_RTuple had a ws-after-rtype, or ATfalse otherwise
  */
-ATbool PRS_hasRTupleWsAfterType(PRS_RTuple arg) {
+ATbool PRS_hasRTupleWsAfterRtype(PRS_RTuple arg) {
   if (PRS_isRTupleRtuple(arg)) {
     return ATtrue;
   }
@@ -4260,21 +4429,21 @@ PRS_OptLayout PRS_getRTupleWsAfterComma(PRS_RTuple arg) {
 }
 
 /**
- * Get the type PRS_RType of a PRS_RTuple. Note that the precondition is that this PRS_RTuple actually has a type
+ * Get the rtype PRS_RType of a PRS_RTuple. Note that the precondition is that this PRS_RTuple actually has a rtype
  * \param[in] arg input PRS_RTuple
- * \return the type of #arg, if it exist or an undefined value if it does not
+ * \return the rtype of #arg, if it exist or an undefined value if it does not
  */
-PRS_RType PRS_getRTupleType(PRS_RTuple arg) {
+PRS_RType PRS_getRTupleRtype(PRS_RTuple arg) {
   
     return (PRS_RType)ATelementAt((ATermList)ATgetArgument((ATermAppl)arg, 1), 6);
 }
 
 /**
- * Get the ws-after-type PRS_OptLayout of a PRS_RTuple. Note that the precondition is that this PRS_RTuple actually has a ws-after-type
+ * Get the ws-after-rtype PRS_OptLayout of a PRS_RTuple. Note that the precondition is that this PRS_RTuple actually has a ws-after-rtype
  * \param[in] arg input PRS_RTuple
- * \return the ws-after-type of #arg, if it exist or an undefined value if it does not
+ * \return the ws-after-rtype of #arg, if it exist or an undefined value if it does not
  */
-PRS_OptLayout PRS_getRTupleWsAfterType(PRS_RTuple arg) {
+PRS_OptLayout PRS_getRTupleWsAfterRtype(PRS_RTuple arg) {
   
     return (PRS_OptLayout)ATelementAt((ATermList)ATgetArgument((ATermAppl)arg, 1), 7);
 }
@@ -4370,32 +4539,32 @@ PRS_RTuple PRS_setRTupleWsAfterComma(PRS_RTuple arg, PRS_OptLayout wsAfterComma)
 }
 
 /**
- * Set the type of a PRS_RTuple. The precondition being that this PRS_RTuple actually has a type
+ * Set the rtype of a PRS_RTuple. The precondition being that this PRS_RTuple actually has a rtype
  * \param[in] arg input PRS_RTuple
- * \param[in] type new PRS_RType to set in #arg
- * \return A new PRS_RTuple with type at the right place, or a core dump if #arg did not have a type
+ * \param[in] rtype new PRS_RType to set in #arg
+ * \return A new PRS_RTuple with rtype at the right place, or a core dump if #arg did not have a rtype
  */
-PRS_RTuple PRS_setRTupleType(PRS_RTuple arg, PRS_RType type) {
+PRS_RTuple PRS_setRTupleRtype(PRS_RTuple arg, PRS_RType rtype) {
   if (PRS_isRTupleRtuple(arg)) {
-    return (PRS_RTuple)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) type), 6), 1);
+    return (PRS_RTuple)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) rtype), 6), 1);
   }
 
-  ATabort("RTuple has no Type: %t\n", arg);
+  ATabort("RTuple has no Rtype: %t\n", arg);
   return (PRS_RTuple)NULL;
 }
 
 /**
- * Set the ws-after-type of a PRS_RTuple. The precondition being that this PRS_RTuple actually has a ws-after-type
+ * Set the ws-after-rtype of a PRS_RTuple. The precondition being that this PRS_RTuple actually has a ws-after-rtype
  * \param[in] arg input PRS_RTuple
- * \param[in] wsAfterType new PRS_OptLayout to set in #arg
- * \return A new PRS_RTuple with wsAfterType at the right place, or a core dump if #arg did not have a wsAfterType
+ * \param[in] wsAfterRtype new PRS_OptLayout to set in #arg
+ * \return A new PRS_RTuple with wsAfterRtype at the right place, or a core dump if #arg did not have a wsAfterRtype
  */
-PRS_RTuple PRS_setRTupleWsAfterType(PRS_RTuple arg, PRS_OptLayout wsAfterType) {
+PRS_RTuple PRS_setRTupleWsAfterRtype(PRS_RTuple arg, PRS_OptLayout wsAfterRtype) {
   if (PRS_isRTupleRtuple(arg)) {
-    return (PRS_RTuple)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) wsAfterType), 7), 1);
+    return (PRS_RTuple)ATsetArgument((ATermAppl)arg, (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)arg, 1), (ATerm)((ATerm) wsAfterRtype), 7), 1);
   }
 
-  ATabort("RTuple has no WsAfterType: %t\n", arg);
+  ATabort("RTuple has no WsAfterRtype: %t\n", arg);
   return (PRS_RTuple)NULL;
 }
 
@@ -4700,20 +4869,56 @@ ATbool PRS_isValidStart(PRS_Start arg) {
   if (PRS_isStartRStore(arg)) {
     return ATtrue;
   }
+  else if (PRS_isStartBoolCon(arg)) {
+    return ATtrue;
+  }
   return ATfalse;
 }
 
 /**
- * Assert whether a PRS_Start is a RStore. Always returns ATtrue
+ * Assert whether a PRS_Start is a RStore. . May not be used to assert correctness of the PRS_Start
  * \param[in] arg input PRS_Start
  * \return ATtrue if #arg corresponds to the signature of a RStore, or ATfalse otherwise
  */
 inline ATbool PRS_isStartRStore(PRS_Start arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, PRS_patternStartRStore, NULL, NULL, NULL, NULL));
-#endif
-  return ATtrue;
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternStartRStore, NULL, NULL, NULL, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a PRS_Start is a BoolCon. . May not be used to assert correctness of the PRS_Start
+ * \param[in] arg input PRS_Start
+ * \return ATtrue if #arg corresponds to the signature of a BoolCon, or ATfalse otherwise
+ */
+inline ATbool PRS_isStartBoolCon(PRS_Start arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternStartBoolCon, NULL, NULL, NULL, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
 }
 
 /**
@@ -4723,6 +4928,9 @@ inline ATbool PRS_isStartRStore(PRS_Start arg) {
  */
 ATbool PRS_hasStartWsBefore(PRS_Start arg) {
   if (PRS_isStartRStore(arg)) {
+    return ATtrue;
+  }
+  else if (PRS_isStartBoolCon(arg)) {
     return ATtrue;
   }
   return ATfalse;
@@ -4749,6 +4957,9 @@ ATbool PRS_hasStartWsAfter(PRS_Start arg) {
   if (PRS_isStartRStore(arg)) {
     return ATtrue;
   }
+  else if (PRS_isStartBoolCon(arg)) {
+    return ATtrue;
+  }
   return ATfalse;
 }
 
@@ -4761,6 +4972,21 @@ ATbool PRS_hasStartAmbCnt(PRS_Start arg) {
   if (PRS_isStartRStore(arg)) {
     return ATtrue;
   }
+  else if (PRS_isStartBoolCon(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Assert whether a PRS_Start has a top-BoolCon. 
+ * \param[in] arg input PRS_Start
+ * \return ATtrue if the PRS_Start had a top-BoolCon, or ATfalse otherwise
+ */
+ATbool PRS_hasStartTopBoolCon(PRS_Start arg) {
+  if (PRS_isStartBoolCon(arg)) {
+    return ATtrue;
+  }
   return ATfalse;
 }
 
@@ -4770,7 +4996,10 @@ ATbool PRS_hasStartAmbCnt(PRS_Start arg) {
  * \return the ws-before of #arg, if it exist or an undefined value if it does not
  */
 PRS_OptLayout PRS_getStartWsBefore(PRS_Start arg) {
-  
+  if (PRS_isStartRStore(arg)) {
+    return (PRS_OptLayout)ATgetFirst((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1));
+  }
+  else 
     return (PRS_OptLayout)ATgetFirst((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1));
 }
 
@@ -4790,7 +5019,10 @@ PRS_RStore PRS_getStartTopRStore(PRS_Start arg) {
  * \return the ws-after of #arg, if it exist or an undefined value if it does not
  */
 PRS_OptLayout PRS_getStartWsAfter(PRS_Start arg) {
-  
+  if (PRS_isStartRStore(arg)) {
+    return (PRS_OptLayout)ATelementAt((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), 2);
+  }
+  else 
     return (PRS_OptLayout)ATelementAt((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), 2);
 }
 
@@ -4800,8 +5032,21 @@ PRS_OptLayout PRS_getStartWsAfter(PRS_Start arg) {
  * \return the amb-cnt of #arg, if it exist or an undefined value if it does not
  */
 int PRS_getStartAmbCnt(PRS_Start arg) {
-  
+  if (PRS_isStartRStore(arg)) {
     return (int)ATgetInt((ATermInt) ATgetArgument((ATermAppl)arg, 1));
+  }
+  else 
+    return (int)ATgetInt((ATermInt) ATgetArgument((ATermAppl)arg, 1));
+}
+
+/**
+ * Get the top-BoolCon PRS_BoolCon of a PRS_Start. Note that the precondition is that this PRS_Start actually has a top-BoolCon
+ * \param[in] arg input PRS_Start
+ * \return the top-BoolCon of #arg, if it exist or an undefined value if it does not
+ */
+PRS_BoolCon PRS_getStartTopBoolCon(PRS_Start arg) {
+  
+    return (PRS_BoolCon)ATelementAt((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), 1);
 }
 
 /**
@@ -4812,6 +5057,9 @@ int PRS_getStartAmbCnt(PRS_Start arg) {
  */
 PRS_Start PRS_setStartWsBefore(PRS_Start arg, PRS_OptLayout wsBefore) {
   if (PRS_isStartRStore(arg)) {
+    return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)ATsetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), (ATerm)((ATerm) wsBefore), 0), 1), 0);
+  }
+  else if (PRS_isStartBoolCon(arg)) {
     return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)ATsetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), (ATerm)((ATerm) wsBefore), 0), 1), 0);
   }
 
@@ -4844,6 +5092,9 @@ PRS_Start PRS_setStartWsAfter(PRS_Start arg, PRS_OptLayout wsAfter) {
   if (PRS_isStartRStore(arg)) {
     return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)ATsetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), (ATerm)((ATerm) wsAfter), 2), 1), 0);
   }
+  else if (PRS_isStartBoolCon(arg)) {
+    return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)ATsetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), (ATerm)((ATerm) wsAfter), 2), 1), 0);
+  }
 
   ATabort("Start has no WsAfter: %t\n", arg);
   return (PRS_Start)NULL;
@@ -4859,8 +5110,26 @@ PRS_Start PRS_setStartAmbCnt(PRS_Start arg, int ambCnt) {
   if (PRS_isStartRStore(arg)) {
     return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) (ATerm) ATmakeInt(ambCnt)), 1);
   }
+  else if (PRS_isStartBoolCon(arg)) {
+    return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) (ATerm) ATmakeInt(ambCnt)), 1);
+  }
 
   ATabort("Start has no AmbCnt: %t\n", arg);
+  return (PRS_Start)NULL;
+}
+
+/**
+ * Set the top-BoolCon of a PRS_Start. The precondition being that this PRS_Start actually has a top-BoolCon
+ * \param[in] arg input PRS_Start
+ * \param[in] topBoolCon new PRS_BoolCon to set in #arg
+ * \return A new PRS_Start with topBoolCon at the right place, or a core dump if #arg did not have a topBoolCon
+ */
+PRS_Start PRS_setStartTopBoolCon(PRS_Start arg, PRS_BoolCon topBoolCon) {
+  if (PRS_isStartBoolCon(arg)) {
+    return (PRS_Start)ATsetArgument((ATermAppl)arg, (ATerm)ATsetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), (ATerm)ATreplace((ATermList)ATgetArgument((ATermAppl)ATgetArgument((ATermAppl)arg, 0), 1), (ATerm)((ATerm) topBoolCon), 1), 1), 0);
+  }
+
+  ATabort("Start has no TopBoolCon: %t\n", arg);
   return (PRS_Start)NULL;
 }
 
@@ -6277,6 +6546,67 @@ PRS_LexStrCharChars PRS_setLexStrCharCharsTail(PRS_LexStrCharChars arg, PRS_LexS
 
   ATabort("LexStrCharChars has no Tail: %t\n", arg);
   return (PRS_LexStrCharChars)NULL;
+}
+
+/**
+ * Assert whether a PRS_BoolCon is any of the valid alternatives, or not. This analysis does not go any deeper than the top level
+ * \param[in] arg input PRS_BoolCon
+ * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
+ */
+ATbool PRS_isValidBoolCon(PRS_BoolCon arg) {
+  if (PRS_isBoolConTrue(arg)) {
+    return ATtrue;
+  }
+  else if (PRS_isBoolConFalse(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Assert whether a PRS_BoolCon is a true. . May not be used to assert correctness of the PRS_BoolCon
+ * \param[in] arg input PRS_BoolCon
+ * \return ATtrue if #arg corresponds to the signature of a true, or ATfalse otherwise
+ */
+inline ATbool PRS_isBoolConTrue(PRS_BoolCon arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternBoolConTrue);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a PRS_BoolCon is a false. . May not be used to assert correctness of the PRS_BoolCon
+ * \param[in] arg input PRS_BoolCon
+ * \return ATtrue if #arg corresponds to the signature of a false, or ATfalse otherwise
+ */
+inline ATbool PRS_isBoolConFalse(PRS_BoolCon arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, PRS_patternBoolConFalse);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
 }
 
 /**
@@ -8048,17 +8378,21 @@ PRS_LexLayoutList PRS_visitLexLayoutList(PRS_LexLayoutList arg, PRS_LexLayout (*
  * Apply functions to the children of a PRS_RElem. 
  * \return A new PRS_RElem with new children where the argument functions might have applied
  */
-PRS_RElem PRS_visitRElem(PRS_RElem arg, PRS_IntCon (*acceptIntCon)(PRS_IntCon), PRS_StrCon (*acceptStrCon)(PRS_StrCon), PRS_Location (*acceptLocation)(PRS_Location), PRS_OptLayout (*acceptWsAfterBraceOpen)(PRS_OptLayout), PRS_RElemElements (*acceptElements)(PRS_RElemElements), PRS_OptLayout (*acceptWsAfterElements)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterBraceOpenBar)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterLessThan)(PRS_OptLayout)) {
-  if (PRS_isRElemInteger(arg)) {
-    return PRS_makeRElemInteger(
+PRS_RElem PRS_visitRElem(PRS_RElem arg, PRS_IntCon (*acceptIntCon)(PRS_IntCon), PRS_StrCon (*acceptStrCon)(PRS_StrCon), PRS_BoolCon (*acceptBoolCon)(PRS_BoolCon), PRS_Location (*acceptLocation)(PRS_Location), PRS_OptLayout (*acceptWsAfterBraceOpen)(PRS_OptLayout), PRS_RElemElements (*acceptElements)(PRS_RElemElements), PRS_OptLayout (*acceptWsAfterElements)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterBraceOpenBar)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterLessThan)(PRS_OptLayout)) {
+  if (PRS_isRElemInt(arg)) {
+    return PRS_makeRElemInt(
         acceptIntCon ? acceptIntCon(PRS_getRElemIntCon(arg)) : PRS_getRElemIntCon(arg));
   }
-  if (PRS_isRElemString(arg)) {
-    return PRS_makeRElemString(
+  if (PRS_isRElemStr(arg)) {
+    return PRS_makeRElemStr(
         acceptStrCon ? acceptStrCon(PRS_getRElemStrCon(arg)) : PRS_getRElemStrCon(arg));
   }
-  if (PRS_isRElemLocation(arg)) {
-    return PRS_makeRElemLocation(
+  if (PRS_isRElemBool(arg)) {
+    return PRS_makeRElemBool(
+        acceptBoolCon ? acceptBoolCon(PRS_getRElemBoolCon(arg)) : PRS_getRElemBoolCon(arg));
+  }
+  if (PRS_isRElemLoc(arg)) {
+    return PRS_makeRElemLoc(
         acceptLocation ? acceptLocation(PRS_getRElemLocation(arg)) : PRS_getRElemLocation(arg));
   }
   if (PRS_isRElemSet(arg)) {
@@ -8086,18 +8420,18 @@ PRS_RElem PRS_visitRElem(PRS_RElem arg, PRS_IntCon (*acceptIntCon)(PRS_IntCon), 
  * Apply functions to the children of a PRS_RType. 
  * \return A new PRS_RType with new children where the argument functions might have applied
  */
-PRS_RType PRS_visitRType(PRS_RType arg, PRS_OptLayout (*acceptWsAfterLessThan)(PRS_OptLayout), PRS_RTypeColumnTypes (*acceptColumnTypes)(PRS_RTypeColumnTypes), PRS_OptLayout (*acceptWsAfterColumnTypes)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterSet)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterBracketOpen)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterElementType)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterBag)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterRel)(PRS_OptLayout), PRS_IdCon (*acceptName)(PRS_IdCon), PRS_OptLayout (*acceptWsAfterAmp)(PRS_OptLayout)) {
-  if (PRS_isRTypeInteger(arg)) {
-    return PRS_makeRTypeInteger();
+PRS_RType PRS_visitRType(PRS_RType arg, PRS_OptLayout (*acceptWsAfterLessThan)(PRS_OptLayout), PRS_RTypeColumnTypes (*acceptColumnTypes)(PRS_RTypeColumnTypes), PRS_OptLayout (*acceptWsAfterColumnTypes)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterSet)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterBracketOpen)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterElementType)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterBag)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterRel)(PRS_OptLayout), PRS_IdCon (*acceptTypeName)(PRS_IdCon), PRS_OptLayout (*acceptWsAfterAmp)(PRS_OptLayout), PRS_IdCon (*acceptParameterName)(PRS_IdCon)) {
+  if (PRS_isRTypeInt(arg)) {
+    return PRS_makeRTypeInt();
   }
-  if (PRS_isRTypeBoolean(arg)) {
-    return PRS_makeRTypeBoolean();
+  if (PRS_isRTypeBool(arg)) {
+    return PRS_makeRTypeBool();
   }
-  if (PRS_isRTypeString(arg)) {
-    return PRS_makeRTypeString();
+  if (PRS_isRTypeStr(arg)) {
+    return PRS_makeRTypeStr();
   }
-  if (PRS_isRTypeLocation(arg)) {
-    return PRS_makeRTypeLocation();
+  if (PRS_isRTypeLoc(arg)) {
+    return PRS_makeRTypeLoc();
   }
   if (PRS_isRTypeTuple(arg)) {
     return PRS_makeRTypeTuple(
@@ -8109,14 +8443,14 @@ PRS_RType PRS_visitRType(PRS_RType arg, PRS_OptLayout (*acceptWsAfterLessThan)(P
     return PRS_makeRTypeSet(
         acceptWsAfterSet ? acceptWsAfterSet(PRS_getRTypeWsAfterSet(arg)) : PRS_getRTypeWsAfterSet(arg),
         acceptWsAfterBracketOpen ? acceptWsAfterBracketOpen(PRS_getRTypeWsAfterBracketOpen(arg)) : PRS_getRTypeWsAfterBracketOpen(arg),
-        PRS_visitRType(PRS_getRTypeElementType(arg), acceptWsAfterLessThan, acceptColumnTypes, acceptWsAfterColumnTypes, acceptWsAfterSet, acceptWsAfterBracketOpen, acceptWsAfterElementType, acceptWsAfterBag, acceptWsAfterRel, acceptName, acceptWsAfterAmp),
+        PRS_visitRType(PRS_getRTypeElementType(arg), acceptWsAfterLessThan, acceptColumnTypes, acceptWsAfterColumnTypes, acceptWsAfterSet, acceptWsAfterBracketOpen, acceptWsAfterElementType, acceptWsAfterBag, acceptWsAfterRel, acceptTypeName, acceptWsAfterAmp, acceptParameterName),
         acceptWsAfterElementType ? acceptWsAfterElementType(PRS_getRTypeWsAfterElementType(arg)) : PRS_getRTypeWsAfterElementType(arg));
   }
   if (PRS_isRTypeBag(arg)) {
     return PRS_makeRTypeBag(
         acceptWsAfterBag ? acceptWsAfterBag(PRS_getRTypeWsAfterBag(arg)) : PRS_getRTypeWsAfterBag(arg),
         acceptWsAfterBracketOpen ? acceptWsAfterBracketOpen(PRS_getRTypeWsAfterBracketOpen(arg)) : PRS_getRTypeWsAfterBracketOpen(arg),
-        PRS_visitRType(PRS_getRTypeElementType(arg), acceptWsAfterLessThan, acceptColumnTypes, acceptWsAfterColumnTypes, acceptWsAfterSet, acceptWsAfterBracketOpen, acceptWsAfterElementType, acceptWsAfterBag, acceptWsAfterRel, acceptName, acceptWsAfterAmp),
+        PRS_visitRType(PRS_getRTypeElementType(arg), acceptWsAfterLessThan, acceptColumnTypes, acceptWsAfterColumnTypes, acceptWsAfterSet, acceptWsAfterBracketOpen, acceptWsAfterElementType, acceptWsAfterBag, acceptWsAfterRel, acceptTypeName, acceptWsAfterAmp, acceptParameterName),
         acceptWsAfterElementType ? acceptWsAfterElementType(PRS_getRTypeWsAfterElementType(arg)) : PRS_getRTypeWsAfterElementType(arg));
   }
   if (PRS_isRTypeRelation(arg)) {
@@ -8128,12 +8462,12 @@ PRS_RType PRS_visitRType(PRS_RType arg, PRS_OptLayout (*acceptWsAfterLessThan)(P
   }
   if (PRS_isRTypeUserDefined(arg)) {
     return PRS_makeRTypeUserDefined(
-        acceptName ? acceptName(PRS_getRTypeName(arg)) : PRS_getRTypeName(arg));
+        acceptTypeName ? acceptTypeName(PRS_getRTypeTypeName(arg)) : PRS_getRTypeTypeName(arg));
   }
   if (PRS_isRTypeParameter(arg)) {
     return PRS_makeRTypeParameter(
         acceptWsAfterAmp ? acceptWsAfterAmp(PRS_getRTypeWsAfterAmp(arg)) : PRS_getRTypeWsAfterAmp(arg),
-        acceptName ? acceptName(PRS_getRTypeName(arg)) : PRS_getRTypeName(arg));
+        acceptParameterName ? acceptParameterName(PRS_getRTypeParameterName(arg)) : PRS_getRTypeParameterName(arg));
   }
   ATabort("not a RType: %t\n", arg);
   return (PRS_RType)NULL;
@@ -8142,15 +8476,15 @@ PRS_RType PRS_visitRType(PRS_RType arg, PRS_OptLayout (*acceptWsAfterLessThan)(P
  * Apply functions to the children of a PRS_RTuple. 
  * \return A new PRS_RTuple with new children where the argument functions might have applied
  */
-PRS_RTuple PRS_visitRTuple(PRS_RTuple arg, PRS_OptLayout (*acceptWsAfterLessThan)(PRS_OptLayout), PRS_IdCon (*acceptVariable)(PRS_IdCon), PRS_OptLayout (*acceptWsAfterVariable)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterComma)(PRS_OptLayout), PRS_RType (*acceptType)(PRS_RType), PRS_OptLayout (*acceptWsAfterType)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterComma1)(PRS_OptLayout), PRS_RElem (*acceptValue)(PRS_RElem), PRS_OptLayout (*acceptWsAfterValue)(PRS_OptLayout)) {
+PRS_RTuple PRS_visitRTuple(PRS_RTuple arg, PRS_OptLayout (*acceptWsAfterLessThan)(PRS_OptLayout), PRS_IdCon (*acceptVariable)(PRS_IdCon), PRS_OptLayout (*acceptWsAfterVariable)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterComma)(PRS_OptLayout), PRS_RType (*acceptRtype)(PRS_RType), PRS_OptLayout (*acceptWsAfterRtype)(PRS_OptLayout), PRS_OptLayout (*acceptWsAfterComma1)(PRS_OptLayout), PRS_RElem (*acceptValue)(PRS_RElem), PRS_OptLayout (*acceptWsAfterValue)(PRS_OptLayout)) {
   if (PRS_isRTupleRtuple(arg)) {
     return PRS_makeRTupleRtuple(
         acceptWsAfterLessThan ? acceptWsAfterLessThan(PRS_getRTupleWsAfterLessThan(arg)) : PRS_getRTupleWsAfterLessThan(arg),
         acceptVariable ? acceptVariable(PRS_getRTupleVariable(arg)) : PRS_getRTupleVariable(arg),
         acceptWsAfterVariable ? acceptWsAfterVariable(PRS_getRTupleWsAfterVariable(arg)) : PRS_getRTupleWsAfterVariable(arg),
         acceptWsAfterComma ? acceptWsAfterComma(PRS_getRTupleWsAfterComma(arg)) : PRS_getRTupleWsAfterComma(arg),
-        acceptType ? acceptType(PRS_getRTupleType(arg)) : PRS_getRTupleType(arg),
-        acceptWsAfterType ? acceptWsAfterType(PRS_getRTupleWsAfterType(arg)) : PRS_getRTupleWsAfterType(arg),
+        acceptRtype ? acceptRtype(PRS_getRTupleRtype(arg)) : PRS_getRTupleRtype(arg),
+        acceptWsAfterRtype ? acceptWsAfterRtype(PRS_getRTupleWsAfterRtype(arg)) : PRS_getRTupleWsAfterRtype(arg),
         acceptWsAfterComma1 ? acceptWsAfterComma1(PRS_getRTupleWsAfterComma1(arg)) : PRS_getRTupleWsAfterComma1(arg),
         acceptValue ? acceptValue(PRS_getRTupleValue(arg)) : PRS_getRTupleValue(arg),
         acceptWsAfterValue ? acceptWsAfterValue(PRS_getRTupleWsAfterValue(arg)) : PRS_getRTupleWsAfterValue(arg));
@@ -8179,11 +8513,18 @@ PRS_RStore PRS_visitRStore(PRS_RStore arg, PRS_OptLayout (*acceptWsAfterRstore)(
  * Apply functions to the children of a PRS_Start. 
  * \return A new PRS_Start with new children where the argument functions might have applied
  */
-PRS_Start PRS_visitStart(PRS_Start arg, PRS_OptLayout (*acceptWsBefore)(PRS_OptLayout), PRS_RStore (*acceptTopRStore)(PRS_RStore), PRS_OptLayout (*acceptWsAfter)(PRS_OptLayout), int (*acceptAmbCnt)(int)) {
+PRS_Start PRS_visitStart(PRS_Start arg, PRS_OptLayout (*acceptWsBefore)(PRS_OptLayout), PRS_RStore (*acceptTopRStore)(PRS_RStore), PRS_OptLayout (*acceptWsAfter)(PRS_OptLayout), int (*acceptAmbCnt)(int), PRS_BoolCon (*acceptTopBoolCon)(PRS_BoolCon)) {
   if (PRS_isStartRStore(arg)) {
     return PRS_makeStartRStore(
         acceptWsBefore ? acceptWsBefore(PRS_getStartWsBefore(arg)) : PRS_getStartWsBefore(arg),
         acceptTopRStore ? acceptTopRStore(PRS_getStartTopRStore(arg)) : PRS_getStartTopRStore(arg),
+        acceptWsAfter ? acceptWsAfter(PRS_getStartWsAfter(arg)) : PRS_getStartWsAfter(arg),
+        acceptAmbCnt ? acceptAmbCnt(PRS_getStartAmbCnt(arg)) : PRS_getStartAmbCnt(arg));
+  }
+  if (PRS_isStartBoolCon(arg)) {
+    return PRS_makeStartBoolCon(
+        acceptWsBefore ? acceptWsBefore(PRS_getStartWsBefore(arg)) : PRS_getStartWsBefore(arg),
+        acceptTopBoolCon ? acceptTopBoolCon(PRS_getStartTopBoolCon(arg)) : PRS_getStartTopBoolCon(arg),
         acceptWsAfter ? acceptWsAfter(PRS_getStartWsAfter(arg)) : PRS_getStartWsAfter(arg),
         acceptAmbCnt ? acceptAmbCnt(PRS_getStartAmbCnt(arg)) : PRS_getStartAmbCnt(arg));
   }
@@ -8341,6 +8682,20 @@ PRS_LexStrCharChars PRS_visitLexStrCharChars(PRS_LexStrCharChars arg, PRS_LexStr
   }
   ATabort("not a LexStrCharChars: %t\n", arg);
   return (PRS_LexStrCharChars)NULL;
+}
+/**
+ * Apply functions to the children of a PRS_BoolCon. 
+ * \return A new PRS_BoolCon with new children where the argument functions might have applied
+ */
+PRS_BoolCon PRS_visitBoolCon(PRS_BoolCon arg) {
+  if (PRS_isBoolConTrue(arg)) {
+    return PRS_makeBoolConTrue();
+  }
+  if (PRS_isBoolConFalse(arg)) {
+    return PRS_makeBoolConFalse();
+  }
+  ATabort("not a BoolCon: %t\n", arg);
+  return (PRS_BoolCon)NULL;
 }
 /**
  * Apply functions to the children of a PRS_LexNatCon. 
