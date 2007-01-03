@@ -27,8 +27,7 @@ typedef struct _PRS_LexNatCon *PRS_LexNatCon;
 typedef struct _PRS_NatCon *PRS_NatCon;
 typedef struct _PRS_LexIdCon *PRS_LexIdCon;
 typedef struct _PRS_IdCon *PRS_IdCon;
-typedef struct _PRS_LexIntCon *PRS_LexIntCon;
-typedef struct _PRS_IntCon *PRS_IntCon;
+typedef struct _PRS_Integer *PRS_Integer;
 typedef struct _PRS_LexLayout *PRS_LexLayout;
 typedef struct _PRS_Location *PRS_Location;
 typedef struct _PRS_Area *PRS_Area;
@@ -77,10 +76,8 @@ void PRS_protectLexIdCon (PRS_LexIdCon * arg);
 void PRS_unprotectLexIdCon (PRS_LexIdCon * arg);
 void PRS_protectIdCon (PRS_IdCon * arg);
 void PRS_unprotectIdCon (PRS_IdCon * arg);
-void PRS_protectLexIntCon (PRS_LexIntCon * arg);
-void PRS_unprotectLexIntCon (PRS_LexIntCon * arg);
-void PRS_protectIntCon (PRS_IntCon * arg);
-void PRS_unprotectIntCon (PRS_IntCon * arg);
+void PRS_protectInteger (PRS_Integer * arg);
+void PRS_unprotectInteger (PRS_Integer * arg);
 void PRS_protectLexLayout (PRS_LexLayout * arg);
 void PRS_unprotectLexLayout (PRS_LexLayout * arg);
 void PRS_protectLocation (PRS_Location * arg);
@@ -129,10 +126,8 @@ PRS_LexIdCon PRS_LexIdConFromTerm (ATerm t);
 ATerm PRS_LexIdConToTerm (PRS_LexIdCon arg);
 PRS_IdCon PRS_IdConFromTerm (ATerm t);
 ATerm PRS_IdConToTerm (PRS_IdCon arg);
-PRS_LexIntCon PRS_LexIntConFromTerm (ATerm t);
-ATerm PRS_LexIntConToTerm (PRS_LexIntCon arg);
-PRS_IntCon PRS_IntConFromTerm (ATerm t);
-ATerm PRS_IntConToTerm (PRS_IntCon arg);
+PRS_Integer PRS_IntegerFromTerm (ATerm t);
+ATerm PRS_IntegerToTerm (PRS_Integer arg);
 PRS_LexLayout PRS_LexLayoutFromTerm (ATerm t);
 ATerm PRS_LexLayoutToTerm (PRS_LexLayout arg);
 PRS_Location PRS_LocationFromTerm (ATerm t);
@@ -332,7 +327,7 @@ PRS_LexLayoutList PRS_makeLexLayoutListEmpty (void);
 PRS_LexLayoutList PRS_makeLexLayoutListSingle (PRS_LexLayout head);
 PRS_LexLayoutList PRS_makeLexLayoutListMany (PRS_LexLayout head,
 					     PRS_LexLayoutList tail);
-PRS_RElem PRS_makeRElemInt (PRS_IntCon IntCon);
+PRS_RElem PRS_makeRElemInt (PRS_Integer Integer);
 PRS_RElem PRS_makeRElemStr (PRS_StrCon StrCon);
 PRS_RElem PRS_makeRElemBool (PRS_BoolCon BoolCon);
 PRS_RElem PRS_makeRElemLoc (PRS_Location Location);
@@ -422,9 +417,11 @@ PRS_LexNatCon PRS_makeLexNatConDigits (const char *list);
 PRS_NatCon PRS_makeNatConLexToCf (PRS_LexNatCon NatCon);
 PRS_LexIdCon PRS_makeLexIdConDefault (char head, const char *tail);
 PRS_IdCon PRS_makeIdConLexToCf (PRS_LexIdCon IdCon);
-PRS_LexIntCon PRS_makeLexIntConPositive (PRS_LexNatCon digits);
-PRS_LexIntCon PRS_makeLexIntConNegative (PRS_LexNatCon digits);
-PRS_IntCon PRS_makeIntConLexToCf (PRS_LexIntCon IntCon);
+PRS_Integer PRS_makeIntegerNatCon (PRS_NatCon NatCon);
+PRS_Integer PRS_makeIntegerPositive (PRS_OptLayout wsAfterPlus,
+				     PRS_Integer integer);
+PRS_Integer PRS_makeIntegerNegative (PRS_OptLayout wsAfter,
+				     PRS_Integer integer);
 PRS_LexLayout PRS_makeLexLayoutWhitespace (char ch);
 PRS_Location PRS_makeLocationFile (PRS_OptLayout wsAfterFile,
 				   PRS_OptLayout wsAfterParenOpen,
@@ -480,8 +477,7 @@ ATbool PRS_isEqualLexNatCon (PRS_LexNatCon arg0, PRS_LexNatCon arg1);
 ATbool PRS_isEqualNatCon (PRS_NatCon arg0, PRS_NatCon arg1);
 ATbool PRS_isEqualLexIdCon (PRS_LexIdCon arg0, PRS_LexIdCon arg1);
 ATbool PRS_isEqualIdCon (PRS_IdCon arg0, PRS_IdCon arg1);
-ATbool PRS_isEqualLexIntCon (PRS_LexIntCon arg0, PRS_LexIntCon arg1);
-ATbool PRS_isEqualIntCon (PRS_IntCon arg0, PRS_IntCon arg1);
+ATbool PRS_isEqualInteger (PRS_Integer arg0, PRS_Integer arg1);
 ATbool PRS_isEqualLexLayout (PRS_LexLayout arg0, PRS_LexLayout arg1);
 ATbool PRS_isEqualLocation (PRS_Location arg0, PRS_Location arg1);
 ATbool PRS_isEqualArea (PRS_Area arg0, PRS_Area arg1);
@@ -516,7 +512,7 @@ inline ATbool PRS_isRElemLoc (PRS_RElem arg);
 inline ATbool PRS_isRElemSet (PRS_RElem arg);
 inline ATbool PRS_isRElemBag (PRS_RElem arg);
 inline ATbool PRS_isRElemTuple (PRS_RElem arg);
-ATbool PRS_hasRElemIntCon (PRS_RElem arg);
+ATbool PRS_hasRElemInteger (PRS_RElem arg);
 ATbool PRS_hasRElemStrCon (PRS_RElem arg);
 ATbool PRS_hasRElemBoolCon (PRS_RElem arg);
 ATbool PRS_hasRElemLocation (PRS_RElem arg);
@@ -525,7 +521,7 @@ ATbool PRS_hasRElemElements (PRS_RElem arg);
 ATbool PRS_hasRElemWsAfterElements (PRS_RElem arg);
 ATbool PRS_hasRElemWsAfterBraceOpenBar (PRS_RElem arg);
 ATbool PRS_hasRElemWsAfterLessThan (PRS_RElem arg);
-PRS_IntCon PRS_getRElemIntCon (PRS_RElem arg);
+PRS_Integer PRS_getRElemInteger (PRS_RElem arg);
 PRS_StrCon PRS_getRElemStrCon (PRS_RElem arg);
 PRS_BoolCon PRS_getRElemBoolCon (PRS_RElem arg);
 PRS_Location PRS_getRElemLocation (PRS_RElem arg);
@@ -534,7 +530,7 @@ PRS_RElemElements PRS_getRElemElements (PRS_RElem arg);
 PRS_OptLayout PRS_getRElemWsAfterElements (PRS_RElem arg);
 PRS_OptLayout PRS_getRElemWsAfterBraceOpenBar (PRS_RElem arg);
 PRS_OptLayout PRS_getRElemWsAfterLessThan (PRS_RElem arg);
-PRS_RElem PRS_setRElemIntCon (PRS_RElem arg, PRS_IntCon IntCon);
+PRS_RElem PRS_setRElemInteger (PRS_RElem arg, PRS_Integer Integer);
 PRS_RElem PRS_setRElemStrCon (PRS_RElem arg, PRS_StrCon StrCon);
 PRS_RElem PRS_setRElemBoolCon (PRS_RElem arg, PRS_BoolCon BoolCon);
 PRS_RElem PRS_setRElemLocation (PRS_RElem arg, PRS_Location Location);
@@ -815,18 +811,23 @@ inline ATbool PRS_isIdConLexToCf (PRS_IdCon arg);
 ATbool PRS_hasIdConIdCon (PRS_IdCon arg);
 PRS_LexIdCon PRS_getIdConIdCon (PRS_IdCon arg);
 PRS_IdCon PRS_setIdConIdCon (PRS_IdCon arg, PRS_LexIdCon IdCon);
-ATbool PRS_isValidLexIntCon (PRS_LexIntCon arg);
-inline ATbool PRS_isLexIntConPositive (PRS_LexIntCon arg);
-inline ATbool PRS_isLexIntConNegative (PRS_LexIntCon arg);
-ATbool PRS_hasLexIntConDigits (PRS_LexIntCon arg);
-PRS_LexNatCon PRS_getLexIntConDigits (PRS_LexIntCon arg);
-PRS_LexIntCon PRS_setLexIntConDigits (PRS_LexIntCon arg,
-				      PRS_LexNatCon digits);
-ATbool PRS_isValidIntCon (PRS_IntCon arg);
-inline ATbool PRS_isIntConLexToCf (PRS_IntCon arg);
-ATbool PRS_hasIntConIntCon (PRS_IntCon arg);
-PRS_LexIntCon PRS_getIntConIntCon (PRS_IntCon arg);
-PRS_IntCon PRS_setIntConIntCon (PRS_IntCon arg, PRS_LexIntCon IntCon);
+ATbool PRS_isValidInteger (PRS_Integer arg);
+inline ATbool PRS_isIntegerNatCon (PRS_Integer arg);
+inline ATbool PRS_isIntegerPositive (PRS_Integer arg);
+inline ATbool PRS_isIntegerNegative (PRS_Integer arg);
+ATbool PRS_hasIntegerNatCon (PRS_Integer arg);
+ATbool PRS_hasIntegerWsAfterPlus (PRS_Integer arg);
+ATbool PRS_hasIntegerInteger (PRS_Integer arg);
+ATbool PRS_hasIntegerWsAfter (PRS_Integer arg);
+PRS_NatCon PRS_getIntegerNatCon (PRS_Integer arg);
+PRS_OptLayout PRS_getIntegerWsAfterPlus (PRS_Integer arg);
+PRS_Integer PRS_getIntegerInteger (PRS_Integer arg);
+PRS_OptLayout PRS_getIntegerWsAfter (PRS_Integer arg);
+PRS_Integer PRS_setIntegerNatCon (PRS_Integer arg, PRS_NatCon NatCon);
+PRS_Integer PRS_setIntegerWsAfterPlus (PRS_Integer arg,
+				       PRS_OptLayout wsAfterPlus);
+PRS_Integer PRS_setIntegerInteger (PRS_Integer arg, PRS_Integer integer);
+PRS_Integer PRS_setIntegerWsAfter (PRS_Integer arg, PRS_OptLayout wsAfter);
 ATbool PRS_isValidLexLayout (PRS_LexLayout arg);
 inline ATbool PRS_isLexLayoutWhitespace (PRS_LexLayout arg);
 ATbool PRS_hasLexLayoutCh (PRS_LexLayout arg);
@@ -944,7 +945,7 @@ PRS_LexLayoutList PRS_visitLexLayoutList (PRS_LexLayoutList arg,
 					  PRS_LexLayout (*acceptHead)
 					  (PRS_LexLayout));
 PRS_RElem PRS_visitRElem (PRS_RElem arg,
-			  PRS_IntCon (*acceptIntCon) (PRS_IntCon),
+			  PRS_Integer (*acceptInteger) (PRS_Integer),
 			  PRS_StrCon (*acceptStrCon) (PRS_StrCon),
 			  PRS_BoolCon (*acceptBoolCon) (PRS_BoolCon),
 			  PRS_Location (*acceptLocation) (PRS_Location),
@@ -1057,11 +1058,11 @@ PRS_LexIdCon PRS_visitLexIdCon (PRS_LexIdCon arg, char (*acceptHead) (char),
 				char *(*acceptTail) (char *));
 PRS_IdCon PRS_visitIdCon (PRS_IdCon arg,
 			  PRS_LexIdCon (*acceptIdCon) (PRS_LexIdCon));
-PRS_LexIntCon PRS_visitLexIntCon (PRS_LexIntCon arg,
-				  PRS_LexNatCon (*acceptDigits)
-				  (PRS_LexNatCon));
-PRS_IntCon PRS_visitIntCon (PRS_IntCon arg,
-			    PRS_LexIntCon (*acceptIntCon) (PRS_LexIntCon));
+PRS_Integer PRS_visitInteger (PRS_Integer arg,
+			      PRS_NatCon (*acceptNatCon) (PRS_NatCon),
+			      PRS_OptLayout (*acceptWsAfterPlus)
+			      (PRS_OptLayout),
+			      PRS_OptLayout (*acceptWsAfter) (PRS_OptLayout));
 PRS_LexLayout PRS_visitLexLayout (PRS_LexLayout arg, char (*acceptCh) (char));
 PRS_Location PRS_visitLocation (PRS_Location arg,
 				PRS_OptLayout (*acceptWsAfterFile)

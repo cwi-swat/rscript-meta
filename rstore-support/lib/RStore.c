@@ -71,7 +71,7 @@ typedef struct ATerm _RS_StrCon;
 typedef struct ATerm _RS_BoolCon;
 typedef struct ATerm _RS_NatCon;
 typedef struct ATerm _RS_IdCon;
-typedef struct ATerm _RS_IntCon;
+typedef struct ATerm _RS_Integer;
 typedef struct ATerm _RS_Location;
 typedef struct ATerm _RS_Area;
 
@@ -275,18 +275,18 @@ void RS_unprotectIdCon(RS_IdCon *arg) {
 }
 
 /**
- * Protect a RS_IntCon from the ATerm garbage collector. Every RS_IntCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
- * \param[in] arg pointer to a RS_IntCon
+ * Protect a RS_Integer from the ATerm garbage collector. Every RS_Integer that is not rooted somewhere on the C call stack must be protected. Examples are global variables
+ * \param[in] arg pointer to a RS_Integer
  */
-void RS_protectIntCon(RS_IntCon *arg) {
+void RS_protectInteger(RS_Integer *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
 /**
- * Unprotect a RS_IntCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
- * \param[in] arg pointer to a RS_IntCon
+ * Unprotect a RS_Integer from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
+ * \param[in] arg pointer to a RS_Integer
  */
-void RS_unprotectIntCon(RS_IntCon *arg) {
+void RS_unprotectInteger(RS_Integer *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -539,20 +539,20 @@ ATerm RS_IdConToTerm(RS_IdCon arg) {
 }
 
 /**
- * Transforms an ATerm to a RS_IntCon. This is just a wrapper for a cast, so no structural validation is done!
+ * Transforms an ATerm to a RS_Integer. This is just a wrapper for a cast, so no structural validation is done!
  * \param[in] t ATerm to be converted
- * \return RS_IntCon that was encoded by \arg
+ * \return RS_Integer that was encoded by \arg
  */
-RS_IntCon RS_IntConFromTerm(ATerm t) {
-  return (RS_IntCon)t;
+RS_Integer RS_IntegerFromTerm(ATerm t) {
+  return (RS_Integer)t;
 }
 
 /**
- * Transforms a RS_IntConto an ATerm. This is just a wrapper for a cast.
- * \param[in] arg RS_IntCon to be converted
- * \return ATerm that represents the RS_IntCon
+ * Transforms a RS_Integerto an ATerm. This is just a wrapper for a cast.
+ * \param[in] arg RS_Integer to be converted
+ * \return ATerm that represents the RS_Integer
  */
-ATerm RS_IntConToTerm(RS_IntCon arg) {
+ATerm RS_IntegerToTerm(RS_Integer arg) {
   return (ATerm)arg;
 }
 
@@ -984,11 +984,11 @@ RS_RTupleRtuples RS_makeRTupleRtuples6(RS_RTuple elem1, RS_RTuple elem2, RS_RTup
 
 /**
  * Constructs a int of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
- * \param[in] IntCon a child of the new int
+ * \param[in] Integer a child of the new int
  * \return A pointer to a int, either newly constructed or shared
  */
-RS_RElem RS_makeRElemInt(RS_IntCon IntCon) {
-  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun0, (ATerm) IntCon);
+RS_RElem RS_makeRElemInt(RS_Integer Integer) {
+  return (RS_RElem)(ATerm)ATmakeAppl1(RS_afun0, (ATerm) Integer);
 }
 /**
  * Constructs a str of type RS_RElem. Like all ATerm types, RS_RElems are maximally shared.
@@ -1251,12 +1251,28 @@ RS_IdCon RS_makeIdConIdCon(const char* string) {
   return (RS_IdCon)(ATerm) (ATerm) ATmakeAppl(ATmakeAFun(string, 0, ATtrue));
 }
 /**
- * Constructs a IntCon of type RS_IntCon. Like all ATerm types, RS_IntCons are maximally shared.
- * \param[in] string a child of the new IntCon
- * \return A pointer to a IntCon, either newly constructed or shared
+ * Constructs a nat-con of type RS_Integer. Like all ATerm types, RS_Integers are maximally shared.
+ * \param[in] NatCon a child of the new nat-con
+ * \return A pointer to a nat-con, either newly constructed or shared
  */
-RS_IntCon RS_makeIntConIntCon(const char* string) {
-  return (RS_IntCon)(ATerm) (ATerm) ATmakeAppl(ATmakeAFun(string, 0, ATtrue));
+RS_Integer RS_makeIntegerNatCon(int NatCon) {
+  return (RS_Integer)(ATerm)ATmakeAppl1(RS_afun18, (ATerm) (ATerm) ATmakeInt(NatCon));
+}
+/**
+ * Constructs a positive of type RS_Integer. Like all ATerm types, RS_Integers are maximally shared.
+ * \param[in] integer a child of the new positive
+ * \return A pointer to a positive, either newly constructed or shared
+ */
+RS_Integer RS_makeIntegerPositive(RS_Integer integer) {
+  return (RS_Integer)(ATerm)ATmakeAppl1(RS_afun19, (ATerm) integer);
+}
+/**
+ * Constructs a negative of type RS_Integer. Like all ATerm types, RS_Integers are maximally shared.
+ * \param[in] integer a child of the new negative
+ * \return A pointer to a negative, either newly constructed or shared
+ */
+RS_Integer RS_makeIntegerNegative(RS_Integer integer) {
+  return (RS_Integer)(ATerm)ATmakeAppl1(RS_afun20, (ATerm) integer);
 }
 /**
  * Constructs a file of type RS_Location. Like all ATerm types, RS_Locations are maximally shared.
@@ -1264,7 +1280,7 @@ RS_IntCon RS_makeIntConIntCon(const char* string) {
  * \return A pointer to a file, either newly constructed or shared
  */
 RS_Location RS_makeLocationFile(const char* filename) {
-  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun18, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)));
+  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun21, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)));
 }
 /**
  * Constructs a area of type RS_Location. Like all ATerm types, RS_Locations are maximally shared.
@@ -1272,7 +1288,7 @@ RS_Location RS_makeLocationFile(const char* filename) {
  * \return A pointer to a area, either newly constructed or shared
  */
 RS_Location RS_makeLocationArea(RS_Area Area) {
-  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun19, (ATerm) Area);
+  return (RS_Location)(ATerm)ATmakeAppl1(RS_afun22, (ATerm) Area);
 }
 /**
  * Constructs a area-in-file of type RS_Location. Like all ATerm types, RS_Locations are maximally shared.
@@ -1281,7 +1297,7 @@ RS_Location RS_makeLocationArea(RS_Area Area) {
  * \return A pointer to a area-in-file, either newly constructed or shared
  */
 RS_Location RS_makeLocationAreaInFile(const char* filename, RS_Area Area) {
-  return (RS_Location)(ATerm)ATmakeAppl2(RS_afun20, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)), (ATerm) Area);
+  return (RS_Location)(ATerm)ATmakeAppl2(RS_afun23, (ATerm) (ATerm) ATmakeAppl(ATmakeAFun(filename, 0, ATtrue)), (ATerm) Area);
 }
 /**
  * Constructs a area of type RS_Area. Like all ATerm types, RS_Areas are maximally shared.
@@ -1294,7 +1310,7 @@ RS_Location RS_makeLocationAreaInFile(const char* filename, RS_Area Area) {
  * \return A pointer to a area, either newly constructed or shared
  */
 RS_Area RS_makeAreaArea(int beginLine, int beginColumn, int endLine, int endColumn, int offset, int length) {
-  return (RS_Area)(ATerm)ATmakeAppl6(RS_afun21, (ATerm) (ATerm) ATmakeInt(beginLine), (ATerm) (ATerm) ATmakeInt(beginColumn), (ATerm) (ATerm) ATmakeInt(endLine), (ATerm) (ATerm) ATmakeInt(endColumn), (ATerm) (ATerm) ATmakeInt(offset), (ATerm) (ATerm) ATmakeInt(length));
+  return (RS_Area)(ATerm)ATmakeAppl6(RS_afun24, (ATerm) (ATerm) ATmakeInt(beginLine), (ATerm) (ATerm) ATmakeInt(beginColumn), (ATerm) (ATerm) ATmakeInt(endLine), (ATerm) (ATerm) ATmakeInt(endColumn), (ATerm) (ATerm) ATmakeInt(offset), (ATerm) (ATerm) ATmakeInt(length));
 }
 
 /**
@@ -1418,12 +1434,12 @@ ATbool RS_isEqualIdCon(RS_IdCon arg0, RS_IdCon arg1) {
 }
 
 /**
- * Tests equality of two RS_IntCons. A constant time operation.
- * \param[in] arg0 first RS_IntCon to be compared
- * \param[in] arg1 second RS_IntCon to be compared
+ * Tests equality of two RS_Integers. A constant time operation.
+ * \param[in] arg0 first RS_Integer to be compared
+ * \param[in] arg1 second RS_Integer to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualIntCon(RS_IntCon arg0, RS_IntCon arg1) {
+ATbool RS_isEqualInteger(RS_Integer arg0, RS_Integer arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1639,11 +1655,11 @@ inline ATbool RS_isRElemTuple(RS_RElem arg) {
 }
 
 /**
- * Assert whether a RS_RElem has a IntCon. 
+ * Assert whether a RS_RElem has a Integer. 
  * \param[in] arg input RS_RElem
- * \return ATtrue if the RS_RElem had a IntCon, or ATfalse otherwise
+ * \return ATtrue if the RS_RElem had a Integer, or ATfalse otherwise
  */
-ATbool RS_hasRElemIntCon(RS_RElem arg) {
+ATbool RS_hasRElemInteger(RS_RElem arg) {
   if (RS_isRElemInt(arg)) {
     return ATtrue;
   }
@@ -1705,13 +1721,13 @@ ATbool RS_hasRElemElements(RS_RElem arg) {
 }
 
 /**
- * Get the IntCon RS_IntCon of a RS_RElem. Note that the precondition is that this RS_RElem actually has a IntCon
+ * Get the Integer RS_Integer of a RS_RElem. Note that the precondition is that this RS_RElem actually has a Integer
  * \param[in] arg input RS_RElem
- * \return the IntCon of #arg, if it exist or an undefined value if it does not
+ * \return the Integer of #arg, if it exist or an undefined value if it does not
  */
-RS_IntCon RS_getRElemIntCon(RS_RElem arg) {
+RS_Integer RS_getRElemInteger(RS_RElem arg) {
   
-    return (RS_IntCon)ATgetArgument((ATermAppl)arg, 0);
+    return (RS_Integer)ATgetArgument((ATermAppl)arg, 0);
 }
 
 /**
@@ -1761,17 +1777,17 @@ RS_RElemElements RS_getRElemElements(RS_RElem arg) {
 }
 
 /**
- * Set the IntCon of a RS_RElem. The precondition being that this RS_RElem actually has a IntCon
+ * Set the Integer of a RS_RElem. The precondition being that this RS_RElem actually has a Integer
  * \param[in] arg input RS_RElem
- * \param[in] IntCon new RS_IntCon to set in #arg
- * \return A new RS_RElem with IntCon at the right place, or a core dump if #arg did not have a IntCon
+ * \param[in] Integer new RS_Integer to set in #arg
+ * \return A new RS_RElem with Integer at the right place, or a core dump if #arg did not have a Integer
  */
-RS_RElem RS_setRElemIntCon(RS_RElem arg, RS_IntCon IntCon) {
+RS_RElem RS_setRElemInteger(RS_RElem arg, RS_Integer Integer) {
   if (RS_isRElemInt(arg)) {
-    return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) IntCon), 0);
+    return (RS_RElem)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) Integer), 0);
   }
 
-  ATabort("RElem has no IntCon: %t\n", arg);
+  ATabort("RElem has no Integer: %t\n", arg);
   return (RS_RElem)NULL;
 }
 
@@ -3291,65 +3307,173 @@ RS_IdCon RS_setIdConString(RS_IdCon arg, const char* string) {
 }
 
 /**
- * Assert whether a RS_IntCon is any of the valid alternatives, or not. This analysis does not go any deeper than the top level
- * \param[in] arg input RS_IntCon
+ * Assert whether a RS_Integer is any of the valid alternatives, or not. This analysis does not go any deeper than the top level
+ * \param[in] arg input RS_Integer
  * \return ATtrue if #arg corresponds to the expected signature, or ATfalse otherwise
  */
-ATbool RS_isValidIntCon(RS_IntCon arg) {
-  if (RS_isIntConIntCon(arg)) {
+ATbool RS_isValidInteger(RS_Integer arg) {
+  if (RS_isIntegerNatCon(arg)) {
+    return ATtrue;
+  }
+  else if (RS_isIntegerPositive(arg)) {
+    return ATtrue;
+  }
+  else if (RS_isIntegerNegative(arg)) {
     return ATtrue;
   }
   return ATfalse;
 }
 
 /**
- * Assert whether a RS_IntCon is a IntCon. Always returns ATtrue
- * \param[in] arg input RS_IntCon
- * \return ATtrue if #arg corresponds to the signature of a IntCon, or ATfalse otherwise
+ * Assert whether a RS_Integer is a nat-con. . May not be used to assert correctness of the RS_Integer
+ * \param[in] arg input RS_Integer
+ * \return ATtrue if #arg corresponds to the signature of a nat-con, or ATfalse otherwise
  */
-inline ATbool RS_isIntConIntCon(RS_IntCon arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternIntConIntCon, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isIntegerNatCon(RS_Integer arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, RS_patternIntegerNatCon, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
 }
 
 /**
- * Assert whether a RS_IntCon has a string. 
- * \param[in] arg input RS_IntCon
- * \return ATtrue if the RS_IntCon had a string, or ATfalse otherwise
+ * Assert whether a RS_Integer is a positive. . May not be used to assert correctness of the RS_Integer
+ * \param[in] arg input RS_Integer
+ * \return ATtrue if #arg corresponds to the signature of a positive, or ATfalse otherwise
  */
-ATbool RS_hasIntConString(RS_IntCon arg) {
-  if (RS_isIntConIntCon(arg)) {
+inline ATbool RS_isIntegerPositive(RS_Integer arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, RS_patternIntegerPositive, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a RS_Integer is a negative. . May not be used to assert correctness of the RS_Integer
+ * \param[in] arg input RS_Integer
+ * \return ATtrue if #arg corresponds to the signature of a negative, or ATfalse otherwise
+ */
+inline ATbool RS_isIntegerNegative(RS_Integer arg) {
+  {
+    static ATerm last_arg = NULL;
+    static int last_gc = -1;
+    static ATbool last_result;
+
+    assert(arg != NULL);
+
+    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
+      last_arg = (ATerm)arg;
+      last_result = ATmatchTerm((ATerm)arg, RS_patternIntegerNegative, NULL);
+      last_gc = ATgetGCCount();
+    }
+
+    return last_result;
+  }
+}
+
+/**
+ * Assert whether a RS_Integer has a NatCon. 
+ * \param[in] arg input RS_Integer
+ * \return ATtrue if the RS_Integer had a NatCon, or ATfalse otherwise
+ */
+ATbool RS_hasIntegerNatCon(RS_Integer arg) {
+  if (RS_isIntegerNatCon(arg)) {
     return ATtrue;
   }
   return ATfalse;
 }
 
 /**
- * Get the string char* of a RS_IntCon. Note that the precondition is that this RS_IntCon actually has a string
- * \param[in] arg input RS_IntCon
- * \return the string of #arg, if it exist or an undefined value if it does not
+ * Assert whether a RS_Integer has a integer. 
+ * \param[in] arg input RS_Integer
+ * \return ATtrue if the RS_Integer had a integer, or ATfalse otherwise
  */
-char* RS_getIntConString(RS_IntCon arg) {
+ATbool RS_hasIntegerInteger(RS_Integer arg) {
+  if (RS_isIntegerPositive(arg)) {
+    return ATtrue;
+  }
+  else if (RS_isIntegerNegative(arg)) {
+    return ATtrue;
+  }
+  return ATfalse;
+}
+
+/**
+ * Get the NatCon int of a RS_Integer. Note that the precondition is that this RS_Integer actually has a NatCon
+ * \param[in] arg input RS_Integer
+ * \return the NatCon of #arg, if it exist or an undefined value if it does not
+ */
+int RS_getIntegerNatCon(RS_Integer arg) {
   
-    return (char*)ATgetName(ATgetAFun((ATermAppl) arg));
+    return (int)ATgetInt((ATermInt) ATgetArgument((ATermAppl)arg, 0));
 }
 
 /**
- * Set the string of a RS_IntCon. The precondition being that this RS_IntCon actually has a string
- * \param[in] arg input RS_IntCon
- * \param[in] string new const char* to set in #arg
- * \return A new RS_IntCon with string at the right place, or a core dump if #arg did not have a string
+ * Get the integer RS_Integer of a RS_Integer. Note that the precondition is that this RS_Integer actually has a integer
+ * \param[in] arg input RS_Integer
+ * \return the integer of #arg, if it exist or an undefined value if it does not
  */
-RS_IntCon RS_setIntConString(RS_IntCon arg, const char* string) {
-  if (RS_isIntConIntCon(arg)) {
-    return (RS_IntCon)((ATerm) (ATerm) ATmakeAppl(ATmakeAFun(string, 0, ATtrue)));
+RS_Integer RS_getIntegerInteger(RS_Integer arg) {
+  if (RS_isIntegerPositive(arg)) {
+    return (RS_Integer)ATgetArgument((ATermAppl)arg, 0);
+  }
+  else 
+    return (RS_Integer)ATgetArgument((ATermAppl)arg, 0);
+}
+
+/**
+ * Set the NatCon of a RS_Integer. The precondition being that this RS_Integer actually has a NatCon
+ * \param[in] arg input RS_Integer
+ * \param[in] NatCon new int to set in #arg
+ * \return A new RS_Integer with NatCon at the right place, or a core dump if #arg did not have a NatCon
+ */
+RS_Integer RS_setIntegerNatCon(RS_Integer arg, int NatCon) {
+  if (RS_isIntegerNatCon(arg)) {
+    return (RS_Integer)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) (ATerm) ATmakeInt(NatCon)), 0);
   }
 
-  ATabort("IntCon has no String: %t\n", arg);
-  return (RS_IntCon)NULL;
+  ATabort("Integer has no NatCon: %t\n", arg);
+  return (RS_Integer)NULL;
+}
+
+/**
+ * Set the integer of a RS_Integer. The precondition being that this RS_Integer actually has a integer
+ * \param[in] arg input RS_Integer
+ * \param[in] integer new RS_Integer to set in #arg
+ * \return A new RS_Integer with integer at the right place, or a core dump if #arg did not have a integer
+ */
+RS_Integer RS_setIntegerInteger(RS_Integer arg, RS_Integer integer) {
+  if (RS_isIntegerPositive(arg)) {
+    return (RS_Integer)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) integer), 0);
+  }
+  else if (RS_isIntegerNegative(arg)) {
+    return (RS_Integer)ATsetArgument((ATermAppl)arg, (ATerm)((ATerm) integer), 0);
+  }
+
+  ATabort("Integer has no Integer: %t\n", arg);
+  return (RS_Integer)NULL;
 }
 
 /**
@@ -3782,10 +3906,10 @@ RS_Area RS_setAreaLength(RS_Area arg, int length) {
  * Apply functions to the children of a RS_RElem. 
  * \return A new RS_RElem with new children where the argument functions might have applied
  */
-RS_RElem RS_visitRElem(RS_RElem arg, RS_IntCon (*acceptIntCon)(RS_IntCon), char* (*acceptStrCon)(char*), RS_BoolCon (*acceptBoolCon)(RS_BoolCon), RS_Location (*acceptLocation)(RS_Location), RS_RElemElements (*acceptElements)(RS_RElemElements)) {
+RS_RElem RS_visitRElem(RS_RElem arg, RS_Integer (*acceptInteger)(RS_Integer), char* (*acceptStrCon)(char*), RS_BoolCon (*acceptBoolCon)(RS_BoolCon), RS_Location (*acceptLocation)(RS_Location), RS_RElemElements (*acceptElements)(RS_RElemElements)) {
   if (RS_isRElemInt(arg)) {
     return RS_makeRElemInt(
-        acceptIntCon ? acceptIntCon(RS_getRElemIntCon(arg)) : RS_getRElemIntCon(arg));
+        acceptInteger ? acceptInteger(RS_getRElemInteger(arg)) : RS_getRElemInteger(arg));
   }
   if (RS_isRElemStr(arg)) {
     return RS_makeRElemStr(
@@ -4007,16 +4131,24 @@ RS_IdCon RS_visitIdCon(RS_IdCon arg, char* (*acceptString)(char*)) {
   return (RS_IdCon)NULL;
 }
 /**
- * Apply functions to the children of a RS_IntCon. 
- * \return A new RS_IntCon with new children where the argument functions might have applied
+ * Apply functions to the children of a RS_Integer. 
+ * \return A new RS_Integer with new children where the argument functions might have applied
  */
-RS_IntCon RS_visitIntCon(RS_IntCon arg, char* (*acceptString)(char*)) {
-  if (RS_isIntConIntCon(arg)) {
-    return RS_makeIntConIntCon(
-        acceptString ? acceptString(RS_getIntConString(arg)) : RS_getIntConString(arg));
+RS_Integer RS_visitInteger(RS_Integer arg, int (*acceptNatCon)(int)) {
+  if (RS_isIntegerNatCon(arg)) {
+    return RS_makeIntegerNatCon(
+        acceptNatCon ? acceptNatCon(RS_getIntegerNatCon(arg)) : RS_getIntegerNatCon(arg));
   }
-  ATabort("not a IntCon: %t\n", arg);
-  return (RS_IntCon)NULL;
+  if (RS_isIntegerPositive(arg)) {
+    return RS_makeIntegerPositive(
+        RS_visitInteger(RS_getIntegerInteger(arg), acceptNatCon));
+  }
+  if (RS_isIntegerNegative(arg)) {
+    return RS_makeIntegerNegative(
+        RS_visitInteger(RS_getIntegerInteger(arg), acceptNatCon));
+  }
+  ATabort("not a Integer: %t\n", arg);
+  return (RS_Integer)NULL;
 }
 /**
  * Apply functions to the children of a RS_Location. 

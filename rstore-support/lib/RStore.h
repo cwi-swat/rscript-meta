@@ -18,7 +18,7 @@ typedef struct _RS_StrCon *RS_StrCon;
 typedef struct _RS_BoolCon *RS_BoolCon;
 typedef struct _RS_NatCon *RS_NatCon;
 typedef struct _RS_IdCon *RS_IdCon;
-typedef struct _RS_IntCon *RS_IntCon;
+typedef struct _RS_Integer *RS_Integer;
 typedef struct _RS_Location *RS_Location;
 typedef struct _RS_Area *RS_Area;
 
@@ -48,8 +48,8 @@ void RS_protectNatCon (RS_NatCon * arg);
 void RS_unprotectNatCon (RS_NatCon * arg);
 void RS_protectIdCon (RS_IdCon * arg);
 void RS_unprotectIdCon (RS_IdCon * arg);
-void RS_protectIntCon (RS_IntCon * arg);
-void RS_unprotectIntCon (RS_IntCon * arg);
+void RS_protectInteger (RS_Integer * arg);
+void RS_unprotectInteger (RS_Integer * arg);
 void RS_protectLocation (RS_Location * arg);
 void RS_unprotectLocation (RS_Location * arg);
 void RS_protectArea (RS_Area * arg);
@@ -78,8 +78,8 @@ RS_NatCon RS_NatConFromTerm (ATerm t);
 ATerm RS_NatConToTerm (RS_NatCon arg);
 RS_IdCon RS_IdConFromTerm (ATerm t);
 ATerm RS_IdConToTerm (RS_IdCon arg);
-RS_IntCon RS_IntConFromTerm (ATerm t);
-ATerm RS_IntConToTerm (RS_IntCon arg);
+RS_Integer RS_IntegerFromTerm (ATerm t);
+ATerm RS_IntegerToTerm (RS_Integer arg);
 RS_Location RS_LocationFromTerm (ATerm t);
 ATerm RS_LocationToTerm (RS_Location arg);
 RS_Area RS_AreaFromTerm (ATerm t);
@@ -150,7 +150,7 @@ RS_RTupleRtuples RS_makeRTupleRtuples5 (RS_RTuple elem1, RS_RTuple elem2,
 RS_RTupleRtuples RS_makeRTupleRtuples6 (RS_RTuple elem1, RS_RTuple elem2,
 					RS_RTuple elem3, RS_RTuple elem4,
 					RS_RTuple elem5, RS_RTuple elem6);
-RS_RElem RS_makeRElemInt (RS_IntCon IntCon);
+RS_RElem RS_makeRElemInt (RS_Integer Integer);
 RS_RElem RS_makeRElemStr (const char *StrCon);
 RS_RElem RS_makeRElemBool (RS_BoolCon BoolCon);
 RS_RElem RS_makeRElemLoc (RS_Location Location);
@@ -188,7 +188,9 @@ RS_BoolCon RS_makeBoolConTrue (void);
 RS_BoolCon RS_makeBoolConFalse (void);
 RS_NatCon RS_makeNatConNatCon (const char *string);
 RS_IdCon RS_makeIdConIdCon (const char *string);
-RS_IntCon RS_makeIntConIntCon (const char *string);
+RS_Integer RS_makeIntegerNatCon (int NatCon);
+RS_Integer RS_makeIntegerPositive (RS_Integer integer);
+RS_Integer RS_makeIntegerNegative (RS_Integer integer);
 RS_Location RS_makeLocationFile (const char *filename);
 RS_Location RS_makeLocationArea (RS_Area Area);
 RS_Location RS_makeLocationAreaInFile (const char *filename, RS_Area Area);
@@ -207,7 +209,7 @@ ATbool RS_isEqualStrCon (RS_StrCon arg0, RS_StrCon arg1);
 ATbool RS_isEqualBoolCon (RS_BoolCon arg0, RS_BoolCon arg1);
 ATbool RS_isEqualNatCon (RS_NatCon arg0, RS_NatCon arg1);
 ATbool RS_isEqualIdCon (RS_IdCon arg0, RS_IdCon arg1);
-ATbool RS_isEqualIntCon (RS_IntCon arg0, RS_IntCon arg1);
+ATbool RS_isEqualInteger (RS_Integer arg0, RS_Integer arg1);
 ATbool RS_isEqualLocation (RS_Location arg0, RS_Location arg1);
 ATbool RS_isEqualArea (RS_Area arg0, RS_Area arg1);
 ATbool RS_isValidRElem (RS_RElem arg);
@@ -218,17 +220,17 @@ inline ATbool RS_isRElemLoc (RS_RElem arg);
 inline ATbool RS_isRElemSet (RS_RElem arg);
 inline ATbool RS_isRElemBag (RS_RElem arg);
 inline ATbool RS_isRElemTuple (RS_RElem arg);
-ATbool RS_hasRElemIntCon (RS_RElem arg);
+ATbool RS_hasRElemInteger (RS_RElem arg);
 ATbool RS_hasRElemStrCon (RS_RElem arg);
 ATbool RS_hasRElemBoolCon (RS_RElem arg);
 ATbool RS_hasRElemLocation (RS_RElem arg);
 ATbool RS_hasRElemElements (RS_RElem arg);
-RS_IntCon RS_getRElemIntCon (RS_RElem arg);
+RS_Integer RS_getRElemInteger (RS_RElem arg);
 char *RS_getRElemStrCon (RS_RElem arg);
 RS_BoolCon RS_getRElemBoolCon (RS_RElem arg);
 RS_Location RS_getRElemLocation (RS_RElem arg);
 RS_RElemElements RS_getRElemElements (RS_RElem arg);
-RS_RElem RS_setRElemIntCon (RS_RElem arg, RS_IntCon IntCon);
+RS_RElem RS_setRElemInteger (RS_RElem arg, RS_Integer Integer);
 RS_RElem RS_setRElemStrCon (RS_RElem arg, const char *StrCon);
 RS_RElem RS_setRElemBoolCon (RS_RElem arg, RS_BoolCon BoolCon);
 RS_RElem RS_setRElemLocation (RS_RElem arg, RS_Location Location);
@@ -332,11 +334,16 @@ inline ATbool RS_isIdConIdCon (RS_IdCon arg);
 ATbool RS_hasIdConString (RS_IdCon arg);
 char *RS_getIdConString (RS_IdCon arg);
 RS_IdCon RS_setIdConString (RS_IdCon arg, const char *string);
-ATbool RS_isValidIntCon (RS_IntCon arg);
-inline ATbool RS_isIntConIntCon (RS_IntCon arg);
-ATbool RS_hasIntConString (RS_IntCon arg);
-char *RS_getIntConString (RS_IntCon arg);
-RS_IntCon RS_setIntConString (RS_IntCon arg, const char *string);
+ATbool RS_isValidInteger (RS_Integer arg);
+inline ATbool RS_isIntegerNatCon (RS_Integer arg);
+inline ATbool RS_isIntegerPositive (RS_Integer arg);
+inline ATbool RS_isIntegerNegative (RS_Integer arg);
+ATbool RS_hasIntegerNatCon (RS_Integer arg);
+ATbool RS_hasIntegerInteger (RS_Integer arg);
+int RS_getIntegerNatCon (RS_Integer arg);
+RS_Integer RS_getIntegerInteger (RS_Integer arg);
+RS_Integer RS_setIntegerNatCon (RS_Integer arg, int NatCon);
+RS_Integer RS_setIntegerInteger (RS_Integer arg, RS_Integer integer);
 ATbool RS_isValidLocation (RS_Location arg);
 inline ATbool RS_isLocationFile (RS_Location arg);
 inline ATbool RS_isLocationArea (RS_Location arg);
@@ -367,7 +374,8 @@ RS_Area RS_setAreaEndLine (RS_Area arg, int endLine);
 RS_Area RS_setAreaEndColumn (RS_Area arg, int endColumn);
 RS_Area RS_setAreaOffset (RS_Area arg, int offset);
 RS_Area RS_setAreaLength (RS_Area arg, int length);
-RS_RElem RS_visitRElem (RS_RElem arg, RS_IntCon (*acceptIntCon) (RS_IntCon),
+RS_RElem RS_visitRElem (RS_RElem arg,
+			RS_Integer (*acceptInteger) (RS_Integer),
 			char *(*acceptStrCon) (char *),
 			RS_BoolCon (*acceptBoolCon) (RS_BoolCon),
 			RS_Location (*acceptLocation) (RS_Location),
@@ -397,7 +405,7 @@ RS_StrCon RS_visitStrCon (RS_StrCon arg, char *(*acceptString) (char *));
 RS_BoolCon RS_visitBoolCon (RS_BoolCon arg);
 RS_NatCon RS_visitNatCon (RS_NatCon arg, char *(*acceptString) (char *));
 RS_IdCon RS_visitIdCon (RS_IdCon arg, char *(*acceptString) (char *));
-RS_IntCon RS_visitIntCon (RS_IntCon arg, char *(*acceptString) (char *));
+RS_Integer RS_visitInteger (RS_Integer arg, int (*acceptNatCon) (int));
 RS_Location RS_visitLocation (RS_Location arg,
 			      char *(*acceptFilename) (char *),
 			      RS_Area (*acceptArea) (RS_Area));
