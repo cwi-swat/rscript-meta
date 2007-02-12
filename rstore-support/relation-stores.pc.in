@@ -1,0 +1,12 @@
+prefix=@prefix@
+Maintainers=jurgenv@cwi.nl
+
+Name: relation-stores
+Version: 0.1
+Description: API's for Rstores.
+Requires: aterm
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lRStoreAPI
+#uninstalled Libs: -L@abs_top_builddir@/lib -lRStoreAPI
+#uninstalled Cflags: -I@abs_top_builddir@/lib
+Jars=${prefix}/share/relationstores.jar
