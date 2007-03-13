@@ -32,142 +32,712 @@ typedef struct _PRS_LexLayout *PRS_LexLayout;
 typedef struct _PRS_Location *PRS_Location;
 typedef struct _PRS_Area *PRS_Area;
 
-void PRS_initParsedRStoreApi (void);
+#ifdef FAST_API
+#define PRS_initParsedRStoreApi() (init_ParsedRStore_dict())
+#else
+void _PRS_initParsedRStoreApi (void);
+#define PRS_initParsedRStoreApi() (_PRS_initParsedRStoreApi())
+#endif
 
-void PRS_protectOptLayout (PRS_OptLayout * arg);
-void PRS_unprotectOptLayout (PRS_OptLayout * arg);
-void PRS_protectLayout (PRS_Layout * arg);
-void PRS_unprotectLayout (PRS_Layout * arg);
-void PRS_protectLexLayoutList (PRS_LexLayoutList * arg);
-void PRS_unprotectLexLayoutList (PRS_LexLayoutList * arg);
-void PRS_protectRElem (PRS_RElem * arg);
-void PRS_unprotectRElem (PRS_RElem * arg);
-void PRS_protectRType (PRS_RType * arg);
-void PRS_unprotectRType (PRS_RType * arg);
-void PRS_protectRTuple (PRS_RTuple * arg);
-void PRS_unprotectRTuple (PRS_RTuple * arg);
-void PRS_protectRStore (PRS_RStore * arg);
-void PRS_unprotectRStore (PRS_RStore * arg);
-void PRS_protectStart (PRS_Start * arg);
-void PRS_unprotectStart (PRS_Start * arg);
-void PRS_protectRElemElements (PRS_RElemElements * arg);
-void PRS_unprotectRElemElements (PRS_RElemElements * arg);
-void PRS_protectRTypeColumnTypes (PRS_RTypeColumnTypes * arg);
-void PRS_unprotectRTypeColumnTypes (PRS_RTypeColumnTypes * arg);
-void PRS_protectRTupleRtuples (PRS_RTupleRtuples * arg);
-void PRS_unprotectRTupleRtuples (PRS_RTupleRtuples * arg);
-void PRS_protectLexStrChar (PRS_LexStrChar * arg);
-void PRS_unprotectLexStrChar (PRS_LexStrChar * arg);
-void PRS_protectStrChar (PRS_StrChar * arg);
-void PRS_unprotectStrChar (PRS_StrChar * arg);
-void PRS_protectLexStrCon (PRS_LexStrCon * arg);
-void PRS_unprotectLexStrCon (PRS_LexStrCon * arg);
-void PRS_protectStrCon (PRS_StrCon * arg);
-void PRS_unprotectStrCon (PRS_StrCon * arg);
-void PRS_protectLexStrCharChars (PRS_LexStrCharChars * arg);
-void PRS_unprotectLexStrCharChars (PRS_LexStrCharChars * arg);
-void PRS_protectBoolCon (PRS_BoolCon * arg);
-void PRS_unprotectBoolCon (PRS_BoolCon * arg);
-void PRS_protectLexNatCon (PRS_LexNatCon * arg);
-void PRS_unprotectLexNatCon (PRS_LexNatCon * arg);
-void PRS_protectNatCon (PRS_NatCon * arg);
-void PRS_unprotectNatCon (PRS_NatCon * arg);
-void PRS_protectLexIdCon (PRS_LexIdCon * arg);
-void PRS_unprotectLexIdCon (PRS_LexIdCon * arg);
-void PRS_protectIdCon (PRS_IdCon * arg);
-void PRS_unprotectIdCon (PRS_IdCon * arg);
-void PRS_protectInteger (PRS_Integer * arg);
-void PRS_unprotectInteger (PRS_Integer * arg);
-void PRS_protectLexLayout (PRS_LexLayout * arg);
-void PRS_unprotectLexLayout (PRS_LexLayout * arg);
-void PRS_protectLocation (PRS_Location * arg);
-void PRS_unprotectLocation (PRS_Location * arg);
-void PRS_protectArea (PRS_Area * arg);
-void PRS_unprotectArea (PRS_Area * arg);
-PRS_OptLayout PRS_OptLayoutFromTerm (ATerm t);
-ATerm PRS_OptLayoutToTerm (PRS_OptLayout arg);
-PRS_Layout PRS_LayoutFromTerm (ATerm t);
-ATerm PRS_LayoutToTerm (PRS_Layout arg);
-PRS_LexLayoutList PRS_LexLayoutListFromTerm (ATerm t);
-ATerm PRS_LexLayoutListToTerm (PRS_LexLayoutList arg);
-PRS_RElem PRS_RElemFromTerm (ATerm t);
-ATerm PRS_RElemToTerm (PRS_RElem arg);
-PRS_RType PRS_RTypeFromTerm (ATerm t);
-ATerm PRS_RTypeToTerm (PRS_RType arg);
-PRS_RTuple PRS_RTupleFromTerm (ATerm t);
-ATerm PRS_RTupleToTerm (PRS_RTuple arg);
-PRS_RStore PRS_RStoreFromTerm (ATerm t);
-ATerm PRS_RStoreToTerm (PRS_RStore arg);
-PRS_Start PRS_StartFromTerm (ATerm t);
-ATerm PRS_StartToTerm (PRS_Start arg);
-PRS_RElemElements PRS_RElemElementsFromTerm (ATerm t);
-ATerm PRS_RElemElementsToTerm (PRS_RElemElements arg);
-PRS_RTypeColumnTypes PRS_RTypeColumnTypesFromTerm (ATerm t);
-ATerm PRS_RTypeColumnTypesToTerm (PRS_RTypeColumnTypes arg);
-PRS_RTupleRtuples PRS_RTupleRtuplesFromTerm (ATerm t);
-ATerm PRS_RTupleRtuplesToTerm (PRS_RTupleRtuples arg);
-PRS_LexStrChar PRS_LexStrCharFromTerm (ATerm t);
-ATerm PRS_LexStrCharToTerm (PRS_LexStrChar arg);
-PRS_StrChar PRS_StrCharFromTerm (ATerm t);
-ATerm PRS_StrCharToTerm (PRS_StrChar arg);
-PRS_LexStrCon PRS_LexStrConFromTerm (ATerm t);
-ATerm PRS_LexStrConToTerm (PRS_LexStrCon arg);
-PRS_StrCon PRS_StrConFromTerm (ATerm t);
-ATerm PRS_StrConToTerm (PRS_StrCon arg);
-PRS_LexStrCharChars PRS_LexStrCharCharsFromTerm (ATerm t);
-ATerm PRS_LexStrCharCharsToTerm (PRS_LexStrCharChars arg);
-PRS_BoolCon PRS_BoolConFromTerm (ATerm t);
-ATerm PRS_BoolConToTerm (PRS_BoolCon arg);
-PRS_LexNatCon PRS_LexNatConFromTerm (ATerm t);
-ATerm PRS_LexNatConToTerm (PRS_LexNatCon arg);
-PRS_NatCon PRS_NatConFromTerm (ATerm t);
-ATerm PRS_NatConToTerm (PRS_NatCon arg);
-PRS_LexIdCon PRS_LexIdConFromTerm (ATerm t);
-ATerm PRS_LexIdConToTerm (PRS_LexIdCon arg);
-PRS_IdCon PRS_IdConFromTerm (ATerm t);
-ATerm PRS_IdConToTerm (PRS_IdCon arg);
-PRS_Integer PRS_IntegerFromTerm (ATerm t);
-ATerm PRS_IntegerToTerm (PRS_Integer arg);
-PRS_LexLayout PRS_LexLayoutFromTerm (ATerm t);
-ATerm PRS_LexLayoutToTerm (PRS_LexLayout arg);
-PRS_Location PRS_LocationFromTerm (ATerm t);
-ATerm PRS_LocationToTerm (PRS_Location arg);
-PRS_Area PRS_AreaFromTerm (ATerm t);
-ATerm PRS_AreaToTerm (PRS_Area arg);
-int PRS_getLexLayoutListLength (PRS_LexLayoutList arg);
-PRS_LexLayoutList PRS_reverseLexLayoutList (PRS_LexLayoutList arg);
-PRS_LexLayoutList PRS_appendLexLayoutList (PRS_LexLayoutList arg,
-					   PRS_LexLayout elem);
-PRS_LexLayoutList PRS_concatLexLayoutList (PRS_LexLayoutList arg0,
-					   PRS_LexLayoutList arg1);
-PRS_LexLayoutList PRS_sliceLexLayoutList (PRS_LexLayoutList arg, int start,
-					  int end);
-PRS_LexLayout PRS_getLexLayoutListLexLayoutAt (PRS_LexLayoutList arg,
-					       int index);
-PRS_LexLayoutList PRS_replaceLexLayoutListLexLayoutAt (PRS_LexLayoutList arg,
-						       PRS_LexLayout elem,
-						       int index);
-PRS_LexLayoutList PRS_makeLexLayoutList2 (PRS_LexLayout elem1,
-					  PRS_LexLayout elem2);
-PRS_LexLayoutList PRS_makeLexLayoutList3 (PRS_LexLayout elem1,
-					  PRS_LexLayout elem2,
-					  PRS_LexLayout elem3);
-PRS_LexLayoutList PRS_makeLexLayoutList4 (PRS_LexLayout elem1,
-					  PRS_LexLayout elem2,
-					  PRS_LexLayout elem3,
-					  PRS_LexLayout elem4);
-PRS_LexLayoutList PRS_makeLexLayoutList5 (PRS_LexLayout elem1,
-					  PRS_LexLayout elem2,
-					  PRS_LexLayout elem3,
-					  PRS_LexLayout elem4,
-					  PRS_LexLayout elem5);
-PRS_LexLayoutList PRS_makeLexLayoutList6 (PRS_LexLayout elem1,
-					  PRS_LexLayout elem2,
-					  PRS_LexLayout elem3,
-					  PRS_LexLayout elem4,
-					  PRS_LexLayout elem5,
-					  PRS_LexLayout elem6);
-int PRS_getRElemElementsLength (PRS_RElemElements arg);
+#ifdef FAST_API
+#define PRS_protectOptLayout(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectOptLayout (PRS_OptLayout * arg);
+#define PRS_protectOptLayout(arg) (_PRS_protectOptLayout(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectOptLayout(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectOptLayout (PRS_OptLayout * arg);
+#define PRS_unprotectOptLayout(arg) (_PRS_unprotectOptLayout(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLayout(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLayout (PRS_Layout * arg);
+#define PRS_protectLayout(arg) (_PRS_protectLayout(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLayout(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLayout (PRS_Layout * arg);
+#define PRS_unprotectLayout(arg) (_PRS_unprotectLayout(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexLayoutList(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexLayoutList (PRS_LexLayoutList * arg);
+#define PRS_protectLexLayoutList(arg) (_PRS_protectLexLayoutList(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexLayoutList(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexLayoutList (PRS_LexLayoutList * arg);
+#define PRS_unprotectLexLayoutList(arg) (_PRS_unprotectLexLayoutList(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRElem(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRElem (PRS_RElem * arg);
+#define PRS_protectRElem(arg) (_PRS_protectRElem(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRElem(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRElem (PRS_RElem * arg);
+#define PRS_unprotectRElem(arg) (_PRS_unprotectRElem(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRType(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRType (PRS_RType * arg);
+#define PRS_protectRType(arg) (_PRS_protectRType(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRType(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRType (PRS_RType * arg);
+#define PRS_unprotectRType(arg) (_PRS_unprotectRType(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRTuple(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRTuple (PRS_RTuple * arg);
+#define PRS_protectRTuple(arg) (_PRS_protectRTuple(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRTuple(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRTuple (PRS_RTuple * arg);
+#define PRS_unprotectRTuple(arg) (_PRS_unprotectRTuple(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRStore(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRStore (PRS_RStore * arg);
+#define PRS_protectRStore(arg) (_PRS_protectRStore(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRStore(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRStore (PRS_RStore * arg);
+#define PRS_unprotectRStore(arg) (_PRS_unprotectRStore(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectStart(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectStart (PRS_Start * arg);
+#define PRS_protectStart(arg) (_PRS_protectStart(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectStart(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectStart (PRS_Start * arg);
+#define PRS_unprotectStart(arg) (_PRS_unprotectStart(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRElemElements(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRElemElements (PRS_RElemElements * arg);
+#define PRS_protectRElemElements(arg) (_PRS_protectRElemElements(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRElemElements(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRElemElements (PRS_RElemElements * arg);
+#define PRS_unprotectRElemElements(arg) (_PRS_unprotectRElemElements(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRTypeColumnTypes(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRTypeColumnTypes (PRS_RTypeColumnTypes * arg);
+#define PRS_protectRTypeColumnTypes(arg) (_PRS_protectRTypeColumnTypes(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRTypeColumnTypes(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRTypeColumnTypes (PRS_RTypeColumnTypes * arg);
+#define PRS_unprotectRTypeColumnTypes(arg) (_PRS_unprotectRTypeColumnTypes(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectRTupleRtuples(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectRTupleRtuples (PRS_RTupleRtuples * arg);
+#define PRS_protectRTupleRtuples(arg) (_PRS_protectRTupleRtuples(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectRTupleRtuples(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectRTupleRtuples (PRS_RTupleRtuples * arg);
+#define PRS_unprotectRTupleRtuples(arg) (_PRS_unprotectRTupleRtuples(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexStrChar(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexStrChar (PRS_LexStrChar * arg);
+#define PRS_protectLexStrChar(arg) (_PRS_protectLexStrChar(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexStrChar(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexStrChar (PRS_LexStrChar * arg);
+#define PRS_unprotectLexStrChar(arg) (_PRS_unprotectLexStrChar(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectStrChar(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectStrChar (PRS_StrChar * arg);
+#define PRS_protectStrChar(arg) (_PRS_protectStrChar(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectStrChar(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectStrChar (PRS_StrChar * arg);
+#define PRS_unprotectStrChar(arg) (_PRS_unprotectStrChar(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexStrCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexStrCon (PRS_LexStrCon * arg);
+#define PRS_protectLexStrCon(arg) (_PRS_protectLexStrCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexStrCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexStrCon (PRS_LexStrCon * arg);
+#define PRS_unprotectLexStrCon(arg) (_PRS_unprotectLexStrCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectStrCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectStrCon (PRS_StrCon * arg);
+#define PRS_protectStrCon(arg) (_PRS_protectStrCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectStrCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectStrCon (PRS_StrCon * arg);
+#define PRS_unprotectStrCon(arg) (_PRS_unprotectStrCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexStrCharChars(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexStrCharChars (PRS_LexStrCharChars * arg);
+#define PRS_protectLexStrCharChars(arg) (_PRS_protectLexStrCharChars(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexStrCharChars(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexStrCharChars (PRS_LexStrCharChars * arg);
+#define PRS_unprotectLexStrCharChars(arg) (_PRS_unprotectLexStrCharChars(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectBoolCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectBoolCon (PRS_BoolCon * arg);
+#define PRS_protectBoolCon(arg) (_PRS_protectBoolCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectBoolCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectBoolCon (PRS_BoolCon * arg);
+#define PRS_unprotectBoolCon(arg) (_PRS_unprotectBoolCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexNatCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexNatCon (PRS_LexNatCon * arg);
+#define PRS_protectLexNatCon(arg) (_PRS_protectLexNatCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexNatCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexNatCon (PRS_LexNatCon * arg);
+#define PRS_unprotectLexNatCon(arg) (_PRS_unprotectLexNatCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectNatCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectNatCon (PRS_NatCon * arg);
+#define PRS_protectNatCon(arg) (_PRS_protectNatCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectNatCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectNatCon (PRS_NatCon * arg);
+#define PRS_unprotectNatCon(arg) (_PRS_unprotectNatCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexIdCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexIdCon (PRS_LexIdCon * arg);
+#define PRS_protectLexIdCon(arg) (_PRS_protectLexIdCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexIdCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexIdCon (PRS_LexIdCon * arg);
+#define PRS_unprotectLexIdCon(arg) (_PRS_unprotectLexIdCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectIdCon(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectIdCon (PRS_IdCon * arg);
+#define PRS_protectIdCon(arg) (_PRS_protectIdCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectIdCon(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectIdCon (PRS_IdCon * arg);
+#define PRS_unprotectIdCon(arg) (_PRS_unprotectIdCon(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectInteger(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectInteger (PRS_Integer * arg);
+#define PRS_protectInteger(arg) (_PRS_protectInteger(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectInteger(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectInteger (PRS_Integer * arg);
+#define PRS_unprotectInteger(arg) (_PRS_unprotectInteger(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLexLayout(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLexLayout (PRS_LexLayout * arg);
+#define PRS_protectLexLayout(arg) (_PRS_protectLexLayout(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLexLayout(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLexLayout (PRS_LexLayout * arg);
+#define PRS_unprotectLexLayout(arg) (_PRS_unprotectLexLayout(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectLocation(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectLocation (PRS_Location * arg);
+#define PRS_protectLocation(arg) (_PRS_protectLocation(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectLocation(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectLocation (PRS_Location * arg);
+#define PRS_unprotectLocation(arg) (_PRS_unprotectLocation(arg))
+#endif
+#ifdef FAST_API
+#define PRS_protectArea(arg) (ATprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_protectArea (PRS_Area * arg);
+#define PRS_protectArea(arg) (_PRS_protectArea(arg))
+#endif
+#ifdef FAST_API
+#define PRS_unprotectArea(arg) (ATunprotect((ATerm*)((void*) (arg))))
+#else
+void _PRS_unprotectArea (PRS_Area * arg);
+#define PRS_unprotectArea(arg) (_PRS_unprotectArea(arg))
+#endif
+#ifdef FAST_API
+#define PRS_OptLayoutFromTerm(t) ((PRS_OptLayout)(t))
+#else
+PRS_OptLayout _PRS_OptLayoutFromTerm (ATerm t);
+#define PRS_OptLayoutFromTerm(t) (_PRS_OptLayoutFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_OptLayoutToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_OptLayoutToTerm (PRS_OptLayout arg);
+#define PRS_OptLayoutToTerm(arg) (_PRS_OptLayoutToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LayoutFromTerm(t) ((PRS_Layout)(t))
+#else
+PRS_Layout _PRS_LayoutFromTerm (ATerm t);
+#define PRS_LayoutFromTerm(t) (_PRS_LayoutFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LayoutToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LayoutToTerm (PRS_Layout arg);
+#define PRS_LayoutToTerm(arg) (_PRS_LayoutToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexLayoutListFromTerm(t) ((PRS_LexLayoutList)(t))
+#else
+PRS_LexLayoutList _PRS_LexLayoutListFromTerm (ATerm t);
+#define PRS_LexLayoutListFromTerm(t) (_PRS_LexLayoutListFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexLayoutListToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexLayoutListToTerm (PRS_LexLayoutList arg);
+#define PRS_LexLayoutListToTerm(arg) (_PRS_LexLayoutListToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RElemFromTerm(t) ((PRS_RElem)(t))
+#else
+PRS_RElem _PRS_RElemFromTerm (ATerm t);
+#define PRS_RElemFromTerm(t) (_PRS_RElemFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RElemToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RElemToTerm (PRS_RElem arg);
+#define PRS_RElemToTerm(arg) (_PRS_RElemToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RTypeFromTerm(t) ((PRS_RType)(t))
+#else
+PRS_RType _PRS_RTypeFromTerm (ATerm t);
+#define PRS_RTypeFromTerm(t) (_PRS_RTypeFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RTypeToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RTypeToTerm (PRS_RType arg);
+#define PRS_RTypeToTerm(arg) (_PRS_RTypeToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RTupleFromTerm(t) ((PRS_RTuple)(t))
+#else
+PRS_RTuple _PRS_RTupleFromTerm (ATerm t);
+#define PRS_RTupleFromTerm(t) (_PRS_RTupleFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RTupleToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RTupleToTerm (PRS_RTuple arg);
+#define PRS_RTupleToTerm(arg) (_PRS_RTupleToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RStoreFromTerm(t) ((PRS_RStore)(t))
+#else
+PRS_RStore _PRS_RStoreFromTerm (ATerm t);
+#define PRS_RStoreFromTerm(t) (_PRS_RStoreFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RStoreToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RStoreToTerm (PRS_RStore arg);
+#define PRS_RStoreToTerm(arg) (_PRS_RStoreToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_StartFromTerm(t) ((PRS_Start)(t))
+#else
+PRS_Start _PRS_StartFromTerm (ATerm t);
+#define PRS_StartFromTerm(t) (_PRS_StartFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_StartToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_StartToTerm (PRS_Start arg);
+#define PRS_StartToTerm(arg) (_PRS_StartToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RElemElementsFromTerm(t) ((PRS_RElemElements)(t))
+#else
+PRS_RElemElements _PRS_RElemElementsFromTerm (ATerm t);
+#define PRS_RElemElementsFromTerm(t) (_PRS_RElemElementsFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RElemElementsToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RElemElementsToTerm (PRS_RElemElements arg);
+#define PRS_RElemElementsToTerm(arg) (_PRS_RElemElementsToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RTypeColumnTypesFromTerm(t) ((PRS_RTypeColumnTypes)(t))
+#else
+PRS_RTypeColumnTypes _PRS_RTypeColumnTypesFromTerm (ATerm t);
+#define PRS_RTypeColumnTypesFromTerm(t) (_PRS_RTypeColumnTypesFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RTypeColumnTypesToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RTypeColumnTypesToTerm (PRS_RTypeColumnTypes arg);
+#define PRS_RTypeColumnTypesToTerm(arg) (_PRS_RTypeColumnTypesToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_RTupleRtuplesFromTerm(t) ((PRS_RTupleRtuples)(t))
+#else
+PRS_RTupleRtuples _PRS_RTupleRtuplesFromTerm (ATerm t);
+#define PRS_RTupleRtuplesFromTerm(t) (_PRS_RTupleRtuplesFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_RTupleRtuplesToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_RTupleRtuplesToTerm (PRS_RTupleRtuples arg);
+#define PRS_RTupleRtuplesToTerm(arg) (_PRS_RTupleRtuplesToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexStrCharFromTerm(t) ((PRS_LexStrChar)(t))
+#else
+PRS_LexStrChar _PRS_LexStrCharFromTerm (ATerm t);
+#define PRS_LexStrCharFromTerm(t) (_PRS_LexStrCharFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexStrCharToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexStrCharToTerm (PRS_LexStrChar arg);
+#define PRS_LexStrCharToTerm(arg) (_PRS_LexStrCharToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_StrCharFromTerm(t) ((PRS_StrChar)(t))
+#else
+PRS_StrChar _PRS_StrCharFromTerm (ATerm t);
+#define PRS_StrCharFromTerm(t) (_PRS_StrCharFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_StrCharToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_StrCharToTerm (PRS_StrChar arg);
+#define PRS_StrCharToTerm(arg) (_PRS_StrCharToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexStrConFromTerm(t) ((PRS_LexStrCon)(t))
+#else
+PRS_LexStrCon _PRS_LexStrConFromTerm (ATerm t);
+#define PRS_LexStrConFromTerm(t) (_PRS_LexStrConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexStrConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexStrConToTerm (PRS_LexStrCon arg);
+#define PRS_LexStrConToTerm(arg) (_PRS_LexStrConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_StrConFromTerm(t) ((PRS_StrCon)(t))
+#else
+PRS_StrCon _PRS_StrConFromTerm (ATerm t);
+#define PRS_StrConFromTerm(t) (_PRS_StrConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_StrConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_StrConToTerm (PRS_StrCon arg);
+#define PRS_StrConToTerm(arg) (_PRS_StrConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexStrCharCharsFromTerm(t) ((PRS_LexStrCharChars)(t))
+#else
+PRS_LexStrCharChars _PRS_LexStrCharCharsFromTerm (ATerm t);
+#define PRS_LexStrCharCharsFromTerm(t) (_PRS_LexStrCharCharsFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexStrCharCharsToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexStrCharCharsToTerm (PRS_LexStrCharChars arg);
+#define PRS_LexStrCharCharsToTerm(arg) (_PRS_LexStrCharCharsToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_BoolConFromTerm(t) ((PRS_BoolCon)(t))
+#else
+PRS_BoolCon _PRS_BoolConFromTerm (ATerm t);
+#define PRS_BoolConFromTerm(t) (_PRS_BoolConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_BoolConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_BoolConToTerm (PRS_BoolCon arg);
+#define PRS_BoolConToTerm(arg) (_PRS_BoolConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexNatConFromTerm(t) ((PRS_LexNatCon)(t))
+#else
+PRS_LexNatCon _PRS_LexNatConFromTerm (ATerm t);
+#define PRS_LexNatConFromTerm(t) (_PRS_LexNatConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexNatConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexNatConToTerm (PRS_LexNatCon arg);
+#define PRS_LexNatConToTerm(arg) (_PRS_LexNatConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_NatConFromTerm(t) ((PRS_NatCon)(t))
+#else
+PRS_NatCon _PRS_NatConFromTerm (ATerm t);
+#define PRS_NatConFromTerm(t) (_PRS_NatConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_NatConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_NatConToTerm (PRS_NatCon arg);
+#define PRS_NatConToTerm(arg) (_PRS_NatConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexIdConFromTerm(t) ((PRS_LexIdCon)(t))
+#else
+PRS_LexIdCon _PRS_LexIdConFromTerm (ATerm t);
+#define PRS_LexIdConFromTerm(t) (_PRS_LexIdConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexIdConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexIdConToTerm (PRS_LexIdCon arg);
+#define PRS_LexIdConToTerm(arg) (_PRS_LexIdConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_IdConFromTerm(t) ((PRS_IdCon)(t))
+#else
+PRS_IdCon _PRS_IdConFromTerm (ATerm t);
+#define PRS_IdConFromTerm(t) (_PRS_IdConFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_IdConToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_IdConToTerm (PRS_IdCon arg);
+#define PRS_IdConToTerm(arg) (_PRS_IdConToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_IntegerFromTerm(t) ((PRS_Integer)(t))
+#else
+PRS_Integer _PRS_IntegerFromTerm (ATerm t);
+#define PRS_IntegerFromTerm(t) (_PRS_IntegerFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_IntegerToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_IntegerToTerm (PRS_Integer arg);
+#define PRS_IntegerToTerm(arg) (_PRS_IntegerToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LexLayoutFromTerm(t) ((PRS_LexLayout)(t))
+#else
+PRS_LexLayout _PRS_LexLayoutFromTerm (ATerm t);
+#define PRS_LexLayoutFromTerm(t) (_PRS_LexLayoutFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LexLayoutToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LexLayoutToTerm (PRS_LexLayout arg);
+#define PRS_LexLayoutToTerm(arg) (_PRS_LexLayoutToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_LocationFromTerm(t) ((PRS_Location)(t))
+#else
+PRS_Location _PRS_LocationFromTerm (ATerm t);
+#define PRS_LocationFromTerm(t) (_PRS_LocationFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_LocationToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_LocationToTerm (PRS_Location arg);
+#define PRS_LocationToTerm(arg) (_PRS_LocationToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_AreaFromTerm(t) ((PRS_Area)(t))
+#else
+PRS_Area _PRS_AreaFromTerm (ATerm t);
+#define PRS_AreaFromTerm(t) (_PRS_AreaFromTerm(t))
+#endif
+#ifdef FAST_API
+#define PRS_AreaToTerm(arg) ((ATerm)(arg))
+#else
+ATerm _PRS_AreaToTerm (PRS_Area arg);
+#define PRS_AreaToTerm(arg) (_PRS_AreaToTerm(arg))
+#endif
+#ifdef FAST_API
+#define PRS_getLexLayoutListLength(arg) (ATgetLength((ATermList) (arg)))
+#else
+int _PRS_getLexLayoutListLength (PRS_LexLayoutList arg);
+#define PRS_getLexLayoutListLength(arg) (_PRS_getLexLayoutListLength(arg))
+#endif
+#ifdef FAST_API
+#define PRS_reverseLexLayoutList(arg) ((PRS_LexLayoutList) ATreverse((ATermList) (arg)))
+#else
+PRS_LexLayoutList _PRS_reverseLexLayoutList (PRS_LexLayoutList arg);
+#define PRS_reverseLexLayoutList(arg) (_PRS_reverseLexLayoutList(arg))
+#endif
+#ifdef FAST_API
+#define PRS_appendLexLayoutList(arg, elem) ((PRS_LexLayoutList) ATappend((ATermList) (arg), (ATerm) (((ATerm) elem))))
+#else
+PRS_LexLayoutList _PRS_appendLexLayoutList (PRS_LexLayoutList arg,
+					    PRS_LexLayout elem);
+#define PRS_appendLexLayoutList(arg, elem) (_PRS_appendLexLayoutList(arg, elem))
+#endif
+#ifdef FAST_API
+#define PRS_concatLexLayoutList(arg0, arg1) ((PRS_LexLayoutList) ATconcat((ATermList) (arg0), (ATermList) (arg1)))
+#else
+PRS_LexLayoutList _PRS_concatLexLayoutList (PRS_LexLayoutList arg0,
+					    PRS_LexLayoutList arg1);
+#define PRS_concatLexLayoutList(arg0, arg1) (_PRS_concatLexLayoutList(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_sliceLexLayoutList(arg, start, end) ((PRS_LexLayoutList) ATgetSlice((ATermList) (arg), (start), (end)))
+#else
+PRS_LexLayoutList _PRS_sliceLexLayoutList (PRS_LexLayoutList arg, int start,
+					   int end);
+#define PRS_sliceLexLayoutList(arg, start, end) (_PRS_sliceLexLayoutList(arg, start, end))
+#endif
+#ifdef FAST_API
+#define PRS_getLexLayoutListLexLayoutAt(arg, index) ((PRS_LexLayout) (ATelementAt((ATermList) arg,index)))
+#else
+PRS_LexLayout _PRS_getLexLayoutListLexLayoutAt (PRS_LexLayoutList arg,
+						int index);
+#define PRS_getLexLayoutListLexLayoutAt(arg, index) (_PRS_getLexLayoutListLexLayoutAt(arg, index))
+#endif
+#ifdef FAST_API
+#define PRS_replaceLexLayoutListLexLayoutAt(arg, elem, index) ((PRS_LexLayoutList) ATreplace((ATermList) (arg), (ATerm) (((ATerm) elem)), (index)))
+#else
+PRS_LexLayoutList _PRS_replaceLexLayoutListLexLayoutAt (PRS_LexLayoutList arg,
+							PRS_LexLayout elem,
+							int index);
+#define PRS_replaceLexLayoutListLexLayoutAt(arg, elem, index) (_PRS_replaceLexLayoutListLexLayoutAt(arg, elem, index))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexLayoutList2(elem1,  elem2) ((PRS_LexLayoutList) ATmakeList2((ATerm) ((ATerm) elem1), (ATerm) (((ATerm) elem2))))
+#else
+PRS_LexLayoutList _PRS_makeLexLayoutList2 (PRS_LexLayout elem1,
+					   PRS_LexLayout elem2);
+#define PRS_makeLexLayoutList2(elem1,  elem2) (_PRS_makeLexLayoutList2(elem1,  elem2))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexLayoutList3(elem1, elem2,  elem3) ((PRS_LexLayoutList) ATmakeList3((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) (((ATerm) elem3))))
+#else
+PRS_LexLayoutList _PRS_makeLexLayoutList3 (PRS_LexLayout elem1,
+					   PRS_LexLayout elem2,
+					   PRS_LexLayout elem3);
+#define PRS_makeLexLayoutList3(elem1, elem2,  elem3) (_PRS_makeLexLayoutList3(elem1, elem2,  elem3))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexLayoutList4(elem1, elem2, elem3,  elem4) ((PRS_LexLayoutList) ATmakeList4((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) (((ATerm) elem4))))
+#else
+PRS_LexLayoutList _PRS_makeLexLayoutList4 (PRS_LexLayout elem1,
+					   PRS_LexLayout elem2,
+					   PRS_LexLayout elem3,
+					   PRS_LexLayout elem4);
+#define PRS_makeLexLayoutList4(elem1, elem2, elem3,  elem4) (_PRS_makeLexLayoutList4(elem1, elem2, elem3,  elem4))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexLayoutList5(elem1, elem2, elem3, elem4,  elem5) ((PRS_LexLayoutList) ATmakeList5((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) (((ATerm) elem5))))
+#else
+PRS_LexLayoutList _PRS_makeLexLayoutList5 (PRS_LexLayout elem1,
+					   PRS_LexLayout elem2,
+					   PRS_LexLayout elem3,
+					   PRS_LexLayout elem4,
+					   PRS_LexLayout elem5);
+#define PRS_makeLexLayoutList5(elem1, elem2, elem3, elem4,  elem5) (_PRS_makeLexLayoutList5(elem1, elem2, elem3, elem4,  elem5))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexLayoutList6(elem1, elem2, elem3, elem4, elem5,  elem6) ((PRS_LexLayoutList) ATmakeList6((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5), (ATerm) (((ATerm) elem6))))
+#else
+PRS_LexLayoutList _PRS_makeLexLayoutList6 (PRS_LexLayout elem1,
+					   PRS_LexLayout elem2,
+					   PRS_LexLayout elem3,
+					   PRS_LexLayout elem4,
+					   PRS_LexLayout elem5,
+					   PRS_LexLayout elem6);
+#define PRS_makeLexLayoutList6(elem1, elem2, elem3, elem4, elem5,  elem6) (_PRS_makeLexLayoutList6(elem1, elem2, elem3, elem4, elem5,  elem6))
+#endif
+#ifdef FAST_API
+#define PRS_getRElemElementsLength(arg) ((ATisEmpty((ATermList) (arg)) ? 0 : (ATgetLength((ATermList) (arg)) / 4) + 1))
+#else
+int _PRS_getRElemElementsLength (PRS_RElemElements arg);
+#define PRS_getRElemElementsLength(arg) (_PRS_getRElemElementsLength(arg))
+#endif
 PRS_RElemElements PRS_reverseRElemElements (PRS_RElemElements arg);
 PRS_RElemElements PRS_appendRElemElements (PRS_RElemElements arg0,
 					   PRS_OptLayout wsAfterHead,
@@ -177,11 +747,27 @@ PRS_RElemElements PRS_concatRElemElements (PRS_RElemElements arg0,
 					   PRS_OptLayout wsAfterHead,
 					   PRS_OptLayout wsAfterSep,
 					   PRS_RElemElements arg1);
-PRS_RElemElements PRS_sliceRElemElements (PRS_RElemElements arg, int start,
-					  int end);
-PRS_RElem PRS_getRElemElementsRElemAt (PRS_RElemElements arg, int index);
-PRS_RElemElements PRS_replaceRElemElementsRElemAt (PRS_RElemElements arg,
-						   PRS_RElem elem, int index);
+#ifdef FAST_API
+#define PRS_sliceRElemElements(arg, start, end) ((PRS_RElemElements) ATgetSlice((ATermList) (arg), (start * 4), (end * 4)))
+#else
+PRS_RElemElements _PRS_sliceRElemElements (PRS_RElemElements arg, int start,
+					   int end);
+#define PRS_sliceRElemElements(arg, start, end) (_PRS_sliceRElemElements(arg, start, end))
+#endif
+#ifdef FAST_API
+#define PRS_getRElemElementsRElemAt(arg, index) ((PRS_RElem) (ATelementAt((ATermList) arg,index * 4)))
+#else
+PRS_RElem _PRS_getRElemElementsRElemAt (PRS_RElemElements arg, int index);
+#define PRS_getRElemElementsRElemAt(arg, index) (_PRS_getRElemElementsRElemAt(arg, index))
+#endif
+#ifdef FAST_API
+#define PRS_replaceRElemElementsRElemAt(arg, elem, index) ((PRS_RElemElements) ATreplace((ATermList) (arg), (ATerm) (((ATerm) elem)), (index * 4)))
+#else
+PRS_RElemElements _PRS_replaceRElemElementsRElemAt (PRS_RElemElements arg,
+						    PRS_RElem elem,
+						    int index);
+#define PRS_replaceRElemElementsRElemAt(arg, elem, index) (_PRS_replaceRElemElementsRElemAt(arg, elem, index))
+#endif
 PRS_RElemElements PRS_makeRElemElements2 (PRS_OptLayout wsAfterHead,
 					  PRS_OptLayout wsAfterSep,
 					  PRS_RElem elem1, PRS_RElem elem2);
@@ -203,7 +789,12 @@ PRS_RElemElements PRS_makeRElemElements6 (PRS_OptLayout wsAfterHead,
 					  PRS_RElem elem1, PRS_RElem elem2,
 					  PRS_RElem elem3, PRS_RElem elem4,
 					  PRS_RElem elem5, PRS_RElem elem6);
-int PRS_getRTypeColumnTypesLength (PRS_RTypeColumnTypes arg);
+#ifdef FAST_API
+#define PRS_getRTypeColumnTypesLength(arg) ((ATisEmpty((ATermList) (arg)) ? 0 : (ATgetLength((ATermList) (arg)) / 4) + 1))
+#else
+int _PRS_getRTypeColumnTypesLength (PRS_RTypeColumnTypes arg);
+#define PRS_getRTypeColumnTypesLength(arg) (_PRS_getRTypeColumnTypesLength(arg))
+#endif
 PRS_RTypeColumnTypes PRS_reverseRTypeColumnTypes (PRS_RTypeColumnTypes arg);
 PRS_RTypeColumnTypes PRS_appendRTypeColumnTypes (PRS_RTypeColumnTypes arg0,
 						 PRS_OptLayout wsAfterHead,
@@ -213,13 +804,28 @@ PRS_RTypeColumnTypes PRS_concatRTypeColumnTypes (PRS_RTypeColumnTypes arg0,
 						 PRS_OptLayout wsAfterHead,
 						 PRS_OptLayout wsAfterSep,
 						 PRS_RTypeColumnTypes arg1);
-PRS_RTypeColumnTypes PRS_sliceRTypeColumnTypes (PRS_RTypeColumnTypes arg,
-						int start, int end);
-PRS_RType PRS_getRTypeColumnTypesRTypeAt (PRS_RTypeColumnTypes arg,
-					  int index);
-PRS_RTypeColumnTypes PRS_replaceRTypeColumnTypesRTypeAt (PRS_RTypeColumnTypes
-							 arg, PRS_RType elem,
-							 int index);
+#ifdef FAST_API
+#define PRS_sliceRTypeColumnTypes(arg, start, end) ((PRS_RTypeColumnTypes) ATgetSlice((ATermList) (arg), (start * 4), (end * 4)))
+#else
+PRS_RTypeColumnTypes _PRS_sliceRTypeColumnTypes (PRS_RTypeColumnTypes arg,
+						 int start, int end);
+#define PRS_sliceRTypeColumnTypes(arg, start, end) (_PRS_sliceRTypeColumnTypes(arg, start, end))
+#endif
+#ifdef FAST_API
+#define PRS_getRTypeColumnTypesRTypeAt(arg, index) ((PRS_RType) (ATelementAt((ATermList) arg,index * 4)))
+#else
+PRS_RType _PRS_getRTypeColumnTypesRTypeAt (PRS_RTypeColumnTypes arg,
+					   int index);
+#define PRS_getRTypeColumnTypesRTypeAt(arg, index) (_PRS_getRTypeColumnTypesRTypeAt(arg, index))
+#endif
+#ifdef FAST_API
+#define PRS_replaceRTypeColumnTypesRTypeAt(arg, elem, index) ((PRS_RTypeColumnTypes) ATreplace((ATermList) (arg), (ATerm) (((ATerm) elem)), (index * 4)))
+#else
+PRS_RTypeColumnTypes _PRS_replaceRTypeColumnTypesRTypeAt (PRS_RTypeColumnTypes
+							  arg, PRS_RType elem,
+							  int index);
+#define PRS_replaceRTypeColumnTypesRTypeAt(arg, elem, index) (_PRS_replaceRTypeColumnTypesRTypeAt(arg, elem, index))
+#endif
 PRS_RTypeColumnTypes PRS_makeRTypeColumnTypes2 (PRS_OptLayout wsAfterHead,
 						PRS_OptLayout wsAfterSep,
 						PRS_RType elem1,
@@ -250,7 +856,12 @@ PRS_RTypeColumnTypes PRS_makeRTypeColumnTypes6 (PRS_OptLayout wsAfterHead,
 						PRS_RType elem4,
 						PRS_RType elem5,
 						PRS_RType elem6);
-int PRS_getRTupleRtuplesLength (PRS_RTupleRtuples arg);
+#ifdef FAST_API
+#define PRS_getRTupleRtuplesLength(arg) ((ATisEmpty((ATermList) (arg)) ? 0 : (ATgetLength((ATermList) (arg)) / 4) + 1))
+#else
+int _PRS_getRTupleRtuplesLength (PRS_RTupleRtuples arg);
+#define PRS_getRTupleRtuplesLength(arg) (_PRS_getRTupleRtuplesLength(arg))
+#endif
 PRS_RTupleRtuples PRS_reverseRTupleRtuples (PRS_RTupleRtuples arg);
 PRS_RTupleRtuples PRS_appendRTupleRtuples (PRS_RTupleRtuples arg0,
 					   PRS_OptLayout wsAfterHead,
@@ -260,12 +871,27 @@ PRS_RTupleRtuples PRS_concatRTupleRtuples (PRS_RTupleRtuples arg0,
 					   PRS_OptLayout wsAfterHead,
 					   PRS_OptLayout wsAfterSep,
 					   PRS_RTupleRtuples arg1);
-PRS_RTupleRtuples PRS_sliceRTupleRtuples (PRS_RTupleRtuples arg, int start,
-					  int end);
-PRS_RTuple PRS_getRTupleRtuplesRTupleAt (PRS_RTupleRtuples arg, int index);
-PRS_RTupleRtuples PRS_replaceRTupleRtuplesRTupleAt (PRS_RTupleRtuples arg,
-						    PRS_RTuple elem,
-						    int index);
+#ifdef FAST_API
+#define PRS_sliceRTupleRtuples(arg, start, end) ((PRS_RTupleRtuples) ATgetSlice((ATermList) (arg), (start * 4), (end * 4)))
+#else
+PRS_RTupleRtuples _PRS_sliceRTupleRtuples (PRS_RTupleRtuples arg, int start,
+					   int end);
+#define PRS_sliceRTupleRtuples(arg, start, end) (_PRS_sliceRTupleRtuples(arg, start, end))
+#endif
+#ifdef FAST_API
+#define PRS_getRTupleRtuplesRTupleAt(arg, index) ((PRS_RTuple) (ATelementAt((ATermList) arg,index * 4)))
+#else
+PRS_RTuple _PRS_getRTupleRtuplesRTupleAt (PRS_RTupleRtuples arg, int index);
+#define PRS_getRTupleRtuplesRTupleAt(arg, index) (_PRS_getRTupleRtuplesRTupleAt(arg, index))
+#endif
+#ifdef FAST_API
+#define PRS_replaceRTupleRtuplesRTupleAt(arg, elem, index) ((PRS_RTupleRtuples) ATreplace((ATermList) (arg), (ATerm) (((ATerm) elem)), (index * 4)))
+#else
+PRS_RTupleRtuples _PRS_replaceRTupleRtuplesRTupleAt (PRS_RTupleRtuples arg,
+						     PRS_RTuple elem,
+						     int index);
+#define PRS_replaceRTupleRtuplesRTupleAt(arg, elem, index) (_PRS_replaceRTupleRtuplesRTupleAt(arg, elem, index))
+#endif
 PRS_RTupleRtuples PRS_makeRTupleRtuples2 (PRS_OptLayout wsAfterHead,
 					  PRS_OptLayout wsAfterSep,
 					  PRS_RTuple elem1, PRS_RTuple elem2);
@@ -287,39 +913,99 @@ PRS_RTupleRtuples PRS_makeRTupleRtuples6 (PRS_OptLayout wsAfterHead,
 					  PRS_RTuple elem1, PRS_RTuple elem2,
 					  PRS_RTuple elem3, PRS_RTuple elem4,
 					  PRS_RTuple elem5, PRS_RTuple elem6);
-int PRS_getLexStrCharCharsLength (PRS_LexStrCharChars arg);
-PRS_LexStrCharChars PRS_reverseLexStrCharChars (PRS_LexStrCharChars arg);
-PRS_LexStrCharChars PRS_appendLexStrCharChars (PRS_LexStrCharChars arg,
-					       PRS_LexStrChar elem);
-PRS_LexStrCharChars PRS_concatLexStrCharChars (PRS_LexStrCharChars arg0,
-					       PRS_LexStrCharChars arg1);
-PRS_LexStrCharChars PRS_sliceLexStrCharChars (PRS_LexStrCharChars arg,
-					      int start, int end);
-PRS_LexStrChar PRS_getLexStrCharCharsLexStrCharAt (PRS_LexStrCharChars arg,
-						   int index);
+#ifdef FAST_API
+#define PRS_getLexStrCharCharsLength(arg) (ATgetLength((ATermList) (arg)))
+#else
+int _PRS_getLexStrCharCharsLength (PRS_LexStrCharChars arg);
+#define PRS_getLexStrCharCharsLength(arg) (_PRS_getLexStrCharCharsLength(arg))
+#endif
+#ifdef FAST_API
+#define PRS_reverseLexStrCharChars(arg) ((PRS_LexStrCharChars) ATreverse((ATermList) (arg)))
+#else
+PRS_LexStrCharChars _PRS_reverseLexStrCharChars (PRS_LexStrCharChars arg);
+#define PRS_reverseLexStrCharChars(arg) (_PRS_reverseLexStrCharChars(arg))
+#endif
+#ifdef FAST_API
+#define PRS_appendLexStrCharChars(arg, elem) ((PRS_LexStrCharChars) ATappend((ATermList) (arg), (ATerm) (((ATerm) elem))))
+#else
+PRS_LexStrCharChars _PRS_appendLexStrCharChars (PRS_LexStrCharChars arg,
+						PRS_LexStrChar elem);
+#define PRS_appendLexStrCharChars(arg, elem) (_PRS_appendLexStrCharChars(arg, elem))
+#endif
+#ifdef FAST_API
+#define PRS_concatLexStrCharChars(arg0, arg1) ((PRS_LexStrCharChars) ATconcat((ATermList) (arg0), (ATermList) (arg1)))
+#else
+PRS_LexStrCharChars _PRS_concatLexStrCharChars (PRS_LexStrCharChars arg0,
+						PRS_LexStrCharChars arg1);
+#define PRS_concatLexStrCharChars(arg0, arg1) (_PRS_concatLexStrCharChars(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_sliceLexStrCharChars(arg, start, end) ((PRS_LexStrCharChars) ATgetSlice((ATermList) (arg), (start), (end)))
+#else
+PRS_LexStrCharChars _PRS_sliceLexStrCharChars (PRS_LexStrCharChars arg,
+					       int start, int end);
+#define PRS_sliceLexStrCharChars(arg, start, end) (_PRS_sliceLexStrCharChars(arg, start, end))
+#endif
+#ifdef FAST_API
+#define PRS_getLexStrCharCharsLexStrCharAt(arg, index) ((PRS_LexStrChar) (ATelementAt((ATermList) arg,index)))
+#else
+PRS_LexStrChar _PRS_getLexStrCharCharsLexStrCharAt (PRS_LexStrCharChars arg,
+						    int index);
+#define PRS_getLexStrCharCharsLexStrCharAt(arg, index) (_PRS_getLexStrCharCharsLexStrCharAt(arg, index))
+#endif
+#ifdef FAST_API
+#define PRS_replaceLexStrCharCharsLexStrCharAt(arg, elem, index) ((PRS_LexStrCharChars) ATreplace((ATermList) (arg), (ATerm) (((ATerm) elem)), (index)))
+#else
 PRS_LexStrCharChars
-PRS_replaceLexStrCharCharsLexStrCharAt (PRS_LexStrCharChars arg,
-					PRS_LexStrChar elem, int index);
-PRS_LexStrCharChars PRS_makeLexStrCharChars2 (PRS_LexStrChar elem1,
-					      PRS_LexStrChar elem2);
-PRS_LexStrCharChars PRS_makeLexStrCharChars3 (PRS_LexStrChar elem1,
-					      PRS_LexStrChar elem2,
-					      PRS_LexStrChar elem3);
-PRS_LexStrCharChars PRS_makeLexStrCharChars4 (PRS_LexStrChar elem1,
-					      PRS_LexStrChar elem2,
-					      PRS_LexStrChar elem3,
-					      PRS_LexStrChar elem4);
-PRS_LexStrCharChars PRS_makeLexStrCharChars5 (PRS_LexStrChar elem1,
-					      PRS_LexStrChar elem2,
-					      PRS_LexStrChar elem3,
-					      PRS_LexStrChar elem4,
-					      PRS_LexStrChar elem5);
-PRS_LexStrCharChars PRS_makeLexStrCharChars6 (PRS_LexStrChar elem1,
-					      PRS_LexStrChar elem2,
-					      PRS_LexStrChar elem3,
-					      PRS_LexStrChar elem4,
-					      PRS_LexStrChar elem5,
-					      PRS_LexStrChar elem6);
+_PRS_replaceLexStrCharCharsLexStrCharAt (PRS_LexStrCharChars arg,
+					 PRS_LexStrChar elem, int index);
+#define PRS_replaceLexStrCharCharsLexStrCharAt(arg, elem, index) (_PRS_replaceLexStrCharCharsLexStrCharAt(arg, elem, index))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexStrCharChars2(elem1,  elem2) ((PRS_LexStrCharChars) ATmakeList2((ATerm) ((ATerm) elem1), (ATerm) (((ATerm) elem2))))
+#else
+PRS_LexStrCharChars _PRS_makeLexStrCharChars2 (PRS_LexStrChar elem1,
+					       PRS_LexStrChar elem2);
+#define PRS_makeLexStrCharChars2(elem1,  elem2) (_PRS_makeLexStrCharChars2(elem1,  elem2))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexStrCharChars3(elem1, elem2,  elem3) ((PRS_LexStrCharChars) ATmakeList3((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) (((ATerm) elem3))))
+#else
+PRS_LexStrCharChars _PRS_makeLexStrCharChars3 (PRS_LexStrChar elem1,
+					       PRS_LexStrChar elem2,
+					       PRS_LexStrChar elem3);
+#define PRS_makeLexStrCharChars3(elem1, elem2,  elem3) (_PRS_makeLexStrCharChars3(elem1, elem2,  elem3))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexStrCharChars4(elem1, elem2, elem3,  elem4) ((PRS_LexStrCharChars) ATmakeList4((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) (((ATerm) elem4))))
+#else
+PRS_LexStrCharChars _PRS_makeLexStrCharChars4 (PRS_LexStrChar elem1,
+					       PRS_LexStrChar elem2,
+					       PRS_LexStrChar elem3,
+					       PRS_LexStrChar elem4);
+#define PRS_makeLexStrCharChars4(elem1, elem2, elem3,  elem4) (_PRS_makeLexStrCharChars4(elem1, elem2, elem3,  elem4))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexStrCharChars5(elem1, elem2, elem3, elem4,  elem5) ((PRS_LexStrCharChars) ATmakeList5((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) (((ATerm) elem5))))
+#else
+PRS_LexStrCharChars _PRS_makeLexStrCharChars5 (PRS_LexStrChar elem1,
+					       PRS_LexStrChar elem2,
+					       PRS_LexStrChar elem3,
+					       PRS_LexStrChar elem4,
+					       PRS_LexStrChar elem5);
+#define PRS_makeLexStrCharChars5(elem1, elem2, elem3, elem4,  elem5) (_PRS_makeLexStrCharChars5(elem1, elem2, elem3, elem4,  elem5))
+#endif
+#ifdef FAST_API
+#define PRS_makeLexStrCharChars6(elem1, elem2, elem3, elem4, elem5,  elem6) ((PRS_LexStrCharChars) ATmakeList6((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5), (ATerm) (((ATerm) elem6))))
+#else
+PRS_LexStrCharChars _PRS_makeLexStrCharChars6 (PRS_LexStrChar elem1,
+					       PRS_LexStrChar elem2,
+					       PRS_LexStrChar elem3,
+					       PRS_LexStrChar elem4,
+					       PRS_LexStrChar elem5,
+					       PRS_LexStrChar elem6);
+#define PRS_makeLexStrCharChars6(elem1, elem2, elem3, elem4, elem5,  elem6) (_PRS_makeLexStrCharChars6(elem1, elem2, elem3, elem4, elem5,  elem6))
+#endif
 PRS_OptLayout PRS_makeOptLayoutAbsent (void);
 PRS_OptLayout PRS_makeOptLayoutPresent (PRS_Layout layout);
 PRS_Layout PRS_makeLayoutLexToCf (PRS_LexLayoutList list);
@@ -451,36 +1137,161 @@ PRS_Area PRS_makeAreaArea (PRS_OptLayout wsAfterArea,
 			   PRS_OptLayout wsAfterOffset,
 			   PRS_OptLayout wsAfterComma4, PRS_NatCon length,
 			   PRS_OptLayout wsAfterLength);
-ATbool PRS_isEqualOptLayout (PRS_OptLayout arg0, PRS_OptLayout arg1);
-ATbool PRS_isEqualLayout (PRS_Layout arg0, PRS_Layout arg1);
-ATbool PRS_isEqualLexLayoutList (PRS_LexLayoutList arg0,
-				 PRS_LexLayoutList arg1);
-ATbool PRS_isEqualRElem (PRS_RElem arg0, PRS_RElem arg1);
-ATbool PRS_isEqualRType (PRS_RType arg0, PRS_RType arg1);
-ATbool PRS_isEqualRTuple (PRS_RTuple arg0, PRS_RTuple arg1);
-ATbool PRS_isEqualRStore (PRS_RStore arg0, PRS_RStore arg1);
-ATbool PRS_isEqualStart (PRS_Start arg0, PRS_Start arg1);
-ATbool PRS_isEqualRElemElements (PRS_RElemElements arg0,
-				 PRS_RElemElements arg1);
-ATbool PRS_isEqualRTypeColumnTypes (PRS_RTypeColumnTypes arg0,
-				    PRS_RTypeColumnTypes arg1);
-ATbool PRS_isEqualRTupleRtuples (PRS_RTupleRtuples arg0,
-				 PRS_RTupleRtuples arg1);
-ATbool PRS_isEqualLexStrChar (PRS_LexStrChar arg0, PRS_LexStrChar arg1);
-ATbool PRS_isEqualStrChar (PRS_StrChar arg0, PRS_StrChar arg1);
-ATbool PRS_isEqualLexStrCon (PRS_LexStrCon arg0, PRS_LexStrCon arg1);
-ATbool PRS_isEqualStrCon (PRS_StrCon arg0, PRS_StrCon arg1);
-ATbool PRS_isEqualLexStrCharChars (PRS_LexStrCharChars arg0,
-				   PRS_LexStrCharChars arg1);
-ATbool PRS_isEqualBoolCon (PRS_BoolCon arg0, PRS_BoolCon arg1);
-ATbool PRS_isEqualLexNatCon (PRS_LexNatCon arg0, PRS_LexNatCon arg1);
-ATbool PRS_isEqualNatCon (PRS_NatCon arg0, PRS_NatCon arg1);
-ATbool PRS_isEqualLexIdCon (PRS_LexIdCon arg0, PRS_LexIdCon arg1);
-ATbool PRS_isEqualIdCon (PRS_IdCon arg0, PRS_IdCon arg1);
-ATbool PRS_isEqualInteger (PRS_Integer arg0, PRS_Integer arg1);
-ATbool PRS_isEqualLexLayout (PRS_LexLayout arg0, PRS_LexLayout arg1);
-ATbool PRS_isEqualLocation (PRS_Location arg0, PRS_Location arg1);
-ATbool PRS_isEqualArea (PRS_Area arg0, PRS_Area arg1);
+#ifdef FAST_API
+#define PRS_isEqualOptLayout(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualOptLayout (PRS_OptLayout arg0, PRS_OptLayout arg1);
+#define PRS_isEqualOptLayout(arg0, arg1) (_PRS_isEqualOptLayout(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLayout(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLayout (PRS_Layout arg0, PRS_Layout arg1);
+#define PRS_isEqualLayout(arg0, arg1) (_PRS_isEqualLayout(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexLayoutList(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexLayoutList (PRS_LexLayoutList arg0,
+				  PRS_LexLayoutList arg1);
+#define PRS_isEqualLexLayoutList(arg0, arg1) (_PRS_isEqualLexLayoutList(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRElem(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRElem (PRS_RElem arg0, PRS_RElem arg1);
+#define PRS_isEqualRElem(arg0, arg1) (_PRS_isEqualRElem(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRType(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRType (PRS_RType arg0, PRS_RType arg1);
+#define PRS_isEqualRType(arg0, arg1) (_PRS_isEqualRType(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRTuple(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRTuple (PRS_RTuple arg0, PRS_RTuple arg1);
+#define PRS_isEqualRTuple(arg0, arg1) (_PRS_isEqualRTuple(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRStore(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRStore (PRS_RStore arg0, PRS_RStore arg1);
+#define PRS_isEqualRStore(arg0, arg1) (_PRS_isEqualRStore(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualStart(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualStart (PRS_Start arg0, PRS_Start arg1);
+#define PRS_isEqualStart(arg0, arg1) (_PRS_isEqualStart(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRElemElements(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRElemElements (PRS_RElemElements arg0,
+				  PRS_RElemElements arg1);
+#define PRS_isEqualRElemElements(arg0, arg1) (_PRS_isEqualRElemElements(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRTypeColumnTypes(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRTypeColumnTypes (PRS_RTypeColumnTypes arg0,
+				     PRS_RTypeColumnTypes arg1);
+#define PRS_isEqualRTypeColumnTypes(arg0, arg1) (_PRS_isEqualRTypeColumnTypes(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualRTupleRtuples(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualRTupleRtuples (PRS_RTupleRtuples arg0,
+				  PRS_RTupleRtuples arg1);
+#define PRS_isEqualRTupleRtuples(arg0, arg1) (_PRS_isEqualRTupleRtuples(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexStrChar(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexStrChar (PRS_LexStrChar arg0, PRS_LexStrChar arg1);
+#define PRS_isEqualLexStrChar(arg0, arg1) (_PRS_isEqualLexStrChar(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualStrChar(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualStrChar (PRS_StrChar arg0, PRS_StrChar arg1);
+#define PRS_isEqualStrChar(arg0, arg1) (_PRS_isEqualStrChar(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexStrCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexStrCon (PRS_LexStrCon arg0, PRS_LexStrCon arg1);
+#define PRS_isEqualLexStrCon(arg0, arg1) (_PRS_isEqualLexStrCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualStrCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualStrCon (PRS_StrCon arg0, PRS_StrCon arg1);
+#define PRS_isEqualStrCon(arg0, arg1) (_PRS_isEqualStrCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexStrCharChars(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexStrCharChars (PRS_LexStrCharChars arg0,
+				    PRS_LexStrCharChars arg1);
+#define PRS_isEqualLexStrCharChars(arg0, arg1) (_PRS_isEqualLexStrCharChars(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualBoolCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualBoolCon (PRS_BoolCon arg0, PRS_BoolCon arg1);
+#define PRS_isEqualBoolCon(arg0, arg1) (_PRS_isEqualBoolCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexNatCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexNatCon (PRS_LexNatCon arg0, PRS_LexNatCon arg1);
+#define PRS_isEqualLexNatCon(arg0, arg1) (_PRS_isEqualLexNatCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualNatCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualNatCon (PRS_NatCon arg0, PRS_NatCon arg1);
+#define PRS_isEqualNatCon(arg0, arg1) (_PRS_isEqualNatCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexIdCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexIdCon (PRS_LexIdCon arg0, PRS_LexIdCon arg1);
+#define PRS_isEqualLexIdCon(arg0, arg1) (_PRS_isEqualLexIdCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualIdCon(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualIdCon (PRS_IdCon arg0, PRS_IdCon arg1);
+#define PRS_isEqualIdCon(arg0, arg1) (_PRS_isEqualIdCon(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualInteger(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualInteger (PRS_Integer arg0, PRS_Integer arg1);
+#define PRS_isEqualInteger(arg0, arg1) (_PRS_isEqualInteger(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLexLayout(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLexLayout (PRS_LexLayout arg0, PRS_LexLayout arg1);
+#define PRS_isEqualLexLayout(arg0, arg1) (_PRS_isEqualLexLayout(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualLocation(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualLocation (PRS_Location arg0, PRS_Location arg1);
+#define PRS_isEqualLocation(arg0, arg1) (_PRS_isEqualLocation(arg0, arg1))
+#endif
+#ifdef FAST_API
+#define PRS_isEqualArea(arg0, arg1) (ATisEqual((ATerm)(arg0), (ATerm)(arg1)))
+#else
+ATbool _PRS_isEqualArea (PRS_Area arg0, PRS_Area arg1);
+#define PRS_isEqualArea(arg0, arg1) (_PRS_isEqualArea(arg0, arg1))
+#endif
 ATbool PRS_isValidOptLayout (PRS_OptLayout arg);
 inline ATbool PRS_isOptLayoutAbsent (PRS_OptLayout arg);
 inline ATbool PRS_isOptLayoutPresent (PRS_OptLayout arg);

@@ -75,18 +75,20 @@ typedef struct ATerm _RS_Integer;
 typedef struct ATerm _RS_Location;
 typedef struct ATerm _RS_Area;
 
+
 /**
  * Initializes the full API. Forgetting to call this function before using the API will lead to strange behaviour. ATinit() needs to be called before this function.
  */
-void RS_initRStoreApi(void) {
+void _RS_initRStoreApi(void) {
   init_RStore_dict();
+
 }
 
 /**
  * Protect a RS_RElem from the ATerm garbage collector. Every RS_RElem that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RElem
  */
-void RS_protectRElem(RS_RElem *arg) {
+void _RS_protectRElem(RS_RElem *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -94,7 +96,7 @@ void RS_protectRElem(RS_RElem *arg) {
  * Unprotect a RS_RElem from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RElem
  */
-void RS_unprotectRElem(RS_RElem *arg) {
+void _RS_unprotectRElem(RS_RElem *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -102,7 +104,7 @@ void RS_unprotectRElem(RS_RElem *arg) {
  * Protect a RS_RType from the ATerm garbage collector. Every RS_RType that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RType
  */
-void RS_protectRType(RS_RType *arg) {
+void _RS_protectRType(RS_RType *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -110,7 +112,7 @@ void RS_protectRType(RS_RType *arg) {
  * Unprotect a RS_RType from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RType
  */
-void RS_unprotectRType(RS_RType *arg) {
+void _RS_unprotectRType(RS_RType *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -118,7 +120,7 @@ void RS_unprotectRType(RS_RType *arg) {
  * Protect a RS_RTuple from the ATerm garbage collector. Every RS_RTuple that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RTuple
  */
-void RS_protectRTuple(RS_RTuple *arg) {
+void _RS_protectRTuple(RS_RTuple *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -126,7 +128,7 @@ void RS_protectRTuple(RS_RTuple *arg) {
  * Unprotect a RS_RTuple from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RTuple
  */
-void RS_unprotectRTuple(RS_RTuple *arg) {
+void _RS_unprotectRTuple(RS_RTuple *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -134,7 +136,7 @@ void RS_unprotectRTuple(RS_RTuple *arg) {
  * Protect a RS_RStore from the ATerm garbage collector. Every RS_RStore that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RStore
  */
-void RS_protectRStore(RS_RStore *arg) {
+void _RS_protectRStore(RS_RStore *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -142,7 +144,7 @@ void RS_protectRStore(RS_RStore *arg) {
  * Unprotect a RS_RStore from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RStore
  */
-void RS_unprotectRStore(RS_RStore *arg) {
+void _RS_unprotectRStore(RS_RStore *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -150,7 +152,7 @@ void RS_unprotectRStore(RS_RStore *arg) {
  * Protect a RS_RElemElements from the ATerm garbage collector. Every RS_RElemElements that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RElemElements
  */
-void RS_protectRElemElements(RS_RElemElements *arg) {
+void _RS_protectRElemElements(RS_RElemElements *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -158,7 +160,7 @@ void RS_protectRElemElements(RS_RElemElements *arg) {
  * Unprotect a RS_RElemElements from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RElemElements
  */
-void RS_unprotectRElemElements(RS_RElemElements *arg) {
+void _RS_unprotectRElemElements(RS_RElemElements *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -166,7 +168,7 @@ void RS_unprotectRElemElements(RS_RElemElements *arg) {
  * Protect a RS_RTypeColumnTypes from the ATerm garbage collector. Every RS_RTypeColumnTypes that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RTypeColumnTypes
  */
-void RS_protectRTypeColumnTypes(RS_RTypeColumnTypes *arg) {
+void _RS_protectRTypeColumnTypes(RS_RTypeColumnTypes *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -174,7 +176,7 @@ void RS_protectRTypeColumnTypes(RS_RTypeColumnTypes *arg) {
  * Unprotect a RS_RTypeColumnTypes from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RTypeColumnTypes
  */
-void RS_unprotectRTypeColumnTypes(RS_RTypeColumnTypes *arg) {
+void _RS_unprotectRTypeColumnTypes(RS_RTypeColumnTypes *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -182,7 +184,7 @@ void RS_unprotectRTypeColumnTypes(RS_RTypeColumnTypes *arg) {
  * Protect a RS_RTupleRtuples from the ATerm garbage collector. Every RS_RTupleRtuples that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_RTupleRtuples
  */
-void RS_protectRTupleRtuples(RS_RTupleRtuples *arg) {
+void _RS_protectRTupleRtuples(RS_RTupleRtuples *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -190,7 +192,7 @@ void RS_protectRTupleRtuples(RS_RTupleRtuples *arg) {
  * Unprotect a RS_RTupleRtuples from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_RTupleRtuples
  */
-void RS_unprotectRTupleRtuples(RS_RTupleRtuples *arg) {
+void _RS_unprotectRTupleRtuples(RS_RTupleRtuples *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -198,7 +200,7 @@ void RS_unprotectRTupleRtuples(RS_RTupleRtuples *arg) {
  * Protect a RS_StrChar from the ATerm garbage collector. Every RS_StrChar that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_StrChar
  */
-void RS_protectStrChar(RS_StrChar *arg) {
+void _RS_protectStrChar(RS_StrChar *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -206,7 +208,7 @@ void RS_protectStrChar(RS_StrChar *arg) {
  * Unprotect a RS_StrChar from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_StrChar
  */
-void RS_unprotectStrChar(RS_StrChar *arg) {
+void _RS_unprotectStrChar(RS_StrChar *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -214,7 +216,7 @@ void RS_unprotectStrChar(RS_StrChar *arg) {
  * Protect a RS_StrCon from the ATerm garbage collector. Every RS_StrCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_StrCon
  */
-void RS_protectStrCon(RS_StrCon *arg) {
+void _RS_protectStrCon(RS_StrCon *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -222,7 +224,7 @@ void RS_protectStrCon(RS_StrCon *arg) {
  * Unprotect a RS_StrCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_StrCon
  */
-void RS_unprotectStrCon(RS_StrCon *arg) {
+void _RS_unprotectStrCon(RS_StrCon *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -230,7 +232,7 @@ void RS_unprotectStrCon(RS_StrCon *arg) {
  * Protect a RS_BoolCon from the ATerm garbage collector. Every RS_BoolCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_BoolCon
  */
-void RS_protectBoolCon(RS_BoolCon *arg) {
+void _RS_protectBoolCon(RS_BoolCon *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -238,7 +240,7 @@ void RS_protectBoolCon(RS_BoolCon *arg) {
  * Unprotect a RS_BoolCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_BoolCon
  */
-void RS_unprotectBoolCon(RS_BoolCon *arg) {
+void _RS_unprotectBoolCon(RS_BoolCon *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -246,7 +248,7 @@ void RS_unprotectBoolCon(RS_BoolCon *arg) {
  * Protect a RS_NatCon from the ATerm garbage collector. Every RS_NatCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_NatCon
  */
-void RS_protectNatCon(RS_NatCon *arg) {
+void _RS_protectNatCon(RS_NatCon *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -254,7 +256,7 @@ void RS_protectNatCon(RS_NatCon *arg) {
  * Unprotect a RS_NatCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_NatCon
  */
-void RS_unprotectNatCon(RS_NatCon *arg) {
+void _RS_unprotectNatCon(RS_NatCon *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -262,7 +264,7 @@ void RS_unprotectNatCon(RS_NatCon *arg) {
  * Protect a RS_IdCon from the ATerm garbage collector. Every RS_IdCon that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_IdCon
  */
-void RS_protectIdCon(RS_IdCon *arg) {
+void _RS_protectIdCon(RS_IdCon *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -270,7 +272,7 @@ void RS_protectIdCon(RS_IdCon *arg) {
  * Unprotect a RS_IdCon from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_IdCon
  */
-void RS_unprotectIdCon(RS_IdCon *arg) {
+void _RS_unprotectIdCon(RS_IdCon *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -278,7 +280,7 @@ void RS_unprotectIdCon(RS_IdCon *arg) {
  * Protect a RS_Integer from the ATerm garbage collector. Every RS_Integer that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_Integer
  */
-void RS_protectInteger(RS_Integer *arg) {
+void _RS_protectInteger(RS_Integer *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -286,7 +288,7 @@ void RS_protectInteger(RS_Integer *arg) {
  * Unprotect a RS_Integer from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_Integer
  */
-void RS_unprotectInteger(RS_Integer *arg) {
+void _RS_unprotectInteger(RS_Integer *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -294,7 +296,7 @@ void RS_unprotectInteger(RS_Integer *arg) {
  * Protect a RS_Location from the ATerm garbage collector. Every RS_Location that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_Location
  */
-void RS_protectLocation(RS_Location *arg) {
+void _RS_protectLocation(RS_Location *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -302,7 +304,7 @@ void RS_protectLocation(RS_Location *arg) {
  * Unprotect a RS_Location from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_Location
  */
-void RS_unprotectLocation(RS_Location *arg) {
+void _RS_unprotectLocation(RS_Location *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -310,7 +312,7 @@ void RS_unprotectLocation(RS_Location *arg) {
  * Protect a RS_Area from the ATerm garbage collector. Every RS_Area that is not rooted somewhere on the C call stack must be protected. Examples are global variables
  * \param[in] arg pointer to a RS_Area
  */
-void RS_protectArea(RS_Area *arg) {
+void _RS_protectArea(RS_Area *arg) {
   ATprotect((ATerm*)((void*) arg));
 }
 
@@ -318,7 +320,7 @@ void RS_protectArea(RS_Area *arg) {
  * Unprotect a RS_Area from the ATerm garbage collector. This improves the efficiency of the garbage collector, as well as provide opportunity for reclaiming space
  * \param[in] arg pointer to a RS_Area
  */
-void RS_unprotectArea(RS_Area *arg) {
+void _RS_unprotectArea(RS_Area *arg) {
   ATunprotect((ATerm*)((void*) arg));
 }
 
@@ -327,7 +329,7 @@ void RS_unprotectArea(RS_Area *arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RElem that was encoded by \arg
  */
-RS_RElem RS_RElemFromTerm(ATerm t) {
+RS_RElem _RS_RElemFromTerm(ATerm t) {
   return (RS_RElem)t;
 }
 
@@ -336,7 +338,7 @@ RS_RElem RS_RElemFromTerm(ATerm t) {
  * \param[in] arg RS_RElem to be converted
  * \return ATerm that represents the RS_RElem
  */
-ATerm RS_RElemToTerm(RS_RElem arg) {
+ATerm _RS_RElemToTerm(RS_RElem arg) {
   return (ATerm)arg;
 }
 
@@ -345,7 +347,7 @@ ATerm RS_RElemToTerm(RS_RElem arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RType that was encoded by \arg
  */
-RS_RType RS_RTypeFromTerm(ATerm t) {
+RS_RType _RS_RTypeFromTerm(ATerm t) {
   return (RS_RType)t;
 }
 
@@ -354,7 +356,7 @@ RS_RType RS_RTypeFromTerm(ATerm t) {
  * \param[in] arg RS_RType to be converted
  * \return ATerm that represents the RS_RType
  */
-ATerm RS_RTypeToTerm(RS_RType arg) {
+ATerm _RS_RTypeToTerm(RS_RType arg) {
   return (ATerm)arg;
 }
 
@@ -363,7 +365,7 @@ ATerm RS_RTypeToTerm(RS_RType arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RTuple that was encoded by \arg
  */
-RS_RTuple RS_RTupleFromTerm(ATerm t) {
+RS_RTuple _RS_RTupleFromTerm(ATerm t) {
   return (RS_RTuple)t;
 }
 
@@ -372,7 +374,7 @@ RS_RTuple RS_RTupleFromTerm(ATerm t) {
  * \param[in] arg RS_RTuple to be converted
  * \return ATerm that represents the RS_RTuple
  */
-ATerm RS_RTupleToTerm(RS_RTuple arg) {
+ATerm _RS_RTupleToTerm(RS_RTuple arg) {
   return (ATerm)arg;
 }
 
@@ -381,7 +383,7 @@ ATerm RS_RTupleToTerm(RS_RTuple arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RStore that was encoded by \arg
  */
-RS_RStore RS_RStoreFromTerm(ATerm t) {
+RS_RStore _RS_RStoreFromTerm(ATerm t) {
   return (RS_RStore)t;
 }
 
@@ -390,7 +392,7 @@ RS_RStore RS_RStoreFromTerm(ATerm t) {
  * \param[in] arg RS_RStore to be converted
  * \return ATerm that represents the RS_RStore
  */
-ATerm RS_RStoreToTerm(RS_RStore arg) {
+ATerm _RS_RStoreToTerm(RS_RStore arg) {
   return (ATerm)arg;
 }
 
@@ -399,7 +401,7 @@ ATerm RS_RStoreToTerm(RS_RStore arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RElemElements that was encoded by \arg
  */
-RS_RElemElements RS_RElemElementsFromTerm(ATerm t) {
+RS_RElemElements _RS_RElemElementsFromTerm(ATerm t) {
   return (RS_RElemElements)t;
 }
 
@@ -408,7 +410,7 @@ RS_RElemElements RS_RElemElementsFromTerm(ATerm t) {
  * \param[in] arg RS_RElemElements to be converted
  * \return ATerm that represents the RS_RElemElements
  */
-ATerm RS_RElemElementsToTerm(RS_RElemElements arg) {
+ATerm _RS_RElemElementsToTerm(RS_RElemElements arg) {
   return (ATerm)arg;
 }
 
@@ -417,7 +419,7 @@ ATerm RS_RElemElementsToTerm(RS_RElemElements arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RTypeColumnTypes that was encoded by \arg
  */
-RS_RTypeColumnTypes RS_RTypeColumnTypesFromTerm(ATerm t) {
+RS_RTypeColumnTypes _RS_RTypeColumnTypesFromTerm(ATerm t) {
   return (RS_RTypeColumnTypes)t;
 }
 
@@ -426,7 +428,7 @@ RS_RTypeColumnTypes RS_RTypeColumnTypesFromTerm(ATerm t) {
  * \param[in] arg RS_RTypeColumnTypes to be converted
  * \return ATerm that represents the RS_RTypeColumnTypes
  */
-ATerm RS_RTypeColumnTypesToTerm(RS_RTypeColumnTypes arg) {
+ATerm _RS_RTypeColumnTypesToTerm(RS_RTypeColumnTypes arg) {
   return (ATerm)arg;
 }
 
@@ -435,7 +437,7 @@ ATerm RS_RTypeColumnTypesToTerm(RS_RTypeColumnTypes arg) {
  * \param[in] t ATerm to be converted
  * \return RS_RTupleRtuples that was encoded by \arg
  */
-RS_RTupleRtuples RS_RTupleRtuplesFromTerm(ATerm t) {
+RS_RTupleRtuples _RS_RTupleRtuplesFromTerm(ATerm t) {
   return (RS_RTupleRtuples)t;
 }
 
@@ -444,7 +446,7 @@ RS_RTupleRtuples RS_RTupleRtuplesFromTerm(ATerm t) {
  * \param[in] arg RS_RTupleRtuples to be converted
  * \return ATerm that represents the RS_RTupleRtuples
  */
-ATerm RS_RTupleRtuplesToTerm(RS_RTupleRtuples arg) {
+ATerm _RS_RTupleRtuplesToTerm(RS_RTupleRtuples arg) {
   return (ATerm)arg;
 }
 
@@ -453,7 +455,7 @@ ATerm RS_RTupleRtuplesToTerm(RS_RTupleRtuples arg) {
  * \param[in] t ATerm to be converted
  * \return RS_StrChar that was encoded by \arg
  */
-RS_StrChar RS_StrCharFromTerm(ATerm t) {
+RS_StrChar _RS_StrCharFromTerm(ATerm t) {
   return (RS_StrChar)t;
 }
 
@@ -462,7 +464,7 @@ RS_StrChar RS_StrCharFromTerm(ATerm t) {
  * \param[in] arg RS_StrChar to be converted
  * \return ATerm that represents the RS_StrChar
  */
-ATerm RS_StrCharToTerm(RS_StrChar arg) {
+ATerm _RS_StrCharToTerm(RS_StrChar arg) {
   return (ATerm)arg;
 }
 
@@ -471,7 +473,7 @@ ATerm RS_StrCharToTerm(RS_StrChar arg) {
  * \param[in] t ATerm to be converted
  * \return RS_StrCon that was encoded by \arg
  */
-RS_StrCon RS_StrConFromTerm(ATerm t) {
+RS_StrCon _RS_StrConFromTerm(ATerm t) {
   return (RS_StrCon)t;
 }
 
@@ -480,7 +482,7 @@ RS_StrCon RS_StrConFromTerm(ATerm t) {
  * \param[in] arg RS_StrCon to be converted
  * \return ATerm that represents the RS_StrCon
  */
-ATerm RS_StrConToTerm(RS_StrCon arg) {
+ATerm _RS_StrConToTerm(RS_StrCon arg) {
   return (ATerm)arg;
 }
 
@@ -489,7 +491,7 @@ ATerm RS_StrConToTerm(RS_StrCon arg) {
  * \param[in] t ATerm to be converted
  * \return RS_BoolCon that was encoded by \arg
  */
-RS_BoolCon RS_BoolConFromTerm(ATerm t) {
+RS_BoolCon _RS_BoolConFromTerm(ATerm t) {
   return (RS_BoolCon)t;
 }
 
@@ -498,7 +500,7 @@ RS_BoolCon RS_BoolConFromTerm(ATerm t) {
  * \param[in] arg RS_BoolCon to be converted
  * \return ATerm that represents the RS_BoolCon
  */
-ATerm RS_BoolConToTerm(RS_BoolCon arg) {
+ATerm _RS_BoolConToTerm(RS_BoolCon arg) {
   return (ATerm)arg;
 }
 
@@ -507,7 +509,7 @@ ATerm RS_BoolConToTerm(RS_BoolCon arg) {
  * \param[in] t ATerm to be converted
  * \return RS_NatCon that was encoded by \arg
  */
-RS_NatCon RS_NatConFromTerm(ATerm t) {
+RS_NatCon _RS_NatConFromTerm(ATerm t) {
   return (RS_NatCon)t;
 }
 
@@ -516,7 +518,7 @@ RS_NatCon RS_NatConFromTerm(ATerm t) {
  * \param[in] arg RS_NatCon to be converted
  * \return ATerm that represents the RS_NatCon
  */
-ATerm RS_NatConToTerm(RS_NatCon arg) {
+ATerm _RS_NatConToTerm(RS_NatCon arg) {
   return (ATerm)arg;
 }
 
@@ -525,7 +527,7 @@ ATerm RS_NatConToTerm(RS_NatCon arg) {
  * \param[in] t ATerm to be converted
  * \return RS_IdCon that was encoded by \arg
  */
-RS_IdCon RS_IdConFromTerm(ATerm t) {
+RS_IdCon _RS_IdConFromTerm(ATerm t) {
   return (RS_IdCon)t;
 }
 
@@ -534,7 +536,7 @@ RS_IdCon RS_IdConFromTerm(ATerm t) {
  * \param[in] arg RS_IdCon to be converted
  * \return ATerm that represents the RS_IdCon
  */
-ATerm RS_IdConToTerm(RS_IdCon arg) {
+ATerm _RS_IdConToTerm(RS_IdCon arg) {
   return (ATerm)arg;
 }
 
@@ -543,7 +545,7 @@ ATerm RS_IdConToTerm(RS_IdCon arg) {
  * \param[in] t ATerm to be converted
  * \return RS_Integer that was encoded by \arg
  */
-RS_Integer RS_IntegerFromTerm(ATerm t) {
+RS_Integer _RS_IntegerFromTerm(ATerm t) {
   return (RS_Integer)t;
 }
 
@@ -552,7 +554,7 @@ RS_Integer RS_IntegerFromTerm(ATerm t) {
  * \param[in] arg RS_Integer to be converted
  * \return ATerm that represents the RS_Integer
  */
-ATerm RS_IntegerToTerm(RS_Integer arg) {
+ATerm _RS_IntegerToTerm(RS_Integer arg) {
   return (ATerm)arg;
 }
 
@@ -561,7 +563,7 @@ ATerm RS_IntegerToTerm(RS_Integer arg) {
  * \param[in] t ATerm to be converted
  * \return RS_Location that was encoded by \arg
  */
-RS_Location RS_LocationFromTerm(ATerm t) {
+RS_Location _RS_LocationFromTerm(ATerm t) {
   return (RS_Location)t;
 }
 
@@ -570,7 +572,7 @@ RS_Location RS_LocationFromTerm(ATerm t) {
  * \param[in] arg RS_Location to be converted
  * \return ATerm that represents the RS_Location
  */
-ATerm RS_LocationToTerm(RS_Location arg) {
+ATerm _RS_LocationToTerm(RS_Location arg) {
   return (ATerm)arg;
 }
 
@@ -579,7 +581,7 @@ ATerm RS_LocationToTerm(RS_Location arg) {
  * \param[in] t ATerm to be converted
  * \return RS_Area that was encoded by \arg
  */
-RS_Area RS_AreaFromTerm(ATerm t) {
+RS_Area _RS_AreaFromTerm(ATerm t) {
   return (RS_Area)t;
 }
 
@@ -588,7 +590,7 @@ RS_Area RS_AreaFromTerm(ATerm t) {
  * \param[in] arg RS_Area to be converted
  * \return ATerm that represents the RS_Area
  */
-ATerm RS_AreaToTerm(RS_Area arg) {
+ATerm _RS_AreaToTerm(RS_Area arg) {
   return (ATerm)arg;
 }
 
@@ -597,7 +599,7 @@ ATerm RS_AreaToTerm(RS_Area arg) {
  * \param[in] arg input RS_RElemElements
  * \return The number of elements in the RS_RElemElements
  */
-int RS_getRElemElementsLength (RS_RElemElements arg) {
+int _RS_getRElemElementsLength(RS_RElemElements arg) {
   return ATgetLength((ATermList) arg);
 }
 
@@ -606,7 +608,7 @@ int RS_getRElemElementsLength (RS_RElemElements arg) {
  * \param[in] arg RS_RElemElements to be reversed
  * \return a reversed #arg
  */
-RS_RElemElements RS_reverseRElemElements(RS_RElemElements arg) {
+RS_RElemElements _RS_reverseRElemElements(RS_RElemElements arg) {
   return (RS_RElemElements) ATreverse((ATermList) arg);
 }
 
@@ -616,7 +618,7 @@ RS_RElemElements RS_reverseRElemElements(RS_RElemElements arg) {
  * \param[in] elem RS_RElem to be appended
  * \return new RS_RElemElements with #elem appended
  */
-RS_RElemElements RS_appendRElemElements(RS_RElemElements arg, RS_RElem elem) {
+RS_RElemElements _RS_appendRElemElements(RS_RElemElements arg, RS_RElem elem) {
   return (RS_RElemElements) ATappend((ATermList) arg, (ATerm) ((ATerm) elem));
 }
 
@@ -626,7 +628,7 @@ RS_RElemElements RS_appendRElemElements(RS_RElemElements arg, RS_RElem elem) {
  * \param[in] arg1 second RS_RElemElements
  * \return RS_RElemElements with the elements of #arg0 before the elements of #arg1
  */
-RS_RElemElements RS_concatRElemElements(RS_RElemElements arg0, RS_RElemElements arg1) {
+RS_RElemElements _RS_concatRElemElements(RS_RElemElements arg0, RS_RElemElements arg1) {
   return (RS_RElemElements) ATconcat((ATermList) arg0, (ATermList) arg1);
 }
 
@@ -637,7 +639,7 @@ RS_RElemElements RS_concatRElemElements(RS_RElemElements arg0, RS_RElemElements 
  * \param[in] end exclusive end index of the sublist
  * \return new RS_RElemElements with a first element the element at index #start from #arg, and as last element the element at index (#end - 1).
  */
-RS_RElemElements RS_sliceRElemElements(RS_RElemElements arg, int start, int end) {
+RS_RElemElements _RS_sliceRElemElements(RS_RElemElements arg, int start, int end) {
   return (RS_RElemElements) ATgetSlice((ATermList) arg, start, end);
 }
 
@@ -647,7 +649,7 @@ RS_RElemElements RS_sliceRElemElements(RS_RElemElements arg, int start, int end)
  * \param[in] index index to use to point in the RS_RElemElements
  * \return RS_RElem at position #index in #arg
  */
-RS_RElem RS_getRElemElementsRElemAt(RS_RElemElements arg, int index) {
+RS_RElem _RS_getRElemElementsRElemAt(RS_RElemElements arg, int index) {
  return (RS_RElem)ATelementAt((ATermList) arg,index);
 }
 
@@ -658,7 +660,7 @@ RS_RElem RS_getRElemElementsRElemAt(RS_RElemElements arg, int index) {
  * \param[in] index index to use to point in the RS_RElemElements
  * \return A new RS_RElemElementswith #elem replaced in #arg at position #index
  */
-RS_RElemElements RS_replaceRElemElementsRElemAt(RS_RElemElements arg, RS_RElem elem, int index) {
+RS_RElemElements _RS_replaceRElemElementsRElemAt(RS_RElemElements arg, RS_RElem elem, int index) {
  return (RS_RElemElements) ATreplace((ATermList) arg, (ATerm) ((ATerm) elem), index);
 }
 
@@ -668,7 +670,7 @@ RS_RElemElements RS_replaceRElemElementsRElemAt(RS_RElemElements arg, RS_RElem e
  * \param[in] elem2 One RS_RElem element of the new RS_RElemElements
  * \return A new RS_RElemElements consisting of 2 RS_RElems
  */
-RS_RElemElements RS_makeRElemElements2(RS_RElem elem1, RS_RElem elem2) {
+RS_RElemElements _RS_makeRElemElements2(RS_RElem elem1, RS_RElem elem2) {
   return (RS_RElemElements) ATmakeList2((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2));
 }
 
@@ -679,7 +681,7 @@ RS_RElemElements RS_makeRElemElements2(RS_RElem elem1, RS_RElem elem2) {
  * \param[in] elem3 One RS_RElem element of the new RS_RElemElements
  * \return A new RS_RElemElements consisting of 3 RS_RElems
  */
-RS_RElemElements RS_makeRElemElements3(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3) {
+RS_RElemElements _RS_makeRElemElements3(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3) {
   return (RS_RElemElements) ATmakeList3((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3));
 }
 
@@ -691,7 +693,7 @@ RS_RElemElements RS_makeRElemElements3(RS_RElem elem1, RS_RElem elem2, RS_RElem 
  * \param[in] elem4 One RS_RElem element of the new RS_RElemElements
  * \return A new RS_RElemElements consisting of 4 RS_RElems
  */
-RS_RElemElements RS_makeRElemElements4(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3, RS_RElem elem4) {
+RS_RElemElements _RS_makeRElemElements4(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3, RS_RElem elem4) {
   return (RS_RElemElements) ATmakeList4((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4));
 }
 
@@ -704,7 +706,7 @@ RS_RElemElements RS_makeRElemElements4(RS_RElem elem1, RS_RElem elem2, RS_RElem 
  * \param[in] elem5 One RS_RElem element of the new RS_RElemElements
  * \return A new RS_RElemElements consisting of 5 RS_RElems
  */
-RS_RElemElements RS_makeRElemElements5(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3, RS_RElem elem4, RS_RElem elem5) {
+RS_RElemElements _RS_makeRElemElements5(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3, RS_RElem elem4, RS_RElem elem5) {
   return (RS_RElemElements) ATmakeList5((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5));
 }
 
@@ -718,7 +720,7 @@ RS_RElemElements RS_makeRElemElements5(RS_RElem elem1, RS_RElem elem2, RS_RElem 
  * \param[in] elem6 One RS_RElem element of the new RS_RElemElements
  * \return A new RS_RElemElements consisting of 6 RS_RElems
  */
-RS_RElemElements RS_makeRElemElements6(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3, RS_RElem elem4, RS_RElem elem5, RS_RElem elem6) {
+RS_RElemElements _RS_makeRElemElements6(RS_RElem elem1, RS_RElem elem2, RS_RElem elem3, RS_RElem elem4, RS_RElem elem5, RS_RElem elem6) {
   return (RS_RElemElements) ATmakeList6((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5), (ATerm) ((ATerm) elem6));
 }
 
@@ -727,7 +729,7 @@ RS_RElemElements RS_makeRElemElements6(RS_RElem elem1, RS_RElem elem2, RS_RElem 
  * \param[in] arg input RS_RTypeColumnTypes
  * \return The number of elements in the RS_RTypeColumnTypes
  */
-int RS_getRTypeColumnTypesLength (RS_RTypeColumnTypes arg) {
+int _RS_getRTypeColumnTypesLength(RS_RTypeColumnTypes arg) {
   return ATgetLength((ATermList) arg);
 }
 
@@ -736,7 +738,7 @@ int RS_getRTypeColumnTypesLength (RS_RTypeColumnTypes arg) {
  * \param[in] arg RS_RTypeColumnTypes to be reversed
  * \return a reversed #arg
  */
-RS_RTypeColumnTypes RS_reverseRTypeColumnTypes(RS_RTypeColumnTypes arg) {
+RS_RTypeColumnTypes _RS_reverseRTypeColumnTypes(RS_RTypeColumnTypes arg) {
   return (RS_RTypeColumnTypes) ATreverse((ATermList) arg);
 }
 
@@ -746,7 +748,7 @@ RS_RTypeColumnTypes RS_reverseRTypeColumnTypes(RS_RTypeColumnTypes arg) {
  * \param[in] elem RS_RType to be appended
  * \return new RS_RTypeColumnTypes with #elem appended
  */
-RS_RTypeColumnTypes RS_appendRTypeColumnTypes(RS_RTypeColumnTypes arg, RS_RType elem) {
+RS_RTypeColumnTypes _RS_appendRTypeColumnTypes(RS_RTypeColumnTypes arg, RS_RType elem) {
   return (RS_RTypeColumnTypes) ATappend((ATermList) arg, (ATerm) ((ATerm) elem));
 }
 
@@ -756,7 +758,7 @@ RS_RTypeColumnTypes RS_appendRTypeColumnTypes(RS_RTypeColumnTypes arg, RS_RType 
  * \param[in] arg1 second RS_RTypeColumnTypes
  * \return RS_RTypeColumnTypes with the elements of #arg0 before the elements of #arg1
  */
-RS_RTypeColumnTypes RS_concatRTypeColumnTypes(RS_RTypeColumnTypes arg0, RS_RTypeColumnTypes arg1) {
+RS_RTypeColumnTypes _RS_concatRTypeColumnTypes(RS_RTypeColumnTypes arg0, RS_RTypeColumnTypes arg1) {
   return (RS_RTypeColumnTypes) ATconcat((ATermList) arg0, (ATermList) arg1);
 }
 
@@ -767,7 +769,7 @@ RS_RTypeColumnTypes RS_concatRTypeColumnTypes(RS_RTypeColumnTypes arg0, RS_RType
  * \param[in] end exclusive end index of the sublist
  * \return new RS_RTypeColumnTypes with a first element the element at index #start from #arg, and as last element the element at index (#end - 1).
  */
-RS_RTypeColumnTypes RS_sliceRTypeColumnTypes(RS_RTypeColumnTypes arg, int start, int end) {
+RS_RTypeColumnTypes _RS_sliceRTypeColumnTypes(RS_RTypeColumnTypes arg, int start, int end) {
   return (RS_RTypeColumnTypes) ATgetSlice((ATermList) arg, start, end);
 }
 
@@ -777,7 +779,7 @@ RS_RTypeColumnTypes RS_sliceRTypeColumnTypes(RS_RTypeColumnTypes arg, int start,
  * \param[in] index index to use to point in the RS_RTypeColumnTypes
  * \return RS_RType at position #index in #arg
  */
-RS_RType RS_getRTypeColumnTypesRTypeAt(RS_RTypeColumnTypes arg, int index) {
+RS_RType _RS_getRTypeColumnTypesRTypeAt(RS_RTypeColumnTypes arg, int index) {
  return (RS_RType)ATelementAt((ATermList) arg,index);
 }
 
@@ -788,7 +790,7 @@ RS_RType RS_getRTypeColumnTypesRTypeAt(RS_RTypeColumnTypes arg, int index) {
  * \param[in] index index to use to point in the RS_RTypeColumnTypes
  * \return A new RS_RTypeColumnTypeswith #elem replaced in #arg at position #index
  */
-RS_RTypeColumnTypes RS_replaceRTypeColumnTypesRTypeAt(RS_RTypeColumnTypes arg, RS_RType elem, int index) {
+RS_RTypeColumnTypes _RS_replaceRTypeColumnTypesRTypeAt(RS_RTypeColumnTypes arg, RS_RType elem, int index) {
  return (RS_RTypeColumnTypes) ATreplace((ATermList) arg, (ATerm) ((ATerm) elem), index);
 }
 
@@ -798,7 +800,7 @@ RS_RTypeColumnTypes RS_replaceRTypeColumnTypesRTypeAt(RS_RTypeColumnTypes arg, R
  * \param[in] elem2 One RS_RType element of the new RS_RTypeColumnTypes
  * \return A new RS_RTypeColumnTypes consisting of 2 RS_RTypes
  */
-RS_RTypeColumnTypes RS_makeRTypeColumnTypes2(RS_RType elem1, RS_RType elem2) {
+RS_RTypeColumnTypes _RS_makeRTypeColumnTypes2(RS_RType elem1, RS_RType elem2) {
   return (RS_RTypeColumnTypes) ATmakeList2((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2));
 }
 
@@ -809,7 +811,7 @@ RS_RTypeColumnTypes RS_makeRTypeColumnTypes2(RS_RType elem1, RS_RType elem2) {
  * \param[in] elem3 One RS_RType element of the new RS_RTypeColumnTypes
  * \return A new RS_RTypeColumnTypes consisting of 3 RS_RTypes
  */
-RS_RTypeColumnTypes RS_makeRTypeColumnTypes3(RS_RType elem1, RS_RType elem2, RS_RType elem3) {
+RS_RTypeColumnTypes _RS_makeRTypeColumnTypes3(RS_RType elem1, RS_RType elem2, RS_RType elem3) {
   return (RS_RTypeColumnTypes) ATmakeList3((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3));
 }
 
@@ -821,7 +823,7 @@ RS_RTypeColumnTypes RS_makeRTypeColumnTypes3(RS_RType elem1, RS_RType elem2, RS_
  * \param[in] elem4 One RS_RType element of the new RS_RTypeColumnTypes
  * \return A new RS_RTypeColumnTypes consisting of 4 RS_RTypes
  */
-RS_RTypeColumnTypes RS_makeRTypeColumnTypes4(RS_RType elem1, RS_RType elem2, RS_RType elem3, RS_RType elem4) {
+RS_RTypeColumnTypes _RS_makeRTypeColumnTypes4(RS_RType elem1, RS_RType elem2, RS_RType elem3, RS_RType elem4) {
   return (RS_RTypeColumnTypes) ATmakeList4((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4));
 }
 
@@ -834,7 +836,7 @@ RS_RTypeColumnTypes RS_makeRTypeColumnTypes4(RS_RType elem1, RS_RType elem2, RS_
  * \param[in] elem5 One RS_RType element of the new RS_RTypeColumnTypes
  * \return A new RS_RTypeColumnTypes consisting of 5 RS_RTypes
  */
-RS_RTypeColumnTypes RS_makeRTypeColumnTypes5(RS_RType elem1, RS_RType elem2, RS_RType elem3, RS_RType elem4, RS_RType elem5) {
+RS_RTypeColumnTypes _RS_makeRTypeColumnTypes5(RS_RType elem1, RS_RType elem2, RS_RType elem3, RS_RType elem4, RS_RType elem5) {
   return (RS_RTypeColumnTypes) ATmakeList5((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5));
 }
 
@@ -848,7 +850,7 @@ RS_RTypeColumnTypes RS_makeRTypeColumnTypes5(RS_RType elem1, RS_RType elem2, RS_
  * \param[in] elem6 One RS_RType element of the new RS_RTypeColumnTypes
  * \return A new RS_RTypeColumnTypes consisting of 6 RS_RTypes
  */
-RS_RTypeColumnTypes RS_makeRTypeColumnTypes6(RS_RType elem1, RS_RType elem2, RS_RType elem3, RS_RType elem4, RS_RType elem5, RS_RType elem6) {
+RS_RTypeColumnTypes _RS_makeRTypeColumnTypes6(RS_RType elem1, RS_RType elem2, RS_RType elem3, RS_RType elem4, RS_RType elem5, RS_RType elem6) {
   return (RS_RTypeColumnTypes) ATmakeList6((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5), (ATerm) ((ATerm) elem6));
 }
 
@@ -857,7 +859,7 @@ RS_RTypeColumnTypes RS_makeRTypeColumnTypes6(RS_RType elem1, RS_RType elem2, RS_
  * \param[in] arg input RS_RTupleRtuples
  * \return The number of elements in the RS_RTupleRtuples
  */
-int RS_getRTupleRtuplesLength (RS_RTupleRtuples arg) {
+int _RS_getRTupleRtuplesLength(RS_RTupleRtuples arg) {
   return ATgetLength((ATermList) arg);
 }
 
@@ -866,7 +868,7 @@ int RS_getRTupleRtuplesLength (RS_RTupleRtuples arg) {
  * \param[in] arg RS_RTupleRtuples to be reversed
  * \return a reversed #arg
  */
-RS_RTupleRtuples RS_reverseRTupleRtuples(RS_RTupleRtuples arg) {
+RS_RTupleRtuples _RS_reverseRTupleRtuples(RS_RTupleRtuples arg) {
   return (RS_RTupleRtuples) ATreverse((ATermList) arg);
 }
 
@@ -876,7 +878,7 @@ RS_RTupleRtuples RS_reverseRTupleRtuples(RS_RTupleRtuples arg) {
  * \param[in] elem RS_RTuple to be appended
  * \return new RS_RTupleRtuples with #elem appended
  */
-RS_RTupleRtuples RS_appendRTupleRtuples(RS_RTupleRtuples arg, RS_RTuple elem) {
+RS_RTupleRtuples _RS_appendRTupleRtuples(RS_RTupleRtuples arg, RS_RTuple elem) {
   return (RS_RTupleRtuples) ATappend((ATermList) arg, (ATerm) ((ATerm) elem));
 }
 
@@ -886,7 +888,7 @@ RS_RTupleRtuples RS_appendRTupleRtuples(RS_RTupleRtuples arg, RS_RTuple elem) {
  * \param[in] arg1 second RS_RTupleRtuples
  * \return RS_RTupleRtuples with the elements of #arg0 before the elements of #arg1
  */
-RS_RTupleRtuples RS_concatRTupleRtuples(RS_RTupleRtuples arg0, RS_RTupleRtuples arg1) {
+RS_RTupleRtuples _RS_concatRTupleRtuples(RS_RTupleRtuples arg0, RS_RTupleRtuples arg1) {
   return (RS_RTupleRtuples) ATconcat((ATermList) arg0, (ATermList) arg1);
 }
 
@@ -897,7 +899,7 @@ RS_RTupleRtuples RS_concatRTupleRtuples(RS_RTupleRtuples arg0, RS_RTupleRtuples 
  * \param[in] end exclusive end index of the sublist
  * \return new RS_RTupleRtuples with a first element the element at index #start from #arg, and as last element the element at index (#end - 1).
  */
-RS_RTupleRtuples RS_sliceRTupleRtuples(RS_RTupleRtuples arg, int start, int end) {
+RS_RTupleRtuples _RS_sliceRTupleRtuples(RS_RTupleRtuples arg, int start, int end) {
   return (RS_RTupleRtuples) ATgetSlice((ATermList) arg, start, end);
 }
 
@@ -907,7 +909,7 @@ RS_RTupleRtuples RS_sliceRTupleRtuples(RS_RTupleRtuples arg, int start, int end)
  * \param[in] index index to use to point in the RS_RTupleRtuples
  * \return RS_RTuple at position #index in #arg
  */
-RS_RTuple RS_getRTupleRtuplesRTupleAt(RS_RTupleRtuples arg, int index) {
+RS_RTuple _RS_getRTupleRtuplesRTupleAt(RS_RTupleRtuples arg, int index) {
  return (RS_RTuple)ATelementAt((ATermList) arg,index);
 }
 
@@ -918,7 +920,7 @@ RS_RTuple RS_getRTupleRtuplesRTupleAt(RS_RTupleRtuples arg, int index) {
  * \param[in] index index to use to point in the RS_RTupleRtuples
  * \return A new RS_RTupleRtupleswith #elem replaced in #arg at position #index
  */
-RS_RTupleRtuples RS_replaceRTupleRtuplesRTupleAt(RS_RTupleRtuples arg, RS_RTuple elem, int index) {
+RS_RTupleRtuples _RS_replaceRTupleRtuplesRTupleAt(RS_RTupleRtuples arg, RS_RTuple elem, int index) {
  return (RS_RTupleRtuples) ATreplace((ATermList) arg, (ATerm) ((ATerm) elem), index);
 }
 
@@ -928,7 +930,7 @@ RS_RTupleRtuples RS_replaceRTupleRtuplesRTupleAt(RS_RTupleRtuples arg, RS_RTuple
  * \param[in] elem2 One RS_RTuple element of the new RS_RTupleRtuples
  * \return A new RS_RTupleRtuples consisting of 2 RS_RTuples
  */
-RS_RTupleRtuples RS_makeRTupleRtuples2(RS_RTuple elem1, RS_RTuple elem2) {
+RS_RTupleRtuples _RS_makeRTupleRtuples2(RS_RTuple elem1, RS_RTuple elem2) {
   return (RS_RTupleRtuples) ATmakeList2((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2));
 }
 
@@ -939,7 +941,7 @@ RS_RTupleRtuples RS_makeRTupleRtuples2(RS_RTuple elem1, RS_RTuple elem2) {
  * \param[in] elem3 One RS_RTuple element of the new RS_RTupleRtuples
  * \return A new RS_RTupleRtuples consisting of 3 RS_RTuples
  */
-RS_RTupleRtuples RS_makeRTupleRtuples3(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3) {
+RS_RTupleRtuples _RS_makeRTupleRtuples3(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3) {
   return (RS_RTupleRtuples) ATmakeList3((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3));
 }
 
@@ -951,7 +953,7 @@ RS_RTupleRtuples RS_makeRTupleRtuples3(RS_RTuple elem1, RS_RTuple elem2, RS_RTup
  * \param[in] elem4 One RS_RTuple element of the new RS_RTupleRtuples
  * \return A new RS_RTupleRtuples consisting of 4 RS_RTuples
  */
-RS_RTupleRtuples RS_makeRTupleRtuples4(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3, RS_RTuple elem4) {
+RS_RTupleRtuples _RS_makeRTupleRtuples4(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3, RS_RTuple elem4) {
   return (RS_RTupleRtuples) ATmakeList4((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4));
 }
 
@@ -964,7 +966,7 @@ RS_RTupleRtuples RS_makeRTupleRtuples4(RS_RTuple elem1, RS_RTuple elem2, RS_RTup
  * \param[in] elem5 One RS_RTuple element of the new RS_RTupleRtuples
  * \return A new RS_RTupleRtuples consisting of 5 RS_RTuples
  */
-RS_RTupleRtuples RS_makeRTupleRtuples5(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3, RS_RTuple elem4, RS_RTuple elem5) {
+RS_RTupleRtuples _RS_makeRTupleRtuples5(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3, RS_RTuple elem4, RS_RTuple elem5) {
   return (RS_RTupleRtuples) ATmakeList5((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5));
 }
 
@@ -978,7 +980,7 @@ RS_RTupleRtuples RS_makeRTupleRtuples5(RS_RTuple elem1, RS_RTuple elem2, RS_RTup
  * \param[in] elem6 One RS_RTuple element of the new RS_RTupleRtuples
  * \return A new RS_RTupleRtuples consisting of 6 RS_RTuples
  */
-RS_RTupleRtuples RS_makeRTupleRtuples6(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3, RS_RTuple elem4, RS_RTuple elem5, RS_RTuple elem6) {
+RS_RTupleRtuples _RS_makeRTupleRtuples6(RS_RTuple elem1, RS_RTuple elem2, RS_RTuple elem3, RS_RTuple elem4, RS_RTuple elem5, RS_RTuple elem6) {
   return (RS_RTupleRtuples) ATmakeList6((ATerm) ((ATerm) elem1), (ATerm) ((ATerm) elem2), (ATerm) ((ATerm) elem3), (ATerm) ((ATerm) elem4), (ATerm) ((ATerm) elem5), (ATerm) ((ATerm) elem6));
 }
 
@@ -1319,7 +1321,7 @@ RS_Area RS_makeAreaArea(int beginLine, int beginColumn, int endLine, int endColu
  * \param[in] arg1 second RS_RElem to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRElem(RS_RElem arg0, RS_RElem arg1) {
+ATbool _RS_isEqualRElem(RS_RElem arg0, RS_RElem arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1329,7 +1331,7 @@ ATbool RS_isEqualRElem(RS_RElem arg0, RS_RElem arg1) {
  * \param[in] arg1 second RS_RType to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRType(RS_RType arg0, RS_RType arg1) {
+ATbool _RS_isEqualRType(RS_RType arg0, RS_RType arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1339,7 +1341,7 @@ ATbool RS_isEqualRType(RS_RType arg0, RS_RType arg1) {
  * \param[in] arg1 second RS_RTuple to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRTuple(RS_RTuple arg0, RS_RTuple arg1) {
+ATbool _RS_isEqualRTuple(RS_RTuple arg0, RS_RTuple arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1349,7 +1351,7 @@ ATbool RS_isEqualRTuple(RS_RTuple arg0, RS_RTuple arg1) {
  * \param[in] arg1 second RS_RStore to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRStore(RS_RStore arg0, RS_RStore arg1) {
+ATbool _RS_isEqualRStore(RS_RStore arg0, RS_RStore arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1359,7 +1361,7 @@ ATbool RS_isEqualRStore(RS_RStore arg0, RS_RStore arg1) {
  * \param[in] arg1 second RS_RElemElements to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRElemElements(RS_RElemElements arg0, RS_RElemElements arg1) {
+ATbool _RS_isEqualRElemElements(RS_RElemElements arg0, RS_RElemElements arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1369,7 +1371,7 @@ ATbool RS_isEqualRElemElements(RS_RElemElements arg0, RS_RElemElements arg1) {
  * \param[in] arg1 second RS_RTypeColumnTypes to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRTypeColumnTypes(RS_RTypeColumnTypes arg0, RS_RTypeColumnTypes arg1) {
+ATbool _RS_isEqualRTypeColumnTypes(RS_RTypeColumnTypes arg0, RS_RTypeColumnTypes arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1379,7 +1381,7 @@ ATbool RS_isEqualRTypeColumnTypes(RS_RTypeColumnTypes arg0, RS_RTypeColumnTypes 
  * \param[in] arg1 second RS_RTupleRtuples to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualRTupleRtuples(RS_RTupleRtuples arg0, RS_RTupleRtuples arg1) {
+ATbool _RS_isEqualRTupleRtuples(RS_RTupleRtuples arg0, RS_RTupleRtuples arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1389,7 +1391,7 @@ ATbool RS_isEqualRTupleRtuples(RS_RTupleRtuples arg0, RS_RTupleRtuples arg1) {
  * \param[in] arg1 second RS_StrChar to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualStrChar(RS_StrChar arg0, RS_StrChar arg1) {
+ATbool _RS_isEqualStrChar(RS_StrChar arg0, RS_StrChar arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1399,7 +1401,7 @@ ATbool RS_isEqualStrChar(RS_StrChar arg0, RS_StrChar arg1) {
  * \param[in] arg1 second RS_StrCon to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualStrCon(RS_StrCon arg0, RS_StrCon arg1) {
+ATbool _RS_isEqualStrCon(RS_StrCon arg0, RS_StrCon arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1409,7 +1411,7 @@ ATbool RS_isEqualStrCon(RS_StrCon arg0, RS_StrCon arg1) {
  * \param[in] arg1 second RS_BoolCon to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualBoolCon(RS_BoolCon arg0, RS_BoolCon arg1) {
+ATbool _RS_isEqualBoolCon(RS_BoolCon arg0, RS_BoolCon arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1419,7 +1421,7 @@ ATbool RS_isEqualBoolCon(RS_BoolCon arg0, RS_BoolCon arg1) {
  * \param[in] arg1 second RS_NatCon to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualNatCon(RS_NatCon arg0, RS_NatCon arg1) {
+ATbool _RS_isEqualNatCon(RS_NatCon arg0, RS_NatCon arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1429,7 +1431,7 @@ ATbool RS_isEqualNatCon(RS_NatCon arg0, RS_NatCon arg1) {
  * \param[in] arg1 second RS_IdCon to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualIdCon(RS_IdCon arg0, RS_IdCon arg1) {
+ATbool _RS_isEqualIdCon(RS_IdCon arg0, RS_IdCon arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1439,7 +1441,7 @@ ATbool RS_isEqualIdCon(RS_IdCon arg0, RS_IdCon arg1) {
  * \param[in] arg1 second RS_Integer to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualInteger(RS_Integer arg0, RS_Integer arg1) {
+ATbool _RS_isEqualInteger(RS_Integer arg0, RS_Integer arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1449,7 +1451,7 @@ ATbool RS_isEqualInteger(RS_Integer arg0, RS_Integer arg1) {
  * \param[in] arg1 second RS_Location to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualLocation(RS_Location arg0, RS_Location arg1) {
+ATbool _RS_isEqualLocation(RS_Location arg0, RS_Location arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1459,7 +1461,7 @@ ATbool RS_isEqualLocation(RS_Location arg0, RS_Location arg1) {
  * \param[in] arg1 second RS_Area to be compared
  * \return ATtrue if #arg0 was equal to #arg1, ATfalse otherwise
  */
-ATbool RS_isEqualArea(RS_Area arg0, RS_Area arg1) {
+ATbool _RS_isEqualArea(RS_Area arg0, RS_Area arg1) {
   return ATisEqual((ATerm)arg0, (ATerm)arg1);
 }
 
@@ -1494,164 +1496,97 @@ ATbool RS_isValidRElem(RS_RElem arg) {
 }
 
 /**
- * Assert whether a RS_RElem is a int. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a int by checking against the following ATerm pattern: int(<"Integer"("Integer")>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a int, or ATfalse otherwise
  */
-inline ATbool RS_isRElemInt(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemInt, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRElemInt(RS_RElem arg){
+  /* checking for: int */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun0) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElem is a str. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a str by checking against the following ATerm pattern: str(<"StrCon"(str)>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a str, or ATfalse otherwise
  */
-inline ATbool RS_isRElemStr(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemStr, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isRElemStr(RS_RElem arg){
+  /* checking for: str */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun1) {
+    ATerm arg_arg0 = ATgetArgument(arg, 0);
+    if (ATgetType((ATerm)arg_arg0) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg_arg0)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg_arg0)) == ATtrue) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElem is a bool. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a bool by checking against the following ATerm pattern: bool(<"BoolCon"("BoolCon")>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a bool, or ATfalse otherwise
  */
-inline ATbool RS_isRElemBool(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemBool, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRElemBool(RS_RElem arg){
+  /* checking for: bool */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun2) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElem is a loc. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a loc by checking against the following ATerm pattern: loc(<"Location"("Location")>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a loc, or ATfalse otherwise
  */
-inline ATbool RS_isRElemLoc(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemLoc, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRElemLoc(RS_RElem arg){
+  /* checking for: loc */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun3) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElem is a set. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a set by checking against the following ATerm pattern: set(<"elements"("RElem-elements")>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a set, or ATfalse otherwise
  */
-inline ATbool RS_isRElemSet(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemSet, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRElemSet(RS_RElem arg){
+  /* checking for: set */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun4) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElem is a bag. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a bag by checking against the following ATerm pattern: bag(<"elements"("RElem-elements")>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a bag, or ATfalse otherwise
  */
-inline ATbool RS_isRElemBag(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemBag, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRElemBag(RS_RElem arg){
+  /* checking for: bag */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun5) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElem is a tuple. . May not be used to assert correctness of the RS_RElem
+ * Assert whether a RS_RElem is a tuple by checking against the following ATerm pattern: tuple(<"elements"("RElem-elements")>). May not be used to assert correctness of the RS_RElem
  * \param[in] arg input RS_RElem
  * \return ATtrue if #arg corresponds to the signature of a tuple, or ATfalse otherwise
  */
-inline ATbool RS_isRElemTuple(RS_RElem arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemTuple, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRElemTuple(RS_RElem arg){
+  /* checking for: tuple */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun6) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
@@ -1897,233 +1832,133 @@ ATbool RS_isValidRType(RS_RType arg) {
 }
 
 /**
- * Assert whether a RS_RType is a int. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a int by checking against the following ATerm pattern: int. May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a int, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeInt(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeInt);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeInt(RS_RType arg){
+  /* checking for: int */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun7) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a bool. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a bool by checking against the following ATerm pattern: bool. May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a bool, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeBool(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeBool);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeBool(RS_RType arg){
+  /* checking for: bool */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun8) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a str. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a str by checking against the following ATerm pattern: str. May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a str, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeStr(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeStr);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeStr(RS_RType arg){
+  /* checking for: str */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun9) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a loc. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a loc by checking against the following ATerm pattern: loc. May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a loc, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeLoc(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeLoc);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeLoc(RS_RType arg){
+  /* checking for: loc */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun10) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a tuple. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a tuple by checking against the following ATerm pattern: tuple(<"column-types"("RType-column-types")>). May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a tuple, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeTuple(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeTuple, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeTuple(RS_RType arg){
+  /* checking for: tuple */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun6) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a set. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a set by checking against the following ATerm pattern: set(<"element-type"("RType")>). May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a set, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeSet(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeSet, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeSet(RS_RType arg){
+  /* checking for: set */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun4) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a bag. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a bag by checking against the following ATerm pattern: bag(<"element-type"("RType")>). May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a bag, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeBag(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeBag, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeBag(RS_RType arg){
+  /* checking for: bag */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun5) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a relation. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a relation by checking against the following ATerm pattern: relation(<"column-types"("RType-column-types")>). May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a relation, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeRelation(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeRelation, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeRelation(RS_RType arg){
+  /* checking for: relation */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun11) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a user-defined. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a user-defined by checking against the following ATerm pattern: user-defined(<"type-name"("IdCon")>). May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a user-defined, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeUserDefined(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeUserDefined, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeUserDefined(RS_RType arg){
+  /* checking for: user-defined */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun12) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RType is a parameter. . May not be used to assert correctness of the RS_RType
+ * Assert whether a RS_RType is a parameter by checking against the following ATerm pattern: parameter(<"parameter-name"("IdCon")>). May not be used to assert correctness of the RS_RType
  * \param[in] arg input RS_RType
  * \return ATtrue if #arg corresponds to the signature of a parameter, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeParameter(RS_RType arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeParameter, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isRTypeParameter(RS_RType arg){
+  /* checking for: parameter */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun13) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
@@ -2305,16 +2140,16 @@ ATbool RS_isValidRTuple(RS_RTuple arg) {
 }
 
 /**
- * Assert whether a RS_RTuple is a rtuple. Always returns ATtrue
+ * Assert whether a RS_RTuple is a rtuple by checking against the following ATerm pattern: rtuple(<"variable"("IdCon")>,<"rtype"("RType")>,<"value"("RElem")>). Always returns ATtrue
  * \param[in] arg input RS_RTuple
  * \return ATtrue if #arg corresponds to the signature of a rtuple, or ATfalse otherwise
  */
-inline ATbool RS_isRTupleRtuple(RS_RTuple arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternRTupleRtuple, NULL, NULL, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isRTupleRtuple(RS_RTuple arg){
+  /* checking for: rtuple */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun14) {
+    return ATtrue;
+  }
+  return ATfalse;
 }
 
 /**
@@ -2441,16 +2276,16 @@ ATbool RS_isValidRStore(RS_RStore arg) {
 }
 
 /**
- * Assert whether a RS_RStore is a rstore. Always returns ATtrue
+ * Assert whether a RS_RStore is a rstore by checking against the following ATerm pattern: rstore(<"rtuples"("RTuple-rtuples")>). Always returns ATtrue
  * \param[in] arg input RS_RStore
  * \return ATtrue if #arg corresponds to the signature of a rstore, or ATfalse otherwise
  */
-inline ATbool RS_isRStoreRstore(RS_RStore arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternRStoreRstore, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isRStoreRstore(RS_RStore arg){
+  /* checking for: rstore */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun15) {
+    return ATtrue;
+  }
+  return ATfalse;
 }
 
 /**
@@ -2509,71 +2344,43 @@ ATbool RS_isValidRElemElements(RS_RElemElements arg) {
 }
 
 /**
- * Assert whether a RS_RElemElements is a empty. . May not be used to assert correctness of the RS_RElemElements
+ * Assert whether a RS_RElemElements is a empty by checking against the following ATerm pattern: []. May not be used to assert correctness of the RS_RElemElements
  * \param[in] arg input RS_RElemElements
  * \return ATtrue if #arg corresponds to the signature of a empty, or ATfalse otherwise
  */
-inline ATbool RS_isRElemElementsEmpty(RS_RElemElements arg) {
-  if (!ATisEmpty((ATermList)arg)) {
-    return ATfalse;
+inline ATbool RS_isRElemElementsEmpty(RS_RElemElements arg){
+  if (ATisEmpty((ATermList)arg)) {
+    return ATtrue;
   }
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternRElemElementsEmpty));
-#endif
-  return ATtrue;
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElemElements is a single. . May not be used to assert correctness of the RS_RElemElements
+ * Assert whether a RS_RElemElements is a single by checking against the following ATerm pattern: [<head(RElem)>]. May not be used to assert correctness of the RS_RElemElements
  * \param[in] arg input RS_RElemElements
  * \return ATtrue if #arg corresponds to the signature of a single, or ATfalse otherwise
  */
-inline ATbool RS_isRElemElementsSingle(RS_RElemElements arg) {
-  if (ATisEmpty((ATermList)arg)) {
-    return ATfalse;
-  }
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemElementsSingle, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isRElemElementsSingle(RS_RElemElements arg){
+  if (ATgetType((ATerm)arg) == AT_LIST && ATisEmpty((ATermList)arg) == ATfalse) {
+    ATermList arg_list = (ATermList)arg;
+    arg_list = ATgetNext(arg_list);
+    if (ATgetType((ATerm)arg_list) == AT_LIST && ATisEmpty((ATermList)arg_list) == ATtrue) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RElemElements is a many. . May not be used to assert correctness of the RS_RElemElements
+ * Assert whether a RS_RElemElements is a many by checking against the following ATerm pattern: [<head(RElem)>,<[tail(RElem-elements)]>]. May not be used to assert correctness of the RS_RElemElements
  * \param[in] arg input RS_RElemElements
  * \return ATtrue if #arg corresponds to the signature of a many, or ATfalse otherwise
  */
-inline ATbool RS_isRElemElementsMany(RS_RElemElements arg) {
-  if (ATisEmpty((ATermList)arg)) {
-    return ATfalse;
+inline ATbool RS_isRElemElementsMany(RS_RElemElements arg){
+  if (ATgetType((ATerm)arg) == AT_LIST && ATisEmpty((ATermList)arg) == ATfalse) {
+    return ATtrue;
   }
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRElemElementsMany, NULL, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
-  }
+  return ATfalse;
 }
 
 /**
@@ -2678,71 +2485,43 @@ ATbool RS_isValidRTypeColumnTypes(RS_RTypeColumnTypes arg) {
 }
 
 /**
- * Assert whether a RS_RTypeColumnTypes is a empty. . May not be used to assert correctness of the RS_RTypeColumnTypes
+ * Assert whether a RS_RTypeColumnTypes is a empty by checking against the following ATerm pattern: []. May not be used to assert correctness of the RS_RTypeColumnTypes
  * \param[in] arg input RS_RTypeColumnTypes
  * \return ATtrue if #arg corresponds to the signature of a empty, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeColumnTypesEmpty(RS_RTypeColumnTypes arg) {
-  if (!ATisEmpty((ATermList)arg)) {
-    return ATfalse;
+inline ATbool RS_isRTypeColumnTypesEmpty(RS_RTypeColumnTypes arg){
+  if (ATisEmpty((ATermList)arg)) {
+    return ATtrue;
   }
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternRTypeColumnTypesEmpty));
-#endif
-  return ATtrue;
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RTypeColumnTypes is a single. . May not be used to assert correctness of the RS_RTypeColumnTypes
+ * Assert whether a RS_RTypeColumnTypes is a single by checking against the following ATerm pattern: [<head(RType)>]. May not be used to assert correctness of the RS_RTypeColumnTypes
  * \param[in] arg input RS_RTypeColumnTypes
  * \return ATtrue if #arg corresponds to the signature of a single, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeColumnTypesSingle(RS_RTypeColumnTypes arg) {
-  if (ATisEmpty((ATermList)arg)) {
-    return ATfalse;
-  }
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeColumnTypesSingle, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isRTypeColumnTypesSingle(RS_RTypeColumnTypes arg){
+  if (ATgetType((ATerm)arg) == AT_LIST && ATisEmpty((ATermList)arg) == ATfalse) {
+    ATermList arg_list = (ATermList)arg;
+    arg_list = ATgetNext(arg_list);
+    if (ATgetType((ATerm)arg_list) == AT_LIST && ATisEmpty((ATermList)arg_list) == ATtrue) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RTypeColumnTypes is a many. . May not be used to assert correctness of the RS_RTypeColumnTypes
+ * Assert whether a RS_RTypeColumnTypes is a many by checking against the following ATerm pattern: [<head(RType)>,<[tail(RType-column-types)]>]. May not be used to assert correctness of the RS_RTypeColumnTypes
  * \param[in] arg input RS_RTypeColumnTypes
  * \return ATtrue if #arg corresponds to the signature of a many, or ATfalse otherwise
  */
-inline ATbool RS_isRTypeColumnTypesMany(RS_RTypeColumnTypes arg) {
-  if (ATisEmpty((ATermList)arg)) {
-    return ATfalse;
+inline ATbool RS_isRTypeColumnTypesMany(RS_RTypeColumnTypes arg){
+  if (ATgetType((ATerm)arg) == AT_LIST && ATisEmpty((ATermList)arg) == ATfalse) {
+    return ATtrue;
   }
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTypeColumnTypesMany, NULL, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
-  }
+  return ATfalse;
 }
 
 /**
@@ -2847,71 +2626,43 @@ ATbool RS_isValidRTupleRtuples(RS_RTupleRtuples arg) {
 }
 
 /**
- * Assert whether a RS_RTupleRtuples is a empty. . May not be used to assert correctness of the RS_RTupleRtuples
+ * Assert whether a RS_RTupleRtuples is a empty by checking against the following ATerm pattern: []. May not be used to assert correctness of the RS_RTupleRtuples
  * \param[in] arg input RS_RTupleRtuples
  * \return ATtrue if #arg corresponds to the signature of a empty, or ATfalse otherwise
  */
-inline ATbool RS_isRTupleRtuplesEmpty(RS_RTupleRtuples arg) {
-  if (!ATisEmpty((ATermList)arg)) {
-    return ATfalse;
+inline ATbool RS_isRTupleRtuplesEmpty(RS_RTupleRtuples arg){
+  if (ATisEmpty((ATermList)arg)) {
+    return ATtrue;
   }
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternRTupleRtuplesEmpty));
-#endif
-  return ATtrue;
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RTupleRtuples is a single. . May not be used to assert correctness of the RS_RTupleRtuples
+ * Assert whether a RS_RTupleRtuples is a single by checking against the following ATerm pattern: [<head(RTuple)>]. May not be used to assert correctness of the RS_RTupleRtuples
  * \param[in] arg input RS_RTupleRtuples
  * \return ATtrue if #arg corresponds to the signature of a single, or ATfalse otherwise
  */
-inline ATbool RS_isRTupleRtuplesSingle(RS_RTupleRtuples arg) {
-  if (ATisEmpty((ATermList)arg)) {
-    return ATfalse;
-  }
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTupleRtuplesSingle, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isRTupleRtuplesSingle(RS_RTupleRtuples arg){
+  if (ATgetType((ATerm)arg) == AT_LIST && ATisEmpty((ATermList)arg) == ATfalse) {
+    ATermList arg_list = (ATermList)arg;
+    arg_list = ATgetNext(arg_list);
+    if (ATgetType((ATerm)arg_list) == AT_LIST && ATisEmpty((ATermList)arg_list) == ATtrue) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_RTupleRtuples is a many. . May not be used to assert correctness of the RS_RTupleRtuples
+ * Assert whether a RS_RTupleRtuples is a many by checking against the following ATerm pattern: [<head(RTuple)>,<[tail(RTuple-rtuples)]>]. May not be used to assert correctness of the RS_RTupleRtuples
  * \param[in] arg input RS_RTupleRtuples
  * \return ATtrue if #arg corresponds to the signature of a many, or ATfalse otherwise
  */
-inline ATbool RS_isRTupleRtuplesMany(RS_RTupleRtuples arg) {
-  if (ATisEmpty((ATermList)arg)) {
-    return ATfalse;
+inline ATbool RS_isRTupleRtuplesMany(RS_RTupleRtuples arg){
+  if (ATgetType((ATerm)arg) == AT_LIST && ATisEmpty((ATermList)arg) == ATfalse) {
+    return ATtrue;
   }
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternRTupleRtuplesMany, NULL, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
-  }
+  return ATfalse;
 }
 
 /**
@@ -3010,16 +2761,15 @@ ATbool RS_isValidStrChar(RS_StrChar arg) {
 }
 
 /**
- * Assert whether a RS_StrChar is a StrChar. Always returns ATtrue
+ * Assert whether a RS_StrChar is a StrChar by checking against the following ATerm pattern: <string(str)>. Always returns ATtrue
  * \param[in] arg input RS_StrChar
  * \return ATtrue if #arg corresponds to the signature of a StrChar, or ATfalse otherwise
  */
-inline ATbool RS_isStrCharStrChar(RS_StrChar arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternStrCharStrChar, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isStrCharStrChar(RS_StrChar arg){
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg)) == ATtrue) {
+    return ATtrue;
+  }
+  return ATfalse;
 }
 
 /**
@@ -3072,16 +2822,15 @@ ATbool RS_isValidStrCon(RS_StrCon arg) {
 }
 
 /**
- * Assert whether a RS_StrCon is a StrCon. Always returns ATtrue
+ * Assert whether a RS_StrCon is a StrCon by checking against the following ATerm pattern: <string(str)>. Always returns ATtrue
  * \param[in] arg input RS_StrCon
  * \return ATtrue if #arg corresponds to the signature of a StrCon, or ATfalse otherwise
  */
-inline ATbool RS_isStrConStrCon(RS_StrCon arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternStrConStrCon, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isStrConStrCon(RS_StrCon arg){
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg)) == ATtrue) {
+    return ATtrue;
+  }
+  return ATfalse;
 }
 
 /**
@@ -3137,49 +2886,29 @@ ATbool RS_isValidBoolCon(RS_BoolCon arg) {
 }
 
 /**
- * Assert whether a RS_BoolCon is a true. . May not be used to assert correctness of the RS_BoolCon
+ * Assert whether a RS_BoolCon is a true by checking against the following ATerm pattern: true. May not be used to assert correctness of the RS_BoolCon
  * \param[in] arg input RS_BoolCon
  * \return ATtrue if #arg corresponds to the signature of a true, or ATfalse otherwise
  */
-inline ATbool RS_isBoolConTrue(RS_BoolCon arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternBoolConTrue);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isBoolConTrue(RS_BoolCon arg){
+  /* checking for: true */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun16) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_BoolCon is a false. . May not be used to assert correctness of the RS_BoolCon
+ * Assert whether a RS_BoolCon is a false by checking against the following ATerm pattern: false. May not be used to assert correctness of the RS_BoolCon
  * \param[in] arg input RS_BoolCon
  * \return ATtrue if #arg corresponds to the signature of a false, or ATfalse otherwise
  */
-inline ATbool RS_isBoolConFalse(RS_BoolCon arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternBoolConFalse);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isBoolConFalse(RS_BoolCon arg){
+  /* checking for: false */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun17) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
@@ -3195,16 +2924,15 @@ ATbool RS_isValidNatCon(RS_NatCon arg) {
 }
 
 /**
- * Assert whether a RS_NatCon is a NatCon. Always returns ATtrue
+ * Assert whether a RS_NatCon is a NatCon by checking against the following ATerm pattern: <string(str)>. Always returns ATtrue
  * \param[in] arg input RS_NatCon
  * \return ATtrue if #arg corresponds to the signature of a NatCon, or ATfalse otherwise
  */
-inline ATbool RS_isNatConNatCon(RS_NatCon arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternNatConNatCon, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isNatConNatCon(RS_NatCon arg){
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg)) == ATtrue) {
+    return ATtrue;
+  }
+  return ATfalse;
 }
 
 /**
@@ -3257,16 +2985,15 @@ ATbool RS_isValidIdCon(RS_IdCon arg) {
 }
 
 /**
- * Assert whether a RS_IdCon is a IdCon. Always returns ATtrue
+ * Assert whether a RS_IdCon is a IdCon by checking against the following ATerm pattern: <string(str)>. Always returns ATtrue
  * \param[in] arg input RS_IdCon
  * \return ATtrue if #arg corresponds to the signature of a IdCon, or ATfalse otherwise
  */
-inline ATbool RS_isIdConIdCon(RS_IdCon arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternIdConIdCon, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isIdConIdCon(RS_IdCon arg){
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg)) == ATtrue) {
+    return ATtrue;
+  }
+  return ATfalse;
 }
 
 /**
@@ -3325,72 +3052,45 @@ ATbool RS_isValidInteger(RS_Integer arg) {
 }
 
 /**
- * Assert whether a RS_Integer is a nat-con. . May not be used to assert correctness of the RS_Integer
+ * Assert whether a RS_Integer is a nat-con by checking against the following ATerm pattern: nat-con(<"NatCon"(int)>). May not be used to assert correctness of the RS_Integer
  * \param[in] arg input RS_Integer
  * \return ATtrue if #arg corresponds to the signature of a nat-con, or ATfalse otherwise
  */
-inline ATbool RS_isIntegerNatCon(RS_Integer arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternIntegerNatCon, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isIntegerNatCon(RS_Integer arg){
+  /* checking for: nat-con */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun18) {
+    ATerm arg_arg0 = ATgetArgument(arg, 0);
+    if (ATgetType((ATerm)arg_arg0) == AT_INT) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_Integer is a positive. . May not be used to assert correctness of the RS_Integer
+ * Assert whether a RS_Integer is a positive by checking against the following ATerm pattern: positive(<"integer"("Integer")>). May not be used to assert correctness of the RS_Integer
  * \param[in] arg input RS_Integer
  * \return ATtrue if #arg corresponds to the signature of a positive, or ATfalse otherwise
  */
-inline ATbool RS_isIntegerPositive(RS_Integer arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternIntegerPositive, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isIntegerPositive(RS_Integer arg){
+  /* checking for: positive */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun19) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_Integer is a negative. . May not be used to assert correctness of the RS_Integer
+ * Assert whether a RS_Integer is a negative by checking against the following ATerm pattern: negative(<"integer"("Integer")>). May not be used to assert correctness of the RS_Integer
  * \param[in] arg input RS_Integer
  * \return ATtrue if #arg corresponds to the signature of a negative, or ATfalse otherwise
  */
-inline ATbool RS_isIntegerNegative(RS_Integer arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternIntegerNegative, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isIntegerNegative(RS_Integer arg){
+  /* checking for: negative */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun20) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
@@ -3495,72 +3195,48 @@ ATbool RS_isValidLocation(RS_Location arg) {
 }
 
 /**
- * Assert whether a RS_Location is a file. . May not be used to assert correctness of the RS_Location
+ * Assert whether a RS_Location is a file by checking against the following ATerm pattern: file(<"filename"(str)>). May not be used to assert correctness of the RS_Location
  * \param[in] arg input RS_Location
  * \return ATtrue if #arg corresponds to the signature of a file, or ATfalse otherwise
  */
-inline ATbool RS_isLocationFile(RS_Location arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternLocationFile, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isLocationFile(RS_Location arg){
+  /* checking for: file */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun21) {
+    ATerm arg_arg0 = ATgetArgument(arg, 0);
+    if (ATgetType((ATerm)arg_arg0) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg_arg0)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg_arg0)) == ATtrue) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_Location is a area. . May not be used to assert correctness of the RS_Location
+ * Assert whether a RS_Location is a area by checking against the following ATerm pattern: area(<"Area"("Area")>). May not be used to assert correctness of the RS_Location
  * \param[in] arg input RS_Location
  * \return ATtrue if #arg corresponds to the signature of a area, or ATfalse otherwise
  */
-inline ATbool RS_isLocationArea(RS_Location arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternLocationArea, NULL);
-      last_gc = ATgetGCCount();
-    }
-
-    return last_result;
+inline ATbool RS_isLocationArea(RS_Location arg){
+  /* checking for: area */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun22) {
+    return ATtrue;
   }
+  return ATfalse;
 }
 
 /**
- * Assert whether a RS_Location is a area-in-file. . May not be used to assert correctness of the RS_Location
+ * Assert whether a RS_Location is a area-in-file by checking against the following ATerm pattern: area-in-file(<"filename"(str)>,<"Area"("Area")>). May not be used to assert correctness of the RS_Location
  * \param[in] arg input RS_Location
  * \return ATtrue if #arg corresponds to the signature of a area-in-file, or ATfalse otherwise
  */
-inline ATbool RS_isLocationAreaInFile(RS_Location arg) {
-  {
-    static ATerm last_arg = NULL;
-    static int last_gc = -1;
-    static ATbool last_result;
-
-    assert(arg != NULL);
-
-    if (last_gc != ATgetGCCount() || (ATerm)arg != last_arg) {
-      last_arg = (ATerm)arg;
-      last_result = ATmatchTerm((ATerm)arg, RS_patternLocationAreaInFile, NULL, NULL);
-      last_gc = ATgetGCCount();
+inline ATbool RS_isLocationAreaInFile(RS_Location arg){
+  /* checking for: area-in-file */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun23) {
+    ATerm arg_arg0 = ATgetArgument(arg, 0);
+    if (ATgetType((ATerm)arg_arg0) == AT_APPL && ATgetArity(ATgetAFun((ATermAppl)arg_arg0)) == 0 && ATisQuoted(ATgetAFun((ATermAppl)arg_arg0)) == ATtrue) {
+      return ATtrue;
     }
-
-    return last_result;
   }
+  return ATfalse;
 }
 
 /**
@@ -3668,16 +3344,34 @@ ATbool RS_isValidArea(RS_Area arg) {
 }
 
 /**
- * Assert whether a RS_Area is a area. Always returns ATtrue
+ * Assert whether a RS_Area is a area by checking against the following ATerm pattern: area(<"begin-line"(int)>,<"begin-column"(int)>,<"end-line"(int)>,<"end-column"(int)>,<"offset"(int)>,<"length"(int)>). Always returns ATtrue
  * \param[in] arg input RS_Area
  * \return ATtrue if #arg corresponds to the signature of a area, or ATfalse otherwise
  */
-inline ATbool RS_isAreaArea(RS_Area arg) {
-#ifndef DISABLE_DYNAMIC_CHECKING
-  assert(arg != NULL);
-  assert(ATmatchTerm((ATerm)arg, RS_patternAreaArea, NULL, NULL, NULL, NULL, NULL, NULL));
-#endif
-  return ATtrue;
+inline ATbool RS_isAreaArea(RS_Area arg){
+  /* checking for: area */
+  if (ATgetType((ATerm)arg) == AT_APPL && ATgetAFun((ATermAppl)arg) == RS_afun24) {
+    ATerm arg_arg0 = ATgetArgument(arg, 0);
+    if (ATgetType((ATerm)arg_arg0) == AT_INT) {
+      ATerm arg_arg1 = ATgetArgument(arg, 1);
+      if (ATgetType((ATerm)arg_arg1) == AT_INT) {
+        ATerm arg_arg2 = ATgetArgument(arg, 2);
+        if (ATgetType((ATerm)arg_arg2) == AT_INT) {
+          ATerm arg_arg3 = ATgetArgument(arg, 3);
+          if (ATgetType((ATerm)arg_arg3) == AT_INT) {
+            ATerm arg_arg4 = ATgetArgument(arg, 4);
+            if (ATgetType((ATerm)arg_arg4) == AT_INT) {
+              ATerm arg_arg5 = ATgetArgument(arg, 5);
+              if (ATgetType((ATerm)arg_arg5) == AT_INT) {
+                return ATtrue;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return ATfalse;
 }
 
 /**

@@ -11,13 +11,15 @@ include_HEADERS = \
 	RStore.h \
 	RStore_dict.h \
 	ParsedRStore.h \
-	ParsedRStore_dict.h 
+	ParsedRStore_dict.h \
+	RStore-utils.h
 
 libRStoreAPI_la_SOURCES = \
 	RStore.c \
 	RStore_dict.c \
 	ParsedRStore.c \
-	ParsedRStore_dict.c 
+	ParsedRStore_dict.c  \
+	lower.c
 
 libRStoreAPI_la_CPPFLAGS = $(ATERM_CFLAGS)
 libRStoreAPI_la_LDFLAGS  = -avoid-version -no-undefined $(AM_LDFLAGS)
