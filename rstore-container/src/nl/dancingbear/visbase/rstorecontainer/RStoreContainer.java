@@ -132,7 +132,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
         m_loadedRStoresMap = new LinkedHashMap<Integer, RStoreTracker>();
         m_earlierLoadedRStoreFilesMap = new LinkedHashMap<File, Integer>();
 
-        if (m_log.isInfoEnabled()) {
+        if (m_log.isDebugEnabled()) {
             m_log.info("Running " + RStoreContainer.class.getSimpleName());
         }
 
@@ -244,7 +244,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             // on
             rStoreId = registerRStore(rStoreFile, parsedRStore);
 
-            if (m_log.isInfoEnabled()) {
+            if (m_log.isDebugEnabled()) {
                 m_log.info("Registered RStore with id: " + rStoreId);
             }
 
@@ -622,7 +622,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 
         // Check if the File was loaded earlier
         if (m_earlierLoadedRStoreFilesMap.containsKey(rStoreFileReference)) {
-            if (m_log.isInfoEnabled()) {
+            if (m_log.isDebugEnabled()) {
                 m_log.info("RStore file has been loaded earlier: "
                         + rStoreFileReference + ". *Updating if needed*");
             }

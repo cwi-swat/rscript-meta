@@ -91,7 +91,7 @@ public class RStoreTracker {
 
                     Integer existingId = m_identifiedRTuplesMap.get(identifier);
 
-                    if (m_log.isInfoEnabled()) {
+                    if (m_log.isDebugEnabled()) {
                         m_log.info("RTuple already exists for identidier: "
                                 + identifier + "(id: " + existingId + ")");
                     }
