@@ -2,7 +2,9 @@ GENERATED_TBSCRIPTS = \
 	start-rci.tb
 
 EXTRA_DIST = \
-	$(foreach i, $(GENERATED_TBSCRIPTS), $i.src) 
+	$(foreach i, $(GENERATED_TBSCRIPTS), $i.src) \
+	rci.tb \
+	rci-test.tb
 
 CLEANFILES = \
 	$(GENERATED_TBSCRIPTS) 
