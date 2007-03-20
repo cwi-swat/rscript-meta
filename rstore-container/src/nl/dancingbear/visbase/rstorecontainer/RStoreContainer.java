@@ -105,7 +105,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
     public RStoreContainer() {
         super();
 
-        if (m_log.isInfoEnabled()) {
+        if (m_log.isDebugEnabled()) {
             m_log.info("Default " + RStoreContainer.class.getName()
                     + " constructor called");
         }
