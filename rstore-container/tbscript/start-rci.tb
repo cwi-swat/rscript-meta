@@ -1,9 +1,0 @@
-#ifndef __START_RCI__
-#define __START_RCI__
-
-process StartRCI is
-  snd-msg(load-jar("file:///home/jurgenv/glt/svn-installed/rstore-container/share/rstore-container.jar", "/home/jurgenv/glt/svn-installed/rstore-container/share/relationstores.jar:/home/jurgenv/glt/svn-installed/rstore-container/share/log4j-1.2.14.jar:/home/jurgenv/glt/svn-installed/rstore-container/share/commons-logging-1.1.jar::/home/jurgenv/glt/svn-installed/aterm-java/share/aterm-java.jar:/home/jurgenv/glt/svn-installed/shared-objects/share/shared-objects.jar:/home/jurgenv/glt/svn-installed/JJTraveler/share/jjtraveler.jar:/home/jurgenv/glt/svn-installed/config-support/share/configapi.jar:/home/jurgenv/glt/svn-installed/toolbus-java-adapter/share/toolbus-java-adapter.jar:/home/jurgenv/glt/svn-installed/meta-studio/share/meta-studio.jar:/home/jurgenv/glt/svn-installed/meta-studio/share/idw-gpl-1.5.0.jar:/home/jurgenv/glt/svn-installed/svg-support/share/svg-support/batik.jar:/home/jurgenv/glt/svn-installed/tunit/share/tunit.jar:/home/jurgenv/glt/svn-installed/tunit/share/tunit/junit.jar"))
-
-toolbus(StartRCI)
-
-#endif /* __START_RCI__ */
