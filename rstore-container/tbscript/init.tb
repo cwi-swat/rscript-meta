@@ -1,0 +1,9 @@
+#include "rci.tb"
+#include "rci-test.tb"
+
+toolbus(NOTIFY-START)
+
+process NOTIFY-START is
+        %% Let the TestCase know when the Toolbus is initialized and started.
+        printf("Toolbus started...\n")
+

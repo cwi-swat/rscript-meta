@@ -1,0 +1,106 @@
+#ifndef __RCI__
+#define __RCI__
+
+tool rStoreContainer is {}
+
+/**
+ * The RStore Container Interface (RCI) toolbus process
+ *
+ * @author Ricardo Lindooren
+ * @author Arend van Beelen (reviewer + fixes)
+ * @author Bas Basten (together with Ricardo: updated script with ' fact updated' and 'rstore unloaded' logic @ 2007-03-14)
+ * @date 2007-02-13
+ */
+process RCI is
+  let Container: rStoreContainer,
+      Path: str,
+      RStoreId: int,
+      RStoreFacts: list,
+      FactId: int,
+      UpdatedRStoreId: int,
+      UpdatedFactId: int,
+      FactData: term
+  in
+    printf("[RCI] START\n") 
+    . rec-connect(Container?)
+    . printf("[RCI] Connected to Java tool RStoreContainer\n") 
+    .
+    (
+      (   
+        (
+          // wait for command from FBMP to load RStore file
+          rec-msg(rc-load-rstore(Path?))
+
+          // tell Java RStoreContainer tool to load the RStore file
+          . snd-eval(Container, rc-load-rstore(Path))
+          .
+          (
+            // listen for updated facts
+            rec-event(Container, rc-fact-updated(UpdatedRStoreId?, UpdatedFactId?))
+
+            . printf("[RCI] Received updated fact event (UpdatedRStoreId: %d, UpdatedFactId: %d), sending note to other Toolbus processes\n", UpdatedRStoreId, UpdatedFactId)
+        
+            // inform other toolbus processes of the updated fact
+            . snd-note(rc-fact-updated(UpdatedRStoreId, UpdatedFactId))
+
+            . snd-ack-event(Container, rc-fact-updated(UpdatedRStoreId, UpdatedFactId))
+
+          )
+          *
+          // wait for identifier for loaded RStore file
+          rec-value(Container, rc-rstore-loaded(Path, RStoreId?))
+
+          // send RStore ID to FBMP
+          . snd-msg(rc-rstore-loaded(Path, RStoreId))
+        )
+        +
+        (
+          // wait for command from FBMP to retrieve RStore facts based on RStore ID
+          rec-msg(rc-get-rstore-facts(RStoreId?))
+
+          // tell the Java RStoreContainer tool to load the fact information for the RStore with the given ID
+          . snd-eval(Container, rc-get-rstore-facts(RStoreId))
+
+          // wait for the facts retrieved by the RStoreContainer
+          . rec-value(Container, rc-rstore-facts(RStoreFacts?))
+ 
+          // send RStore facts
+          . snd-msg(rc-get-rstore-facts(RStoreId, RStoreFacts))
+	    )
+        +
+        (
+          // wait for the command from the FactBrowser to load data from a specific fact
+          rec-msg(rc-get-fact-data(RStoreId?, FactId?))
+
+          // tell the Java RStoreContainer tool to load the fact data
+          . snd-eval(Container, rc-get-fact-data(RStoreId, FactId))
+
+          // wait for the fact data loaded by the RStoreContainer
+          . rec-value(Container, rc-fact-data(FactData?))
+
+          // send the fact data to the FactBrowser
+          . snd-msg(rc-get-fact-data(RStoreId, FactId, FactData))
+	    )
+        +
+        (
+          // wait for the command from the FactBrowser to unload an earlier loaded RStore based on it's id
+          rec-msg(rc-unload-rstore(RStoreId?))
+
+          // tell the Java RStoreContainer tool to unload the RStore
+          . snd-eval(Container, rc-unload-rstore(RStoreId))
+
+          // wait till the Java RStoreContainer tool is done unloading the RStore
+          . rec-value(Container, rc-rstore-unloaded(RStoreId?))
+
+          // notify all other Toolbus processes that the RStore is unloaded
+          . snd-note(rc-rstore-unloaded(RStoreId))
+        )
+      )
+      *
+      delta
+    )
+  endlet
+
+toolbus(RCI)
+
+#endif /* __RCI__ */

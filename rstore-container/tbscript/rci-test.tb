@@ -1,0 +1,56 @@
+#ifndef __RCI_TEST__
+#define __RCI_TEST__
+
+tool rciTest is {}
+
+/**
+ * Helper process for testing the RCI process.
+ *
+ * @author Arend van Beelen
+ * @date 06-03-2007
+ */
+process RCI-TEST is
+  let ContainerTest: rciTest,
+      Path: str,
+      RStoreId: int,
+      RStoreFacts: list,
+      FactId: int,
+      FactData: term
+  in
+    rec-connect(ContainerTest?)
+    .
+    (
+      // pass rc-load-rstore event from test tool to RCI process
+      rec-event(ContainerTest, rc-load-rstore(Path?))
+      . snd-ack-event(ContainerTest, rc-load-rstore(Path))
+      . snd-msg(rc-load-rstore(Path))
+    +
+      // pass rc-get-rstore-facts event from test tool to RCI process
+      rec-event(ContainerTest, rc-get-rstore-facts(RStoreId?))
+      . snd-ack-event(ContainerTest, rc-get-rstore-facts(RStoreId))
+      . snd-msg(rc-get-rstore-facts(RStoreId))
+    +
+      // pass rc-get-fact-data event from test tool to RCI process
+      rec-event(ContainerTest, rc-get-fact-data(RStoreId?, FactId?))
+      . snd-ack-event(ContainerTest, rc-get-fact-data(RStoreId, FactId))
+      . snd-msg(rc-get-fact-data(RStoreId, FactId))
+    +
+      // pass rc-rstore-loaded message from the RCI process to the test tool
+      rec-msg(rc-rstore-loaded(Path?, RStoreId?))
+      . snd-do(ContainerTest, rc-rstore-loaded(Path, RStoreId))
+    +
+      // pass rc-get-rstore-facts message from the RCI process to the test tool
+      rec-msg(rc-get-rstore-facts(RStoreId?, RStoreFacts?))
+      . snd-do(ContainerTest, rc-get-rstore-facts(RStoreId, RStoreFacts))
+    +
+      // pass rc-get-fact-data message from the RCI process to the test tool
+      rec-msg(rc-get-fact-data(RStoreId?, FactId?, FactData?))
+      . snd-do(ContainerTest, rc-get-fact-data(RStoreId, FactId, FactData))
+    )
+    *
+    delta
+  endlet
+
+toolbus(RCI-TEST)
+
+#endif /* __RCI_TEST__ */
