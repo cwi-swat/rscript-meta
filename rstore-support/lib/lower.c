@@ -1,5 +1,6 @@
 #include <RStore.h>
 #include <ParsedRStore.h>
+#include <assert.h>
 
 static RS_IdCon RS_lowerIdCon(PRS_IdCon in)
 {
@@ -7,14 +8,19 @@ static RS_IdCon RS_lowerIdCon(PRS_IdCon in)
   PRS_LexIdCon lex = PRS_getIdConIdCon(in);
   char head = PRS_getLexIdConHead(lex);
   char* tail = PRS_getLexIdConTail(lex);
-  char* tmp = (char*) malloc((strlen(tail)) + 2 * sizeof(char));
+  int len  = strlen(tail) + 2;
+  static char tmp[BUFSIZ];
   RS_IdCon result = NULL;
 
+  if (len + 2 >= BUFSIZ) {
+    return RS_makeIdConIdCon("id-too-long");
+  }
+
   tmp[0] = head;
+  tmp[1] = '\0';
   strcat(tmp+1, tail);
 
   result = RS_makeIdConIdCon(tmp);
-  free(tmp);
 
   return result;
 }
@@ -108,6 +114,7 @@ static const char *RS_lowerStrCon(PRS_StrCon pStr)
   int len = PRS_getLexStrCharCharsLength(list);
   int i;
   static char result[BUFSIZ];
+  assert(pStr != NULL);
 
   if (len >= BUFSIZ - 2) {
     ATwarning("PRS_lowerStrCon: insufficient memory to allocate string\n");
@@ -151,6 +158,7 @@ static const char *RS_lowerStrCon(PRS_StrCon pStr)
 
 static RS_BoolCon RS_lowerBoolCon(PRS_BoolCon in)
 {
+  assert(in != NULL);
   if (PRS_isBoolConTrue(in)) {
     return RS_makeBoolConTrue();
   }
@@ -167,12 +175,14 @@ static RS_Area RS_lowerArea(PRS_Area in)
   int ec = RS_lowerNatCon(PRS_getAreaEndColumn(in));
   int o = RS_lowerNatCon(PRS_getAreaOffset(in));
   int l = RS_lowerNatCon(PRS_getAreaLength(in));
+  assert(in != NULL);
 
   return RS_makeAreaArea(bl,bc,el,ec,o,l);
 }
 
 static RS_Location RS_lowerLocation(PRS_Location in)
 {
+  assert(in != NULL);
   if (PRS_isLocationFile(in)) {
     const char* name = RS_lowerStrCon(PRS_getLocationFilename(in));
     return RS_makeLocationFile(name);
@@ -192,6 +202,7 @@ static RS_RElem RS_lowerRElem(PRS_RElem in);
 static RS_RElemElements RS_lowerRElemElements(PRS_RElemElements in) 
 {
   RS_RElemElements elems = RS_makeRElemElementsEmpty();
+  assert(in != NULL);
 
   for ( ; !PRS_isRElemElementsEmpty(in); in = PRS_getRElemElementsTail(in)) {
     RS_RElem elem = RS_lowerRElem(PRS_getRElemElementsHead(in));
@@ -209,6 +220,7 @@ static RS_RElemElements RS_lowerRElemElements(PRS_RElemElements in)
 
 static RS_RElem RS_lowerRElem(PRS_RElem in)
 {
+  assert(in != NULL);
   if (PRS_isRElemInt(in)) {
     RS_Integer i = RS_lowerInteger(PRS_getRElemInteger(in));
     return RS_makeRElemInt(i);
@@ -235,7 +247,8 @@ static RS_RElem RS_lowerRElem(PRS_RElem in)
   }
   else if (PRS_isRElemTuple(in)) {
     RS_RElemElements e = RS_lowerRElemElements(PRS_getRElemElements(in));
-    return RS_makeRElemTuple(e);
+    /* order is relevant here */
+    return RS_makeRElemTuple(RS_reverseRElemElements(e));
   }
 
   ATwarning("error: unknown kind of relem: %t\n", in);
@@ -248,6 +261,7 @@ static RS_RTuple RS_lowerRTuple(PRS_RTuple in)
   RS_IdCon variable = RS_lowerIdCon(PRS_getRTupleVariable(in));
   RS_RType type = RS_lowerRType(PRS_getRTupleRtype(in));
   RS_RElem value = RS_lowerRElem(PRS_getRTupleValue(in));
+  assert(in != NULL);
 
   if (variable != NULL
       && type != NULL
@@ -261,6 +275,7 @@ static RS_RTuple RS_lowerRTuple(PRS_RTuple in)
 static RS_RTupleRtuples RS_lowerRTuples(PRS_RTupleRtuples in)
 {
   RS_RTupleRtuples out = RS_makeRTupleRtuplesEmpty();
+  assert(in != NULL);
 
   for (; !PRS_isRTupleRtuplesEmpty(in); in = PRS_getRTupleRtuplesTail(in)) {
     RS_RTuple tuple = RS_lowerRTuple(PRS_getRTupleRtuplesHead(in));
@@ -278,5 +293,6 @@ static RS_RTupleRtuples RS_lowerRTuples(PRS_RTupleRtuples in)
 
 RS_RStore RS_lowerRStore(PRS_RStore in)
 {
+  assert(in != NULL);
   return RS_makeRStoreRstore(RS_lowerRTuples(PRS_getRStoreRtuples(in)));
 }

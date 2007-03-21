@@ -5,14 +5,17 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <aterm2.h>
+#include <atb-tool.h>
 
 #include "RStore-utils.h"
+#include <ParsedRStore.h>
+#include "lower-rstore.tif.h"
 
 /*}}}  */
 /*{{{  globals */
 
 static char myname[]    = "lower-error";
-static char myversion[] = "1.0";
+static char myversion[] = "1.1";
 static char myarguments[] = "hi:o:tV";
 
 /*}}}  */
@@ -35,6 +38,35 @@ void usage(void)
 
 /*}}}  */
 
+/*{{{  ATerm lower_rstore(int cid, ATerm in) */
+
+ATerm lower_rstore(int cid, ATerm in)
+{
+  ATerm input = ATBunpack(in);
+  RS_RStore result = RS_makeRStoreRstore(RS_makeRTupleRtuplesEmpty());
+
+  if (PRS_isValidStart(PRS_StartFromTerm(input))) {
+    PRS_RStore tmp = PRS_getStartTopRStore(PRS_StartFromTerm(input));
+    result = RS_lowerRStore(tmp);
+  }
+  else if (PRS_isValidRStore(PRS_RStoreFromTerm(input))) {
+    result = RS_lowerRStore(PRS_RStoreFromTerm(input));
+  }
+
+  return ATmake("snd-value(lowered-rstore(<term>))", result);
+}
+
+/*}}}  */
+
+/*{{{  int rec_terminate(int cid) */
+
+void rec_terminate(int cid, ATerm msg)
+{
+  exit(0);
+}
+
+/*}}}  */
+
 /*{{{  int main (int argc, char *argv[]) */
 
 int main (int argc, char *argv[])
@@ -46,43 +78,64 @@ int main (int argc, char *argv[])
   ATbool textual = ATfalse;
   char *input_file_name = "-";
   char *output_file_name = "-";
-  
-  while ((c = getopt(argc, argv, myarguments)) != EOF)
-    switch (c) {
-      case 'h':  usage();                      exit(0);
-      case 'i':  input_file_name  = optarg;    break;
-      case 'o':  output_file_name = optarg;    break;
-      case 't':  textual = ATtrue; break;
-      case 'V':  fprintf(stderr, "%s %s\n", myname, myversion);
-                                               exit(0);
-      default :  usage();                      exit(1);
-  }
+  int i;
+  ATbool use_toolbus = ATfalse;
 
   ATinit(argc, argv, &bottomOfStack);
   RS_initRStoreApi();
   PRS_initParsedRStoreApi();
 
-  input = ATreadFromNamedFile(input_file_name);
-
-  if(input == NULL) {
-    ATerror("%s: could not read term from input file %s\n", 
-	    myname, input_file_name);
-    return 1;
+  for (i=1; !use_toolbus && i < argc; i++) {
+    use_toolbus = !strcmp(argv[i], "-TB_TOOL_NAME");
   }
 
-  output = (ATerm) RS_lowerRStore(PRS_RStoreFromTerm(input));
+  if (use_toolbus) {
+    int cid;
+    ATBinit(argc, argv, &bottomOfStack);
 
-  if(output != NULL) {
-    if (textual) {
-      ATwriteToNamedTextFile(output, output_file_name);
-    }
-    else {
-      ATwriteToNamedBinaryFile(output, output_file_name);
-    }
+    cid = ATBconnect(NULL, NULL, -1, lower_rstore_handler);
+    ATBeventloop();
   }
   else {
-    ATwarning("%s: something went wrong\n", myname);
-    return 1;
+    while ((c = getopt(argc, argv, myarguments)) != EOF)
+      switch (c) {
+	case 'h':  usage();                      exit(0);
+	case 'i':  input_file_name  = optarg;    break;
+	case 'o':  output_file_name = optarg;    break;
+	case 't':  textual = ATtrue; break;
+	case 'V':  fprintf(stderr, "%s %s\n", myname, myversion);
+		   exit(0);
+	default :  usage();                      exit(1);
+      }
+
+    input = ATreadFromNamedFile(input_file_name);
+
+    if(input == NULL) {
+      ATerror("%s: could not read term from input file %s\n", 
+	      myname, input_file_name);
+      return 1;
+    }
+
+    if (PRS_isValidRStore((PRS_RStoreFromTerm(input)))) {
+      output = (ATerm) RS_lowerRStore(PRS_RStoreFromTerm(input));
+    }
+    else if (PRS_isValidStart(PRS_StartFromTerm(input))) {
+      PRS_RStore tmp = PRS_getStartTopRStore(PRS_StartFromTerm(input));
+      output = (ATerm) RS_lowerRStore(tmp);
+    }
+
+    if(output != NULL) {
+      if (textual) {
+	ATwriteToNamedTextFile(output, output_file_name);
+      }
+      else {
+	ATwriteToNamedBinaryFile(output, output_file_name);
+      }
+    }
+    else {
+      ATwarning("%s: something went wrong\n", myname);
+      return 1;
+    }
   }
 
   return 0;

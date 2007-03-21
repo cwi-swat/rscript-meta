@@ -1,5 +1,9 @@
 
 
+Wed Mar 21 13:04:59 CET 2007 <jurgenv@cwi.nl>
+ * utils/lower-rstore: made a ToolBus tool out of it, and made robust
+   against input from Start constructors, or RStores directly.
+
 Tue Mar 13 12:17:11 CET 2007 <jurgenv@cwi.nl>
  * lib/lower.c: added mapping from parsed rstores to ATerm rstores.
  * lib/**: regenerated apis with new apigen
