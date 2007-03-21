@@ -199,6 +199,60 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 
     /**
      * Called by the RStoreContainerInterface ToolBus process to load an RStore
+     * directly from an ATerm
+     * 
+     * @param filename
+     *            Filename of the RStore file, if it would be written to disk.
+     * @return ATerm containing the generated ID for the RStore in the format
+     * @c snd-value(rc-rstore-loaded(&lt;str filename&gt;,&lt;int ID&gt;)). The
+     *    ID is set to -1 if loading fails.
+     * 
+     * @author Jurgen Vinju
+     */
+    public ATerm rcLoadRstore(String filename, ATerm rstoreData) {
+        File rStoreFile = new File(filename);
+
+        // try to parse the input file to a RStore
+        RStore parsedRStore = null;
+        try {
+        	 Factory factory = Factory.getInstance(getPureFactory());
+            parsedRStore = factory.RStoreFromTerm(rstoreData);
+        } catch (Exception exception) {
+            if (m_log.isErrorEnabled()) {
+                m_log
+                        .error(
+                                "Unexpected exception while trying to parse the RStore file (see cause): ",
+                                exception);
+            }
+        }
+
+        // check parsed RStore result again for safety
+        int rStoreId = -1;
+        if (parsedRStore != null) {
+            // add parsed RStore to loaded RStores so it can be retrieved later
+            // on
+            rStoreId = registerRStore(rStoreFile, parsedRStore);
+
+            if (m_log.isDebugEnabled()) {
+                m_log.info("Registered RStore with id: " + rStoreId);
+            }
+
+        } else {
+            if (m_log.isWarnEnabled()) {
+                m_log.warn("Could not register RStore, returning id: "
+                        + rStoreId);
+            }
+        }
+
+        ATerm result = getPureFactory().make(
+                "snd-value(rc-rstore-loaded(<str>,<int>))", filename,
+                new Integer(rStoreId));
+        return result;
+		
+	}
+    
+    /**
+     * Called by the RStoreContainerInterface ToolBus process to load an RStore
      * file.
      * 
      * @param filename
@@ -716,4 +770,6 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             }
         }
     }
+
+	
 }

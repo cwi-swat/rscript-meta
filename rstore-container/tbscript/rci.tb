@@ -19,7 +19,8 @@ process RCI is
       FactId: int,
       UpdatedRStoreId: int,
       UpdatedFactId: int,
-      FactData: term
+      FactData: term,
+      Store: term
   in
     printf("[RCI] START\n") 
     . rec-connect(Container?)
@@ -29,10 +30,13 @@ process RCI is
       (   
         (
           // wait for command from FBMP to load RStore file
-          rec-msg(rc-load-rstore(Path?))
-
-          // tell Java RStoreContainer tool to load the RStore file
-          . snd-eval(Container, rc-load-rstore(Path))
+          (
+            rec-msg(rc-load-rstore(Path?))
+            . snd-eval(Container, rc-load-rstore(Path))
+          +
+            rec-msg(rc-load-rstore(Path?, Store?))
+            . snd-eval(Container, rc-load-rstore(Path, Store))
+          )
           .
           (
             // listen for updated facts
