@@ -9,7 +9,7 @@
 
 #include "RStore-utils.h"
 #include <ParsedRStore.h>
-#include "lower-rstore.tif.h"
+#include "lower-rstore.h"
 
 /*}}}  */
 /*{{{  globals */
