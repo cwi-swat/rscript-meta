@@ -8,7 +8,7 @@ AM_CPPFLAGS += \
 	${ATERM_CFLAGS}
 
 lower_rstore_SOURCES=\
-	lower-rstore.idef \
+	lower-rstore.isrc \
 	main.c 
 
 lower_rstore_LDADD=\
