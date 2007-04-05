@@ -19,11 +19,11 @@ lower_rstore_LDADD=\
 pkgdata_DATA = lower-rstore.idef
 
 ERRORS=
-EXTRA_DIST=$(wildcard *.ref) $(wildcard *.tree) 
+EXTRA_DIST+=$(wildcard *.ref) $(wildcard *.tree) 
 
 GENERATED_BY_TESTS = 
 
-CLEANFILES = $(TESTS) $(GENERATED_BY_TESTS)
+CLEANFILES += $(TESTS) $(GENERATED_BY_TESTS)
 
 TESTS=$(foreach e, ${ERRORS}, $e.sh)
 
