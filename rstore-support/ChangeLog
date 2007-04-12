@@ -1,5 +1,11 @@
 
 
+Thu Apr 12 20:24:45 CEST 2007 <jurgenv@cwi.nl>
+ * lib/lower.c: made lowering robust against RStores containing more 
+   than just RStore syntax (i.e. unreduced functions). The illegal parts
+   of an RStore are replaced by default values, and a message is printed
+   on the console.
+
 Wed Mar 21 13:04:59 CET 2007 <jurgenv@cwi.nl>
  * utils/lower-rstore: made a ToolBus tool out of it, and made robust
    against input from Start constructors, or RStores directly.
