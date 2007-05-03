@@ -212,15 +212,7 @@ public class RStoreTracker {
 
         result_not_equal = !existingRTuple.equals(newRTuple);
 
-        if (result_not_equal) {
-            if (m_log.isInfoEnabled()) {
-                m_log.info("existingRTuple is NOT EQUAL to newRTuple");
-            }
-        } else {
-            if (m_log.isInfoEnabled()) {
-                m_log.info("existingRTuple is EQUAL to newRTuple");
-            }
-        }
+       m_log.debug("existingRTuple is " + (result_not_equal ? "NOT" : "") + " EQUAL to newRTuple");
 
         return result_not_equal;
     }

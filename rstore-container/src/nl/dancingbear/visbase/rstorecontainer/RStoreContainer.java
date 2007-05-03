@@ -105,10 +105,8 @@ public class RStoreContainer extends DefaultStudioPlugin implements
     public RStoreContainer() {
         super();
 
-        if (m_log.isDebugEnabled()) {
-            m_log.info("Default " + RStoreContainer.class.getName()
+            m_log.debug("Default " + RStoreContainer.class.getName()
                     + " constructor called");
-        }
 
         m_loadedRStoresMap = new LinkedHashMap<Integer, RStoreTracker>();
         m_earlierLoadedRStoreFilesMap = new LinkedHashMap<File, Integer>();
@@ -132,9 +130,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
         m_loadedRStoresMap = new LinkedHashMap<Integer, RStoreTracker>();
         m_earlierLoadedRStoreFilesMap = new LinkedHashMap<File, Integer>();
 
-        if (m_log.isDebugEnabled()) {
-            m_log.info("Running " + RStoreContainer.class.getSimpleName());
-        }
+            m_log.debug("Running " + RStoreContainer.class.getSimpleName());
 
         try {
             m_bridge = new RStoreContainerBridge(getPureFactory(), this);
@@ -142,11 +138,9 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             m_bridge.connect();
             m_bridge.run();
         } catch (Exception exception) {
-            if (m_log.isFatalEnabled()) {
                 m_log
                         .fatal("Exception during the initialization of the RStoreContainerBridge, see attached cause (can be ignored during JUnit test when there is no ToolBus process present at the moment): "
                                 + exception);
-            }
         }
     }
 
@@ -181,17 +175,13 @@ public class RStoreContainer extends DefaultStudioPlugin implements
                 this);
 
         if (m_metaStudio.getATermFactory() instanceof PureFactory) {
-            if (m_log.isDebugEnabled()) {
                 m_log
                         .debug("metaStudio.getATermFactory() is an instance of PureFactory. Using this one for the static pureFactory variable.");
-            }
 
             m_pureFactory = (PureFactory) m_metaStudio.getATermFactory();
         } else {
-            if (m_log.isDebugEnabled()) {
                 m_log
                         .debug("metaStudio.getATermFactory() isn't an instance of PureFactory");
-            }
         }
 
         m_metaStudio.connect(getName(), m_bridge);
@@ -218,12 +208,10 @@ public class RStoreContainer extends DefaultStudioPlugin implements
         	 Factory factory = Factory.getInstance(getPureFactory());
             parsedRStore = factory.RStoreFromTerm(rstoreData);
         } catch (Exception exception) {
-            if (m_log.isErrorEnabled()) {
                 m_log
                         .error(
                                 "Unexpected exception while trying to parse the RStore file (see cause): ",
                                 exception);
-            }
         }
 
         // check parsed RStore result again for safety
@@ -233,15 +221,11 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             // on
             rStoreId = registerRStore(rStoreFile, parsedRStore);
 
-            if (m_log.isDebugEnabled()) {
-                m_log.info("Registered RStore with id: " + rStoreId);
-            }
+            m_log.debug("Registered RStore with id: " + rStoreId);
 
         } else {
-            if (m_log.isWarnEnabled()) {
                 m_log.warn("Could not register RStore, returning id: "
                         + rStoreId);
-            }
         }
 
         ATerm result = getPureFactory().make(
@@ -278,16 +262,12 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             InputStream inputStream = inputStreamFromFile(rStoreFile);
             parsedRStore = parseRStore(inputStream);
         } catch (FileNotFoundException exception) {
-            if (m_log.isErrorEnabled()) {
                 m_log.error("File not found!");
-            }
         } catch (Exception exception) {
-            if (m_log.isErrorEnabled()) {
                 m_log
                         .error(
                                 "Unexpected exception while trying to parse the RStore file (see cause): ",
                                 exception);
-            }
         }
 
         // check parsed RStore result again for safety
@@ -298,15 +278,11 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             // on
             rStoreId = registerRStore(rStoreFile, parsedRStore);
 
-            if (m_log.isDebugEnabled()) {
-                m_log.info("Registered RStore with id: " + rStoreId);
-            }
+                m_log.debug("Registered RStore with id: " + rStoreId);
 
         } else {
-            if (m_log.isWarnEnabled()) {
                 m_log.warn("Could not register RStore, returning id: "
                         + rStoreId);
-            }
         }
 
         ATerm result = getPureFactory().make(
@@ -331,9 +307,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @date 2007-02-16
      */
     public ATerm rcGetRstoreFacts(int id) {
-        if (m_log.isDebugEnabled()) {
             m_log.debug("argument: " + id);
-        }
 
         RStoreTracker earlierLoadedRStoreTracker = m_loadedRStoresMap
                 .get(new Integer(id));
@@ -346,10 +320,8 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 
             factIds = factsList.toATermList();
         } else {
-            if (m_log.isWarnEnabled()) {
                 m_log.warn("RStore didn't exist for ID: " + id
                         + " (returning empty facts list)");
-            }
 
             // create empty list
             factIds = getPureFactory().makeList();
@@ -377,9 +349,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @date 2007-02-20
      */
     public ATerm rcGetFactData(int rStoreId, int factId) {
-        if (m_log.isDebugEnabled()) {
             m_log.debug("arguments: " + rStoreId + ", " + factId);
-        }
 
         RStoreTracker earlierLoadedRStoreTracker = m_loadedRStoresMap
                 .get(new Integer(rStoreId));
@@ -392,14 +362,10 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             if (factTuple != null) {
                 factData = factTuple.toTerm();
             } else {
-                if (m_log.isWarnEnabled()) {
                     m_log.warn("Fact (RTuple) didn't exist for ID: " + factId);
-                }
             }
         } else {
-            if (m_log.isWarnEnabled()) {
                 m_log.warn("RStore didn't exist for ID: " + rStoreId + ". Valid ID's are: " + m_loadedRStoresMap.keySet());
-            }
         }
 
         if (factData == null) {
@@ -423,9 +389,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @Date 2007-03-14
      */
     public ATerm rcUnloadRstore(int id) {
-        if (m_log.isDebugEnabled()) {
             m_log.debug("argument: " + id);
-        }
 
         Integer nrIdentifier = new Integer(id);
 
@@ -453,9 +417,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             // remove the file reference (do this outside the for-loop)
             if (storedFileReference != null ) {
                 
-                if (m_log.isDebugEnabled()) {
                     m_log.debug("Unloading RStore with identifier, id: " + storedIdentifier + ", file: " + storedFileReference);
-                }
                 
                 m_earlierLoadedRStoreFilesMap.remove(storedFileReference);
             }
@@ -464,9 +426,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
         {
             nrIdentifier = new Integer(-1);
             
-            if (m_log.isWarnEnabled()){
                 m_log.warn("No earlier loaded RStore for identifier: " + nrIdentifier + ". *Returning -1*");
-            }
         }
         
         ATerm resultList = getPureFactory().make(
@@ -482,9 +442,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @Date 2007-03-14
      */
     public void recAckEvent(ATerm t0) {
-        if (m_log.isDebugEnabled()) {
             m_log.debug("argument: " + t0);
-        }
     }
 
     /**
@@ -518,9 +476,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @date 20-02-2007
      */
     public void recTerminate(ATerm message) {
-        if (m_log.isDebugEnabled()) {
             m_log.debug("Received terminate message: " + message + ".");
-        }
 
         m_bridge = null;
         m_metaStudio = null;
@@ -543,9 +499,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      */
     public static PureFactory getPureFactory() {
         if (m_pureFactory == null) {
-            if (m_log.isDebugEnabled()) {
                 m_log.debug("Created the static PureFactory.");
-            }
 
             m_pureFactory = new PureFactory();
         }
@@ -676,10 +630,8 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 
         // Check if the File was loaded earlier
         if (m_earlierLoadedRStoreFilesMap.containsKey(rStoreFileReference)) {
-            if (m_log.isDebugEnabled()) {
-                m_log.info("RStore file has been loaded earlier: "
+                m_log.debug("RStore file has been loaded earlier: "
                         + rStoreFileReference + ". *Updating if needed*");
-            }
 
             // Get the identifier for this earlier loaded RStore
             Integer idOfEarlierLoadedRStore = m_earlierLoadedRStoreFilesMap
@@ -701,11 +653,9 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             // find a unique ID for the RStore in the map
             int id = m_loadedRStoresMap.size() + 1;
             while (m_loadedRStoresMap.get(new Integer(id)) != null) {
-                if (m_log.isWarnEnabled()) {
                     m_log
                             .warn("Suggested ID for RStore already existed in loadedRStoresMap: "
                                     + id);
-                }
                 id++;
             }
 
@@ -754,19 +704,15 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             ATerm updatedFactEvent = getPureFactory().make("rc-fact-updated(<int>,<int>)", rStoreId, updatedFactId);
                                                                
             if (m_bridge != null) {
-                if (m_log.isDebugEnabled()) {
                     m_log.debug("Sending this updatedFact-event as term: "
                             + updatedFactEvent);
-                }
 
                 m_bridge.postEvent(updatedFactEvent);
 
             } else {
-                if (m_log.isWarnEnabled()) {
                     m_log
                             .warn("There is no bridge, cannot send this updatedFact-event: "
                                     + updatedFactEvent);
-                }
             }
         }
     }
