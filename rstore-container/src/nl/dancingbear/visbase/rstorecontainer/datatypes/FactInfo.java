@@ -54,7 +54,7 @@ public class FactInfo {
 
             m_id = ((ATermInt) aTermList.elementAt(0)).getInt();
             m_name = ((ATermAppl) aTermList.elementAt(1)).getName();
-            m_rType = factory.RTypeFromTerm((ATermAppl) aTermList.elementAt(2));
+            m_rType = factory.RTypeFromTerm(aTermList.elementAt(2));
 
         } catch (Exception exception) {
             throw new ATermParseException(
@@ -122,12 +122,10 @@ public class FactInfo {
      * @date 2007-02-14
      */
     public String getType() {
-        if (m_rType != null) {
-            // TODO is it wise to use the toString() method
-            return m_rType.toString();
-        } else {
-            return "";
-        }
+    	if(m_rType == null) return "";
+    	
+        // TODO is it wise to use the toString() method
+        return m_rType.toString();
     }
 
     /**

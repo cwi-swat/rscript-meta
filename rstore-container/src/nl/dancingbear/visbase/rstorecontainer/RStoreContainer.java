@@ -171,17 +171,14 @@ public class RStoreContainer extends DefaultStudioPlugin implements
     public void initStudioPlugin(Studio metaStudio) {
         m_metaStudio = metaStudio;
 
-        m_bridge = new RStoreContainerBridge(m_metaStudio.getATermFactory(),
-                this);
+        m_bridge = new RStoreContainerBridge(m_metaStudio.getATermFactory(), this);
 
         if (m_metaStudio.getATermFactory() instanceof PureFactory) {
-                m_log
-                        .debug("metaStudio.getATermFactory() is an instance of PureFactory. Using this one for the static pureFactory variable.");
+                m_log.debug("metaStudio.getATermFactory() is an instance of PureFactory. Using this one for the static pureFactory variable.");
 
             m_pureFactory = (PureFactory) m_metaStudio.getATermFactory();
         } else {
-                m_log
-                        .debug("metaStudio.getATermFactory() isn't an instance of PureFactory");
+                m_log.debug("metaStudio.getATermFactory() isn't an instance of PureFactory");
         }
 
         m_metaStudio.connect(getName(), m_bridge);
@@ -208,10 +205,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
         	 Factory factory = Factory.getInstance(getPureFactory());
             parsedRStore = factory.RStoreFromTerm(rstoreData);
         } catch (Exception exception) {
-                m_log
-                        .error(
-                                "Unexpected exception while trying to parse the RStore file (see cause): ",
-                                exception);
+                m_log.error("Unexpected exception while trying to parse the RStore file (see cause): ", exception);
         }
 
         // check parsed RStore result again for safety
@@ -224,8 +218,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
             m_log.debug("Registered RStore with id: " + rStoreId);
 
         } else {
-                m_log.warn("Could not register RStore, returning id: "
-                        + rStoreId);
+            m_log.warn("Could not register RStore, returning id: "+ rStoreId);
         }
 
         ATerm result = getPureFactory().make(
@@ -497,9 +490,9 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @author Arend van Beelen (reviewer)
      * @date 14-02-2007
      */
-    public static PureFactory getPureFactory() {
+    public static synchronized PureFactory getPureFactory() {
         if (m_pureFactory == null) {
-                m_log.debug("Created the static PureFactory.");
+            m_log.debug("Created the static PureFactory.");
 
             m_pureFactory = new PureFactory();
         }

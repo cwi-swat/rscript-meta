@@ -521,10 +521,8 @@ public class RStoreContainerTest extends TestCase {
      * @author Arend van Beelen (reviewer)
      * @date 2007-02-14
      */
-    @SuppressWarnings("static-access")
     public void testGetPureFactory() {
-        assertNotNull("The PureFactory should never be null", m_container
-                .getPureFactory());
+        assertNotNull("The PureFactory should never be null", RStoreContainer.getPureFactory());
     }
 
     /**

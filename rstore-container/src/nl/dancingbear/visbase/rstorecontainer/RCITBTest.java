@@ -38,7 +38,7 @@ public class RCITBTest extends TUnitTestCase {
 
             // query for loading of an RStore
             ATerm rcLoadRStore = factory.make("rc-load-rstore(<str>)", rStoreFile);
-            ATerm rcRStoreLoaded = factory.make("rc-rstore-loaded(<str>, <int>)", rStoreFile, rStoreId);
+            ATerm rcRStoreLoaded = factory.make("rc-rstore-loaded(<str>, <int>)", rStoreFile, new Integer(rStoreId));
 
             rciTest.sendEvent(rcLoadRStore);
             rciTest.expectAckEvent(rcLoadRStore, 3000);
@@ -50,9 +50,9 @@ public class RCITBTest extends TUnitTestCase {
 
             // query for RStore facts
             ATermList emptyList = factory.makeList();
-            ATerm rcGetRStoreFacts = factory.make("rc-get-rstore-facts(<int>)", rStoreId);
+            ATerm rcGetRStoreFacts = factory.make("rc-get-rstore-facts(<int>)", new Integer(rStoreId));
             ATerm rcRStoreFacts = factory.make("rc-rstore-facts(<list>)", emptyList);
-            ATerm rcGetRStoreFactsReply = factory.make("rc-get-rstore-facts(<int>, <list>)", rStoreId, emptyList);
+            ATerm rcGetRStoreFactsReply = factory.make("rc-get-rstore-facts(<int>, <list>)", new Integer(rStoreId), emptyList);
 
             rciTest.sendEvent(rcGetRStoreFacts);
             rciTest.expectAckEvent(rcGetRStoreFacts, 3000);
@@ -63,9 +63,9 @@ public class RCITBTest extends TUnitTestCase {
             rciTest.expectDo(rcGetRStoreFactsReply, 3000);
 
             // query for fact data
-            ATerm rcGetFactData = factory.make("rc-get-fact-data(<int>, <int>)", rStoreId, factId);
+            ATerm rcGetFactData = factory.make("rc-get-fact-data(<int>, <int>)", new Integer(rStoreId), new Integer(factId));
             ATerm rcFactData = factory.make("rc-fact-data(<term>)", emptyList);
-            ATerm rcGetFactDataReply = factory.make("rc-get-fact-data(<int>, <int>, <term>)", rStoreId, factId, emptyList);
+            ATerm rcGetFactDataReply = factory.make("rc-get-fact-data(<int>, <int>, <term>)", new Integer(rStoreId), new Integer(factId), emptyList);
 
             rciTest.sendEvent(rcGetFactData);
             rciTest.expectAckEvent(rcGetFactData, 3000);
