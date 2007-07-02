@@ -469,8 +469,10 @@ public class RStoreContainer extends DefaultStudioPlugin implements
      * @date 20-02-2007
      */
     public void recTerminate(ATerm message) {
-            m_log.debug("Received terminate message: " + message + ".");
-
+    	m_log.debug("Received terminate message: " + message + ".");
+        
+    	fireStudioPluginClosed();
+    	
         m_bridge = null;
         m_metaStudio = null;
     }
