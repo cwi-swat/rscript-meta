@@ -1,0 +1,8 @@
+#ifndef __RSCRIPT_TRANSACTIONS__
+#define __RSCRIPT_TRANSACTIONS__
+
+toolbus(TransactionManager(module-manager))
+toolbus(TransactionManager(syntax-definition))
+toolbus(TransactionManager(rscript-parsing))
+
+#endif /*__RSCRIPT_TRANSACTIONS__*/

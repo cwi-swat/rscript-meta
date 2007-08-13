@@ -1,0 +1,35 @@
+#ifndef __RSCRIPT_EDITOR_LISTENERS__
+#define __RSCRIPT_EDITOR_LISTENERS__
+
+#include <rscript-namespace.h>
+
+process StartRSCRIPTEditor(Path: str, Area: area) is
+let
+  ModuleId: module-id,
+  Pid: int,
+  Sid: session-id
+in
+  MM-GetModuleIdByAttribute(RSCRIPT_NAMESPACE, "path", path(Path), ModuleId?)
+  . create(EditSyntax(ModuleId), Pid?)
+  . TODO("And what if it does not start? See editing Terms")
+  . rec-msg(syntax-editor-started(ModuleId, Sid?))
+  . snd-msg(te-set-selection(Sid, Area))
+  . GoToEditorArea(Sid, Area)
+endlet
+
+process RSCRIPTCloseEditors is
+let
+  ModuleId: module-id
+in
+  subscribe(mm-module-deleted(<module-id>))
+  .
+  (
+    rec-note(mm-module-deleted(ModuleId?))
+    . DeleteSessions(ModuleId)
+  )
+  * delta
+endlet
+
+toolbus(RSCRIPTCloseEditors)
+
+#endif /* __RSCRIPT_EDITOR_LISTENERS__ */
