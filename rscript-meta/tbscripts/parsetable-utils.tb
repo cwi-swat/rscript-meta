@@ -35,6 +35,7 @@ in
   .
   (
     rec-msg(get-parsetable(ModuleId?, Type))
+    . printf("BUILDPARSETABLE - Get parsetable for %t, %t\n", ModuleId, Type)
     . GetCachedValue(TableName, ModuleId, Table?)
     .
     if equal(Table, UNDEFINED) then

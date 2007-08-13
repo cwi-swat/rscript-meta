@@ -36,6 +36,6 @@ pkgdata_DATA = \
 	       standard.rscript.actions
 
 %.tb: %.tb.src Makefile
-	sed "s@__RSCRIPTTABLE__@$(RSCRIPT_PREFIX)/share/rscript/Rscript.trm.tbl@g; \
+	sed "s@__RSCRIPTTABLE__@$(RSCRIPT_PREFIX)/share/rscript/rscript.trm.tbl@g; \
              s@__RSCRIPT_META__@$(prefix)/share/rscript-meta@g;" \
 	    < $< > $@ 

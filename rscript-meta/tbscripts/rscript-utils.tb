@@ -154,10 +154,6 @@ in
   fi
 endlet
 
-process GetImportedModulenames(Tree: term, Imports: list?) is
-  snd-msg(sm-get-imported-module-names(Tree))
-  . rec-msg(sm-imported-module-names(Imports?)) 
-
 process CloseOtherModules(ModuleId: module-id) is
 let
   Dependencies: list,
@@ -327,47 +323,6 @@ in
   fi
 endlet
 
-/* TODO: The following should be DEAD */
-process RenameImports(OldImport: str, NewImport: str) is
-let
-  ImportRelations: list,
-  ModuleId: str,
-  Depending: list
-in
-  snd-msg(ts-get-key-value-pairs("import-relations"))
-  . rec-msg(ts-pairs("import-relations", ImportRelations?))
-  . snd-msg(sm-get-depending-module-names(ImportRelations, OldImport))
-  . rec-msg(sm-depending-module-names(Depending?))
-  .
-  if not-equal(Depending, []) then
-    ModuleId := first(Depending)
-    . RenameImport(ModuleId, OldImport, NewImport)
-    . Depending := next(Depending)
-  fi
-  *
-  if equal(Depending, []) then
-    tau
-  fi
-endlet
-
-process RenameImport(Modulename: str, OldImport: str, NewImport: str) is
-let
-  Status: term,
-  Tree: term
-in
-  snd-msg(ts-get-term-value("rscript-tree", Modulename))
-  . rec-msg(ts-value("rscript-tree", Modulename, Tree?))
-  . snd-msg(sm-remove-import-from-module(Tree, OldImport))
-  . rec-msg(sm-import-removed-from-module(Tree?))
-  . snd-msg(sm-add-import-to-module(Tree, NewImport))
-  . rec-msg(sm-import-added-to-module(Tree?))
-  /* . MDB-StoreModuleTree(Modulename, Tree) dead */
-  . snd-msg(save-module(Modulename, rscript))
-  . rec-msg(saved-module(Modulename, Status?))
-endlet
-
-/* end of dead code */
-
 process IsLibraryModule(ModuleId: module-id, LibraryModule: bool?) is
 let
   Directories: list,
@@ -452,6 +407,7 @@ in
     . ReadText(Path, Text?)
     .
     if not-equal(Text, "") then
+      printf("GETRSCRIPTPARSETREE - About to get parsetable\n").
       GetParseTable(ModuleId, Type, ParseTable?)
       .
       if not-equal(ParseTable, UNDEFINED) then
@@ -490,8 +446,6 @@ in
   .
   if not-equal(Tree, UNDEFINED) then
     GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
-    . snd-msg(sm-get-module-id(Tree))
-    . rec-msg(sm-module-id(Modulename?))
     . snd-msg(io-get-path-directory(Path))
     . rec-msg(io-directory(Path, Directory?))
     . snd-msg(sm-get-module-path(Directory, Modulename))
@@ -507,23 +461,6 @@ in
     fi
   else
     tau
-  fi
-endlet
-
-
-process GetImportsForRenaming(ModuleId: module-id, ModuleIds: list, Imports: term?) is
-let
-  Modulename: str,
-  Modules: list
-in
-  GetModules(ModuleIds, Modules?)
-  .
-  if equal(Modules, []) then
-    Imports := []
-  else
-    MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
-    . snd-msg(sm-get-all-needed-imports(Modules, Modulename))
-    . rec-msg(sm-all-needed-imports(Imports?))
   fi
 endlet
 
