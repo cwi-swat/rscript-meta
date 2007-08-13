@@ -20,18 +20,15 @@ TBSCRIPTS = \
 GENERATED_TBSCRIPTS = \
 		      rscript-language.tb \
 		      rscript-initialize.tb \
-		      start-meta-studio.tb \
-		      start-def-dump.tb \
-		      start-pt-dump.tb
+		      start-meta-studio.tb
 
 EXTRA_DIST = \
 	     $(TBSCRIPTS) \
 	     $(GENERATED_TBSCRIPTS:.tb=.tb.src) \
-	     standard.rscript.actions.src
+	     standard.rscript.actions
 
 CLEANFILES = \
-	     $(GENERATED_TBSCRIPTS) \
-	     standard.rscript.actions
+	     $(GENERATED_TBSCRIPTS)
 
 pkgdata_DATA = \
 	       $(TBSCRIPTS) \
@@ -42,5 +39,3 @@ pkgdata_DATA = \
 	sed "s@__RSCRIPTTABLE__@$(RSCRIPT_PREFIX)/share/rscript/Rscript.trm.tbl@g; \
              s@__RSCRIPT_META__@$(prefix)/share/rscript-meta@g;" \
 	    < $< > $@ 
-
-standard.rscript.actions:  standard.rscript.actions.src Makefile
