@@ -61,7 +61,7 @@ in
   . JobDone(Filename)
 endlet
 
-process DumpSdfDefinition(ModuleId: module-id, Filename: str) is
+process DumpRscriptDefinition(ModuleId: module-id, Filename: str) is
 let
   Syntax: term,
   Path: str,
@@ -273,19 +273,19 @@ in
   )
 endlet
 
-process CopySdfModule(SrcModulename: str, Directory: str, Filename: str) is
+process CopyRscriptModule(SrcModulename: str, Directory: str, Filename: str) is
 let
   Id: int,
   Pid: int
 in
   Id := process-id
   . snd-note(ui-status(statf(Id, "Copying %s to %s", [SrcModulename, Filename])))
-  . create(CopySdfContentHandler(SrcModulename), Pid?)
+  . create(CopyRscriptContentHandler(SrcModulename), Pid?)
   . CreateNewModule(Pid, Directory, Filename)
   . snd-note(ui-status(endstat(Id)))
 endlet
 
-process CopySdfContentHandler(SrcModulename: str) is
+process CopyRscriptContentHandler(SrcModulename: str) is
 let
   Contents: str,
   DestModulename: str,
@@ -308,7 +308,7 @@ in
   )
 endlet
 
-process SaveSdfModules(Modules: list, Status: term?) is
+process SaveRscriptModules(Modules: list, Status: term?) is
 let
   Runner: list,
   Module: str

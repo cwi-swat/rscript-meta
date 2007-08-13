@@ -4,6 +4,7 @@
 #include <config-utils.tb>
 #include <rscript-namespace.h>
 #include <gui-utils.tb>
+#include <pretty-print-utils.tb>
 
 process ChangeWorkspaceAction is
 let
@@ -60,8 +61,7 @@ let
   Path: str
 in
   GetModuleId(EditorId, ModuleId?)
-  . GetPath(EditorId, Path?)
-  . GetTermParsetree(ModuleId, Path, Tree?)
+  . GetRSCRIPTParsetree(ModuleId, Tree?)
   .
   if not-equal(Tree, UNDEFINED) then
     PrettyPrint(Path, Tree, RTree?)
