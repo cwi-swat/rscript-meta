@@ -218,6 +218,52 @@ endlet
 
 toolbus(RSCRIPTChecker)
 
+process RSCRIPTSetModuleImports is
+let
+  Event: attribute-changed-event,
+  Import: str,
+  ImportId: module-id,
+  Imports: list,
+  ModuleId: module-id,
+  Tree: term
+in
+  MM-Subscribe-Attribute-Changed(<module-id>,RSCRIPT_NAMESPACE,"status",<term>,identified)
+  .
+  (
+    rec-note(mm-attribute-changed(Event?))
+    . ACE-GetModuleId(Event, ModuleId?)
+    . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", opening)
+    . GetRSCRIPTParsetree(ModuleId, Tree?)
+    . MM-GetModuleDependencies(ModuleId, Imports?)
+    .
+    if not-equal(Imports, []) then
+      MM-DeleteModuleDependencies(ModuleId)
+    else
+      tau
+    fi
+    . GetImportedModulenames(Tree, Imports?)
+    .
+    if not-equal(Imports, []) then
+      if not-equal(Imports, []) then
+        Import := first(Imports)
+        . Imports := next(Imports)
+        . OpenModule(Import, ImportId?)
+        . MM-AddModuleDependency(ModuleId, ImportId)
+      fi
+      *
+      if equal(Imports, []) then
+        MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", opened)
+      fi
+    else
+      MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", opened)
+    fi
+  )
+  *
+  delta
+endlet
+
+toolbus(RSCRIPTSetModuleImports)
+
 process RSCRIPTRemoveDependencies is
 let
   Event: attribute-changed-event,

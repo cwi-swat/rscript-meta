@@ -175,6 +175,9 @@ in
     fi
 endlet
 
+process GetImportedModulenames(Tree: term, Imports: list?) is
+  tau
+
 process CloseOtherModules(ModuleId: module-id) is
 let
   Dependencies: list,
@@ -460,13 +463,12 @@ let
   Tree: term,
   Path: str,
   Directory: str,
-  Modulename: str,
-  File: str
+  Filename: str
 in
   GetRSCRIPTParsetree(ModuleId, Tree?)
   .
   if not-equal(Tree, UNDEFINED) then
-    GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+    /*GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
     . snd-msg(io-get-path-directory(Path))
     . rec-msg(io-directory(Path, Directory?))
     . snd-msg(sm-get-module-path(Directory, Modulename))
@@ -479,7 +481,12 @@ in
     else
       printf("error: Module %s should be in a file named %s\n", Modulename, File)
       . ResultStatus := error
-    fi
+    fi*/
+    GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+    . snd-msg(io-get-path-filename(Path))
+    . rec-msg(io-filename(Path, Filename?))
+    . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Filename)
+    . ResultStatus := identified
   else
     tau
   fi
