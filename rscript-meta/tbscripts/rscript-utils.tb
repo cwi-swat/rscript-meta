@@ -166,11 +166,8 @@ in
     if not-equal(Tree, UNDEFINED) then
       snd-msg(check-rscript(Tree))
       . rec-msg(checked-rscript(Summary?))
-      . snd-msg(get-summary-errors(Summary))
-      . rec-msg(summary-errors(Errors?))
       . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
-      . snd-msg(es-make-summary("rscript-checker", Modulename, Errors))
-      . rec-msg(es-summary(Summary?))
+      . ReplaceSummaryInfo(Summary?, "rscript-checker", Modulename)
       . RemoveSummary("rscript-checker", Modulename)
       . DisplaySummary(Summary)
     else 
