@@ -14,6 +14,7 @@ tool rStoreContainer is {}
 process RCI is
 let Container: rStoreContainer,
     Path: str,
+    RStore: term,
     RStoreId: int,
     RStoreFacts: list,
     FactId: int,
@@ -41,6 +42,11 @@ in
     *
     rec-value(Container, rc-rstore-loaded(Path, RStoreId?))
     . snd-msg(rc-rstore-loaded(Path, RStoreId))
+  +
+    rec-msg(rc-get-rstore(RStoreId?))
+    . snd-eval(Container, rc-get-rstore(RStoreId))
+    . rec-value(Container, rc-rstore(RStore?))
+    . snd-msg(rc-rstore(RStoreId, RStore))
   +
     rec-msg(rc-get-rstore-facts(RStoreId?))
     . snd-eval(Container, rc-get-rstore-facts(RStoreId))

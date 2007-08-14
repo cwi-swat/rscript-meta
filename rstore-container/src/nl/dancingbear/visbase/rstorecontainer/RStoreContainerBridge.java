@@ -1,6 +1,6 @@
 // Java tool bridge RStoreContainerBridge
 // This file is generated automatically, please do not edit!
-// generation time: Mar 21, 2007 12:24:36 PM
+// generation time: Aug 14, 2007 5:22:04 PM
 
 package nl.dancingbear.visbase.rstorecontainer;
 
@@ -30,6 +30,13 @@ public class RStoreContainerBridge
       return tool.rcGetFactData(i0, i1);
     }
       throw new UnsupportedOperationException("method `rcGetFactData' not supported.");
+  }
+  public ATerm rcGetRstore(int i0)
+  {
+    if (tool != null) {
+      return tool.rcGetRstore(i0);
+    }
+      throw new UnsupportedOperationException("method `rcGetRstore' not supported.");
   }
   public ATerm rcGetRstoreFacts(int i0)
   {

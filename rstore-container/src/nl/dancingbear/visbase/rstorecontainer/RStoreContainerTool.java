@@ -1,6 +1,6 @@
 // Java tool interface class RStoreContainerTool
 // This file is generated automatically, please do not edit!
-// generation time: Mar 21, 2007 12:24:36 PM
+// generation time: Aug 14, 2007 5:22:04 PM
 
 package nl.dancingbear.visbase.rstorecontainer;
 
@@ -25,6 +25,7 @@ abstract public class RStoreContainerTool
   // Patterns that are used to match against incoming terms
   private ATerm PrcUnloadRstore0;
   private ATerm PrcGetFactData0;
+  private ATerm PrcGetRstore0;
   private ATerm PrcGetRstoreFacts0;
   private ATerm PrcLoadRstore0;
   private ATerm PrcLoadRstore1;
@@ -45,6 +46,7 @@ abstract public class RStoreContainerTool
     sigTable.add(factory.parse("rec-eval(<rStoreContainer>,rc-load-rstore(<str>))"));
     sigTable.add(factory.parse("rec-eval(<rStoreContainer>,rc-load-rstore(<str>,<term>))"));
     sigTable.add(factory.parse("rec-ack-event(<rStoreContainer>,<term>)"));
+    sigTable.add(factory.parse("rec-eval(<rStoreContainer>,rc-get-rstore(<int>))"));
     sigTable.add(factory.parse("rec-eval(<rStoreContainer>,rc-get-rstore-facts(<int>))"));
     sigTable.add(factory.parse("rec-eval(<rStoreContainer>,rc-get-fact-data(<int>,<int>))"));
     sigTable.add(factory.parse("rec-eval(<rStoreContainer>,rc-unload-rstore(<int>))"));
@@ -56,6 +58,7 @@ abstract public class RStoreContainerTool
   {
     PrcUnloadRstore0 = factory.parse("rec-eval(rc-unload-rstore(<int>))");
     PrcGetFactData0 = factory.parse("rec-eval(rc-get-fact-data(<int>,<int>))");
+    PrcGetRstore0 = factory.parse("rec-eval(rc-get-rstore(<int>))");
     PrcGetRstoreFacts0 = factory.parse("rec-eval(rc-get-rstore-facts(<int>))");
     PrcLoadRstore0 = factory.parse("rec-eval(rc-load-rstore(<str>))");
     PrcLoadRstore1 = factory.parse("rec-eval(rc-load-rstore(<str>,<term>))");
@@ -75,6 +78,10 @@ abstract public class RStoreContainerTool
     result = term.match(PrcGetFactData0);
     if (result != null) {
       return rcGetFactData(((Integer)result.get(0)).intValue(), ((Integer)result.get(1)).intValue());
+    }
+    result = term.match(PrcGetRstore0);
+    if (result != null) {
+      return rcGetRstore(((Integer)result.get(0)).intValue());
     }
     result = term.match(PrcGetRstoreFacts0);
     if (result != null) {

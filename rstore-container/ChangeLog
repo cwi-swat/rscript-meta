@@ -1,5 +1,8 @@
 
 
+Tue Aug 14 17:38:22 CEST 2007 <kooiker@cwi.nl>
+ * added possibility to get RStore by RStoreId
+
 Wed Mar 21 15:08:35 CET 2007 <jurgenv@cwi.nl>
  * added possibility to load RStore without first writing it to disk.
 

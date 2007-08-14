@@ -1,6 +1,6 @@
 // Java tool interface RStoreContainerTif
 // This file is generated automatically, please do not edit!
-// generation time: Mar 21, 2007 12:24:36 PM
+// generation time: Aug 14, 2007 5:22:04 PM
 
 package nl.dancingbear.visbase.rstorecontainer;
 
@@ -10,6 +10,7 @@ public interface RStoreContainerTif
 {
   public ATerm rcUnloadRstore(int i0);
   public ATerm rcGetFactData(int i0, int i1);
+  public ATerm rcGetRstore(int i0);
   public ATerm rcGetRstoreFacts(int i0);
   public ATerm rcLoadRstore(String s0);
   public ATerm rcLoadRstore(String s0, ATerm t1);
