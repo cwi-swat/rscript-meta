@@ -5,6 +5,7 @@
 #include <rscript-namespace.h>
 #include <gui-utils.tb>
 #include <pretty-print-utils.tb>
+#include <rscriptcalculator.idef>
 
 process ChangeWorkspaceAction is
 let
@@ -213,6 +214,19 @@ in
   . rec-msg(es-rscript-store(Store?))
   . snd-msg(rs-lower-rstore(Store))
   . rec-msg(rs-lowered-rstore(RStore?))
+  . snd-msg(rc-load-rstore(Modulename, RStore))
+endlet
+
+process RunRscriptAction(ModuleId : module-id) is
+let
+  Modulename: str,
+  RStore: term,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . snd-msg(eval-rscript(Tree))
+  . rec-msg(evaluated-rscript(RStore?))
   . snd-msg(rc-load-rstore(Modulename, RStore))
 endlet
 

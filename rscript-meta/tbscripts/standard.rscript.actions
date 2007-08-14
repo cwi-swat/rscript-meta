@@ -26,6 +26,10 @@ configuration([
          "MoveCursorDownAction"),
   action([description(syntax-editor, popup)], "EditorPopup"),
 
+  action([description(syntax-editor, menu([label("Rscript"), label("Run")],"Evaluate rscript")),
+          description(module-popup, menu([label("Run")],"Evaluate rscript"))],
+	 "RunRscriptAction"),
+
   action([description(module-popup, menu([label("Close...")],"Close this module"))],
          "CloseModuleAction"),
   action([description(module-popup, menu([label("Close others")],"Close all other modules"))],
