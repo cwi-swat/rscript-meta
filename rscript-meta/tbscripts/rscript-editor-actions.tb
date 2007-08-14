@@ -11,6 +11,14 @@ in
   . EditSyntaxAction(ModuleId)
 endlet
 
+process EditorRunRscriptAction(EditorId : session-id) is
+let
+  ModuleId : module-id
+in
+  GetModuleId(EditorId, ModuleId?)
+  . RunRscriptAction(ModuleId)
+endlet
+
 process EditSyntaxAction(ModuleId : module-id) is
 let
   Pid: int,
