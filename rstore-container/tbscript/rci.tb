@@ -12,54 +12,54 @@ tool rStoreContainer is {}
  * @date 2007-02-13
  */
 process RCI is
-  let Container: rStoreContainer,
-      Path: str,
-      RStoreId: int,
-      RStoreFacts: list,
-      FactId: int,
-      UpdatedRStoreId: int,
-      UpdatedFactId: int,
-      FactData: term,
-      Store: term
-  in
-    rec-connect(Container?)
+let Container: rStoreContainer,
+    Path: str,
+    RStoreId: int,
+    RStoreFacts: list,
+    FactId: int,
+    UpdatedRStoreId: int,
+    UpdatedFactId: int,
+    FactData: term,
+    Store: term
+in
+  rec-connect(Container?)
+  .
+  (   
+    (
+      rec-msg(rc-load-rstore(Path?))
+      . snd-eval(Container, rc-load-rstore(Path))
+    +
+      rec-msg(rc-load-rstore(Path?, Store?))
+      . snd-eval(Container, rc-load-rstore(Path, Store))
+    )
     .
     (
-      (   
-          (
-            rec-msg(rc-load-rstore(Path?))
-            . snd-eval(Container, rc-load-rstore(Path))
-          +
-            rec-msg(rc-load-rstore(Path?, Store?))
-            . snd-eval(Container, rc-load-rstore(Path, Store))
-          )
-          .
-          (
-            rec-event(Container, rc-fact-updated(UpdatedRStoreId?, UpdatedFactId?))
-            . snd-note(rc-fact-updated(UpdatedRStoreId, UpdatedFactId))
-            . snd-ack-event(Container, rc-fact-updated(UpdatedRStoreId, UpdatedFactId))
-          )
-          *
-          rec-value(Container, rc-rstore-loaded(Path, RStoreId?))
-          . snd-msg(rc-rstore-loaded(Path, RStoreId))
-        +
-          rec-msg(rc-get-rstore-facts(RStoreId?))
-          . snd-eval(Container, rc-get-rstore-facts(RStoreId))
-          . rec-value(Container, rc-rstore-facts(RStoreFacts?))
-          . snd-msg(rc-get-rstore-facts(RStoreId, RStoreFacts))
-        +
-          rec-msg(rc-get-fact-data(RStoreId?, FactId?))
-          . snd-eval(Container, rc-get-fact-data(RStoreId, FactId))
-          . rec-value(Container, rc-fact-data(FactData?))
-          . snd-msg(rc-get-fact-data(RStoreId, FactId, FactData))
-        +
-          rec-msg(rc-unload-rstore(RStoreId?))
-          . snd-eval(Container, rc-unload-rstore(RStoreId))
-          . rec-value(Container, rc-rstore-unloaded(RStoreId?))
-          . snd-note(rc-rstore-unloaded(RStoreId))
-      ) * delta
+      rec-event(Container, rc-fact-updated(UpdatedRStoreId?, UpdatedFactId?))
+      . snd-note(rc-fact-updated(UpdatedRStoreId, UpdatedFactId))
+      . snd-ack-event(Container, rc-fact-updated(UpdatedRStoreId, UpdatedFactId))
     )
-  endlet
+    *
+    rec-value(Container, rc-rstore-loaded(Path, RStoreId?))
+    . snd-msg(rc-rstore-loaded(Path, RStoreId))
+  +
+    rec-msg(rc-get-rstore-facts(RStoreId?))
+    . snd-eval(Container, rc-get-rstore-facts(RStoreId))
+    . rec-value(Container, rc-rstore-facts(RStoreFacts?))
+    . snd-msg(rc-get-rstore-facts(RStoreId, RStoreFacts))
+  +
+    rec-msg(rc-get-fact-data(RStoreId?, FactId?))
+    . snd-eval(Container, rc-get-fact-data(RStoreId, FactId))
+    . rec-value(Container, rc-fact-data(FactData?))
+    . snd-msg(rc-get-fact-data(RStoreId, FactId, FactData))
+  +
+    rec-msg(rc-unload-rstore(RStoreId?))
+    . snd-eval(Container, rc-unload-rstore(RStoreId))
+    . rec-value(Container, rc-rstore-unloaded(RStoreId?))
+    . snd-note(rc-rstore-unloaded(RStoreId))
+  ) 
+  * 
+  delta
+endlet
 
 toolbus(RCI)
 
