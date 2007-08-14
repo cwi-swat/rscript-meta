@@ -7,6 +7,8 @@
 #include <graph-namespace.h>
 #include <navigator.idef>
 
+#include <rscriptchecker.idef>
+
 #define BG_ERROR_COLOR rgb(224,64,60)
 #define BG_CHILD_ERROR_COLOR rgb(255,128,114)
 #define BG_CORRECT_COLOR rgb(255,255,221)
@@ -195,6 +197,26 @@ in
 endlet
 
 toolbus(RSCRIPTModuleIdentifier)
+
+process RSCRIPTChecker is
+let
+  Event: attribute-changed-event,
+  Summary: summary,
+  Tree: term,
+  ModuleId: module-id
+in
+  MM-Subscribe-Attribute-Changed(<module-id>,RSCRIPT_NAMESPACE,"status",<term>,parsed)
+  .
+  (
+    rec-note(mm-attribute-changed(Event?))
+    . ACE-GetModuleId(Event, ModuleId?)
+    . CheckRSCRIPTModule(ModuleId)
+  )
+  *
+  delta
+endlet
+
+toolbus(RSCRIPTChecker)
 
 process RSCRIPTRemoveDependencies is
 let

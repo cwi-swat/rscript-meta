@@ -154,6 +154,30 @@ in
   fi
 endlet
 
+process CheckRSCRIPTModule(ModuleId: module-id) is
+let
+  Errors: list,
+  Modulename: str,
+  Summary: summary,
+  Tree: term
+in
+    GetRSCRIPTParsetree(ModuleId, Tree?)
+    .
+    if not-equal(Tree, UNDEFINED) then
+      snd-msg(check-rscript(Tree))
+      . rec-msg(checked-rscript(Summary?))
+      . snd-msg(get-summary-errors(Summary))
+      . rec-msg(summary-errors(Errors?))
+      . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+      . snd-msg(es-make-summary("rscript-checker", Modulename, Errors))
+      . rec-msg(es-summary(Summary?))
+      . RemoveSummary("rscript-checker", Modulename)
+      . DisplaySummary(Summary)
+    else 
+      tau
+    fi
+endlet
+
 process CloseOtherModules(ModuleId: module-id) is
 let
   Dependencies: list,
