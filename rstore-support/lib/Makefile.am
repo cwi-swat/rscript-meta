@@ -19,7 +19,8 @@ libRStoreAPI_la_SOURCES = \
 	RStore_dict.c \
 	ParsedRStore.c \
 	ParsedRStore_dict.c  \
-	lower.c
+	lower.c \
+	lift.c
 
 libRStoreAPI_la_CPPFLAGS = $(ATERM_CFLAGS)
 libRStoreAPI_la_LDFLAGS  = -avoid-version -no-undefined $(AM_LDFLAGS)

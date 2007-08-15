@@ -314,7 +314,7 @@ static RS_RElem RS_lowerRElem(PRS_RElem in)
     }
   }
   else {
-    ATwarning("lower rstire: this is not an RElem: %t, default to boolean\n", in);
+    ATwarning("lower rstore: this is not an RElem: %t, default to boolean\n", in);
     return RS_makeRElemBool(RS_makeBoolConFalse());;
   }
 }
