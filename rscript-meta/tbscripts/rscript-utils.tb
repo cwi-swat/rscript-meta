@@ -61,7 +61,7 @@ in
   . JobDone(Filename)
 endlet
 
-process DumpRscriptDefinition(ModuleId: module-id, Filename: str) is
+process DumpRScriptDefinition(ModuleId: module-id, Filename: str) is
 let
   Syntax: term,
   Path: str,
@@ -281,19 +281,19 @@ in
   fi
 endlet
 
-process CopyRscriptModule(SrcModulename: str, Directory: str, Filename: str) is
+process CopyRScriptModule(SrcModulename: str, Directory: str, Filename: str) is
 let
   Id: int,
   Pid: int
 in
   Id := process-id
   . snd-note(ui-status(statf(Id, "Copying %s to %s", [SrcModulename, Filename])))
-  . create(CopyRscriptContentHandler(SrcModulename), Pid?)
+  . create(CopyRScriptContentHandler(SrcModulename), Pid?)
   . CreateNewModule(Pid, Directory, Filename)
   . snd-note(ui-status(endstat(Id)))
 endlet
 
-process CopyRscriptContentHandler(SrcModulename: str) is
+process CopyRScriptContentHandler(SrcModulename: str) is
 let
   Contents: str,
   DestModulename: str,
@@ -316,7 +316,7 @@ in
   )
 endlet
 
-process SaveRscriptModules(Modules: list, Status: term?) is
+process SaveRScriptModules(Modules: list, Status: term?) is
 let
   Runner: list,
   Module: str
@@ -479,7 +479,20 @@ in
   fi
 endlet
 
-process RunRscriptWithRStore(ModuleId : module-id) is
+process RunRScript(ModuleId : module-id) is
+let
+  Modulename: str,
+  RStore: rstore,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . snd-msg(eval-rscript(Tree))
+  . rec-msg(evaluated-rscript(RStore?))
+  . snd-msg(rc-load-rstore(Modulename, RStore))
+endlet
+
+process RunRScriptWithRStore(ModuleId : module-id) is
 let
   Modulename: str,
   RStore: rstore,

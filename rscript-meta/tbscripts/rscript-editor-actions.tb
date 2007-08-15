@@ -11,12 +11,20 @@ in
   . EditSyntaxAction(ModuleId)
 endlet
 
-process EditorRunRscriptAction(EditorId : session-id) is
+process EditorRunRScriptAction(EditorId : session-id) is
 let
   ModuleId : module-id
 in
   GetModuleId(EditorId, ModuleId?)
-  . RunRscriptAction(ModuleId)
+  . RunRScript(ModuleId)
+endlet
+
+process EditorRunRScriptWithRStoreAction(EditorId : session-id) is
+let
+  ModuleId : module-id
+in
+  GetModuleId(EditorId, ModuleId?)
+  . RunRScriptWithRStore(ModuleId)
 endlet
 
 process EditSyntaxAction(ModuleId : module-id) is

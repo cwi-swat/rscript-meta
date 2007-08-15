@@ -163,7 +163,7 @@ in
   fi
 endlet
 
-process DumpRscriptDefinitionAction(ModuleId : module-id) is
+process DumpRScriptDefinitionAction(ModuleId : module-id) is
 let
   Cancel: bool,
   Path : str
@@ -174,7 +174,7 @@ in
     tau
   else
     snd-msg(tm-request-transaction(syntax-definition))
-    . DumpRscriptDefinition(ModuleId, Path)
+    . DumpRScriptDefinition(ModuleId, Path)
     . snd-msg(tm-end-transaction(syntax-definition))
   fi
 endlet
@@ -217,20 +217,10 @@ in
   . snd-msg(rc-load-rstore(Modulename, RStore))
 endlet
 
-process RunRscriptAction(ModuleId : module-id) is
-let
-  Modulename: str,
-  RStore: rstore,
-  Tree: term
-in
-  GetRSCRIPTParsetree(ModuleId, Tree?)
-  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
-  . snd-msg(eval-rscript(Tree))
-  . rec-msg(evaluated-rscript(RStore?))
-  . snd-msg(rc-load-rstore(Modulename, RStore))
-endlet
+process RunRScriptAction(ModuleId : module-id) is
+  RunRScript(ModuleId)
 
-process RunRscriptWithRStoreAction(ModuleId : module-id) is
-  RunRscriptWithRStore(ModuleId)
+process RunRScriptWithRStoreAction(ModuleId : module-id) is
+  RunRScriptWithRStore(ModuleId)
 
 #endif /*__RSCRIPT_ACTIONS__*/
