@@ -30,6 +30,8 @@ configuration([
 	 "EditorRunRscriptAction"),
   action([description(module-popup, menu([label("Run")],"Evaluate rscript"))],
 	 "RunRscriptAction"),
+  action([description(module-popup, menu([label("Run with RStore")],"Evaluate rscript"))],
+	 "RunRscriptWithRStoreAction"),
 
   action([description(module-popup, menu([label("Close...")],"Close this module"))],
          "CloseModuleAction"),

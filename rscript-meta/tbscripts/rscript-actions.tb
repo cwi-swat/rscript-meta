@@ -205,7 +205,7 @@ process ExtractRSCRIPTAction(ModuleId : module-id) is
 let
   Syntax : term,
   Store : term,
-  RStore : term,
+  RStore : rstore,
   Modulename : str
 in
   GetSyntaxDefinition(ModuleId, Syntax?)
@@ -220,7 +220,7 @@ endlet
 process RunRscriptAction(ModuleId : module-id) is
 let
   Modulename: str,
-  RStore: term,
+  RStore: rstore,
   Tree: term
 in
   GetRSCRIPTParsetree(ModuleId, Tree?)
@@ -230,4 +230,21 @@ in
   . snd-msg(rc-load-rstore(Modulename, RStore))
 endlet
 
+process RunRscriptWithRStoreAction(ModuleId : module-id) is
+let
+  Modulename: str,
+  RStore: rstore,
+  RStoreId: int,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . snd-msg(fb-get-selected-rstoreid)
+  . rec-msg(fb-selected-rstoreid(RStoreId?))
+  . snd-msg(rc-get-rstore(RStoreId))
+  . rec-msg(rc-rstore(RStoreId, RStore?))
+  . snd-msg(eval-rscript-with-rstore(Tree, RStore))
+  . rec-msg(evaluated-rscript-with-rstore(RStore?))
+  . snd-msg(rc-load-rstore(Modulename, RStore))
+endlet
 #endif /*__RSCRIPT_ACTIONS__*/
