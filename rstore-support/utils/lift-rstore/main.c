@@ -9,6 +9,7 @@
 
 #include "RStore-utils.h"
 #include <ParsedRStore.h>
+#include <RStore.h>
 #include "lift-rstore.h"
 
 /*}}}  */
@@ -43,13 +44,11 @@ void usage(void)
 ATerm lift_rstore(int cid, ATerm in)
 {
   ATerm input = ATBunpack(in);
-  PRS_RStore result = PRS_makeRStoreRstore(PRS_makeRTupleRtuplesEmpty());
+  PRS_OptLayout e = PRS_makeOptLayoutAbsent();
+  PRS_RStore result = PRS_makeRStoreRstore(e, e, e, 
+                                           PRS_makeRTupleRtuplesEmpty(), e, e);
 
-  if (RS_isValidStart(RS_StartFromTerm(input))) {
-    RS_RStore tmp = RS_getStartTopRStore(RS_StartFromTerm(input));
-    result = RS_liftRStore(tmp);
-  }
-  else if (RS_isValidRStore(RS_RStoreFromTerm(input))) {
+  if (RS_isValidRStore(RS_RStoreFromTerm(input))) {
     result = RS_liftRStore(RS_RStoreFromTerm(input));
   }
 
@@ -118,10 +117,6 @@ int main (int argc, char *argv[])
 
     if (RS_isValidRStore((RS_RStoreFromTerm(input)))) {
       output = (ATerm) RS_liftRStore(RS_RStoreFromTerm(input));
-    }
-    else if (RS_isValidStart(RS_StartFromTerm(input))) {
-      RS_RStore tmp = RS_getStartTopRStore(RS_StartFromTerm(input));
-      output = (ATerm) RS_liftRStore(tmp);
     }
 
     if(output != NULL) {
