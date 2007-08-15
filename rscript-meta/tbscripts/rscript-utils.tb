@@ -431,7 +431,6 @@ in
     . ReadText(Path, Text?)
     .
     if not-equal(Text, "") then
-      printf("GETRSCRIPTPARSETREE - About to get parsetable\n").
       GetParseTable(ModuleId, Type, ParseTable?)
       .
       if not-equal(ParseTable, UNDEFINED) then

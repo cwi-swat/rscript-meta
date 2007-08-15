@@ -163,10 +163,8 @@ in
     . GetRSCRIPTParsetree(ModuleId, Tree?)
     .
     if equal(Tree, UNDEFINED) then
-       printf("RSCRIPTMODULEPARSER - No tree\n").
        MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", error)
     else
-       printf("RSCRIPTMODULEPARSER - Parsed\n").
        MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", parsed)
     fi
     . Tree := UNDEFINED

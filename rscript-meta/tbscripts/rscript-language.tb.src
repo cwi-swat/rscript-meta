@@ -16,16 +16,13 @@ in
     rec-msg(get-parsetable(ModuleId?, Type))
     .
     if equal(Table, UNDEFINED) then 
-      printf("OPENRSCRIPTLANGUAGE - Retrieving parsetable\n").
       snd-msg(io-read-and-pack-term("__RSCRIPTTABLE__"))
       .
       (
         rec-msg(io-packed-term(Table?))
-        . printf("OPENRSCRIPTLANGUAGE - Got a parsetable\n")
         . snd-msg(parsetable(ModuleId, Type, Table))
       +
         rec-msg(io-error-reading(Error?))
-        . printf("OPENRSCRIPTLANGUAGE - No parsetable\n")
         . snd-msg(no-parsetable(ModuleId, Type))
       )
     else
