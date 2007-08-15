@@ -231,25 +231,6 @@ in
 endlet
 
 process RunRscriptWithRStoreAction(ModuleId : module-id) is
-let
-  Modulename: str,
-  RStore: rstore,
-  RStoreId: int,
-  Tree: term
-in
-  GetRSCRIPTParsetree(ModuleId, Tree?)
-  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
-  . snd-msg(fb-get-selected-rstoreid)
-  .
-  (
-    rec-msg(fb-selected-rstoreid(RStoreId?))
-    . snd-msg(rc-get-rstore(RStoreId))
-    . rec-msg(rc-rstore(RStoreId, RStore?))
-    . snd-msg(eval-rscript-with-rstore(Tree, RStore))
-    . rec-msg(evaluated-rscript-with-rstore(RStore?))
-    . snd-msg(rc-load-rstore(Modulename, RStore))
-  +
-    rec-msg(fb-no-rstore-selected)
-  )
-endlet
+  RunRscriptWithRStore(ModuleId)
+
 #endif /*__RSCRIPT_ACTIONS__*/

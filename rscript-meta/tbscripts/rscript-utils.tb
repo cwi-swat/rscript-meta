@@ -17,7 +17,7 @@ in
   .
   (
     rec-msg(get-module-contents(Pid, ModuleId?))
-    . snd-msg(module-contents(Pid, ["module ", ModuleId, "\n\n"]))
+    . snd-msg(module-contents(Pid, [""]))
   +
     rec-msg(cancel-content-handler(Pid))
   )
@@ -250,47 +250,35 @@ let
   Extension: str,
   ModuleId: module-id,
   Modulename: str,
-  Path: str,
-  SearchPaths: list
+  Path: str
 in
-  snd-msg(cm-get-module-paths)
-  . rec-msg(cm-module-paths(SearchPaths?))
-  . snd-msg(sm-get-new-module-name(SearchPaths, Directory, Filename))
+  Modulename := Filename
+  . MM-GetModuleIdByAttribute(RSCRIPT_NAMESPACE, "name", Modulename, ModuleId?)
   .
-  (
-    rec-msg(sm-new-module-name(BaseDir?, Modulename?))
-    . MM-GetModuleIdByAttribute(RSCRIPT_NAMESPACE, "name", Modulename, ModuleId?)
+  if equal(ModuleId, UNDEFINED) then
+    BuildPath(Directory, Modulename, RSCRIPT_EXTENSION, Path?)
+    . snd-msg(io-exists-file(Path))
     .
-    if equal(ModuleId, UNDEFINED) then
-      BuildPath(BaseDir, Modulename, RSCRIPT_EXTENSION, Path?)
-      . snd-msg(io-exists-file(Path))
+    (
+      rec-msg(io-file-exists)
+      . CancelCreateNewModule(Pid, "File %s already exists", [Path])
+    +
+      rec-msg(io-file-not-exists)
+      . snd-msg(get-module-contents(Pid, Modulename))
+      . rec-msg(module-contents(Pid, Contents?))
+      . snd-msg(io-write-text-list(Path, Contents))
       .
       (
-        rec-msg(io-file-exists)
-        . CancelCreateNewModule(Pid, "File %s already exists", [Path])
+        rec-msg(io-file-written)
+        . OpenModule(Modulename, ModuleId?)
       +
-        rec-msg(io-file-not-exists)
-        . snd-msg(get-module-contents(Pid, Modulename))
-        . rec-msg(module-contents(Pid, Contents?))
-        . snd-msg(io-write-text-list(Path, Contents))
-        .
-        (
-          rec-msg(io-file-written)
-          . OpenModule(Modulename, ModuleId?)
-        +
-          rec-msg(io-file-not-written(Error?))
-          . snd-note(ui-status(errorf("%s: %s", [Path, Error])))
-        )
+        rec-msg(io-file-not-written(Error?))
+        . snd-note(ui-status(errorf("%s: %s", [Path, Error])))
       )
-    else
-      CancelCreateNewModule(Pid, "Module %s already exists", [Modulename])
-    fi
-  +
-    rec-msg(sm-new-module-name-inconsistent)
-    . CancelCreateNewModule(Pid,
-                         "Module %s in %s is inconsistent with module paths",
-                         [Filename, Path])
-  )
+    )
+  else
+    CancelCreateNewModule(Pid, "Module %s already exists", [Modulename])
+  fi
 endlet
 
 process CopyRscriptModule(SrcModulename: str, Directory: str, Filename: str) is
@@ -489,6 +477,29 @@ in
   else
     tau
   fi
+endlet
+
+process RunRscriptWithRStore(ModuleId : module-id) is
+let
+  Modulename: str,
+  RStore: rstore,
+  RStoreId: int,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . snd-msg(fb-get-selected-rstoreid)
+  .
+  (
+    rec-msg(fb-selected-rstoreid(RStoreId?))
+    . snd-msg(rc-get-rstore(RStoreId))
+    . rec-msg(rc-rstore(RStoreId, RStore?))
+    . snd-msg(eval-rscript-with-rstore(Tree, RStore))
+    . rec-msg(evaluated-rscript-with-rstore(RStore?))
+    . snd-msg(rc-load-rstore(Modulename, RStore))
+  +
+    rec-msg(fb-no-rstore-selected)
+  )
 endlet
 
 #endif
