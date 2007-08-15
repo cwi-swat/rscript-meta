@@ -1,0 +1,24 @@
+#ifndef LIFT_RSTORE
+#define LIFT_RSTORE
+tool lift-rstore is { command = "__PREFIX__/bin/lift-rstore" }  
+
+process RStoreLiftTool is
+let
+  AT       : lift-rstore,
+  Store     : term,
+  NewStore     : term
+in
+  (
+    rec-msg(rs-lift-rstore(Store?)).
+    execute(lift-rstore, AT?).
+    snd-eval(AT, lift-rstore(Store)).
+    rec-value(AT, lifted-rstore(NewStore?)).
+    snd-terminate(AT, "done") .
+    snd-msg(rs-lifted-rstore(NewStore))
+  ) *
+  delta
+endlet
+
+toolbus(RStoreLiftTool)
+
+#endif
