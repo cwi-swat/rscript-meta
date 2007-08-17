@@ -41,7 +41,7 @@ in
   delta
 endlet
 
-toolbus(ImportGraphPainter)
+/*toolbus(ImportGraphPainter)*/
 
 process ImportGraphUpdater is
 let
@@ -65,7 +65,7 @@ in
   delta
 endlet
 
-toolbus(ImportGraphUpdater)
+/*toolbus(ImportGraphUpdater)*/
 
 process NavigatorUpdater is
 let
