@@ -61,7 +61,7 @@ in
     rec-msg(rc-unload-rstore(RStoreId?))
     . snd-eval(Container, rc-unload-rstore(RStoreId))
     . rec-value(Container, rc-rstore-unloaded(RStoreId?))
-    . snd-note(rc-rstore-unloaded(RStoreId))
+    . snd-msg(rc-rstore-unloaded(RStoreId))
   ) 
   * 
   delta
