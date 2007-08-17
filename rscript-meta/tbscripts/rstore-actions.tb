@@ -3,7 +3,6 @@
 
 #include <configuration-manager.idef>
 #include <fbi.tb>
-#include <lift-rstore.idef>
 
 process HandleRStoreEvent(Type: term, Event: term, RStoreId: term) is
 let
@@ -63,9 +62,7 @@ in
   else
     snd-msg(rc-get-rstore(RStoreId))
     . rec-msg(rc-rstore(RStoreId, RStore?))
-    . snd-msg(rs-lift-rstore(RStore))
-    . rec-msg(rs-lifted-rstore(Store?))
-    . snd-msg(io-write-term-in-baf(Path, Store))
+    . snd-msg(io-write-term-as-text(Path, RStore))
     . 
     (
       rec-msg(io-file-written)
