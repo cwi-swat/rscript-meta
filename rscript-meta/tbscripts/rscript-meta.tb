@@ -1,6 +1,7 @@
 #ifndef __RSCRIPT_META__
 #define __RSCRIPT_META__
 
+#include <rstore-actions.tb>
 #include <rscript-module-actions.tb>
 #include <rscript-listeners.tb>
 #include <rscript-actions.tb>

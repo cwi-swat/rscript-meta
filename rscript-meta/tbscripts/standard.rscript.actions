@@ -50,6 +50,10 @@ configuration([
   action([description(new-module-popup, menu([label("Delete this module")],"Close this module, and remove imports of it in all other opened modules"))],
          "delete-module"),
 
+  action([description(factbrowser-popup, menu([label("Unload")],"Unload RStore"))],
+	 "UnloadRStoreAction"),
+  action([description(factbrowser-popup, menu([label("Save")],"Save RStore"))],
+	 "SaveRStoreAction"),
 
    text-category(normal,[foreground-color(rgb(0,0,0)),
                          background-color(rgb(255,255,255)),

@@ -15,7 +15,8 @@ TBSCRIPTS = \
 	    rscript-progress-listener.tb \
 	    rscript-transactions.tb \
 	    rscript-utils.tb \
-	    rscript-module-utils.tb
+	    rscript-module-utils.tb \
+	    rstore-actions.tb 
   
 GENERATED_TBSCRIPTS = \
 		      rscript-language.tb \
