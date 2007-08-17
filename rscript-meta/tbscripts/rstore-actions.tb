@@ -1,0 +1,78 @@
+#ifndef __RSTORE_ACTIONS__
+#define __RSTORE_ACTIONS__
+
+#include <configuration-manager.idef>
+#include <fbi.tb>
+#include <lift-rstore.idef>
+
+process HandleRStoreEvent(Type: term, Event: term, RStoreId: term) is
+let
+  Action: str
+in
+  snd-msg(cm-get-action(Type, Event))
+  . rec-msg(cm-action(Action?))
+  . Action(RStoreId)
+endlet
+
+process GetRStorePopupEvents(PopupMenu: list?) is
+let
+  Events: list 
+in
+  snd-msg(cm-get-events(factbrowser-popup))
+  . rec-msg(cm-events(PopupMenu?))
+endlet
+
+process HandleRStorePopup is
+let
+  RStoreId: term,
+  Menu: term,
+  PopupMenu: list,
+  Type: term
+in
+  (
+    FB-RequestPopup(RStoreId?)
+    . GetRStorePopupEvents(PopupMenu?)
+    . FB-ShowPopup(RStoreId, PopupMenu)
+  +
+    FB-PopupEvent(RStoreId?, Menu?)
+    . HandleRStoreEvent(factbrowser-popup, Menu, RStoreId)
+  )
+  *
+  delta
+endlet
+
+toolbus(HandleRStorePopup)
+
+process UnloadRStoreAction(RStoreId: term) is
+  snd-msg(rc-unload-rstore(RStoreId))
+  . rec-msg(rc-rstore-unloaded(RStoreId))
+  . snd-msg(fb-rstore-unloaded(RStoreId))
+
+process SaveRStoreAction(RStoreId: term) is
+let
+  Cancel: bool,
+  Path: str,
+  RStore: rstore,
+  Store: term,
+  Summary: summary
+in
+  PromptForFileWithExtension("Save RStore", [], ".rstore", Cancel?, Path?)
+  .
+  if equal(Cancel, true) then
+    tau
+  else
+    snd-msg(rc-get-rstore(RStoreId))
+    . rec-msg(rc-rstore(RStoreId, RStore?))
+    . snd-msg(rs-lift-rstore(RStore))
+    . rec-msg(rs-lifted-rstore(Store?))
+    . snd-msg(io-write-term-in-baf(Path, Store))
+    . 
+    (
+      rec-msg(io-file-written)
+    +
+      rec-msg(io-file-not-written(Summary?))
+    )
+  fi
+endlet
+
+#endif /* __RSTORE_ACTIONS__ */

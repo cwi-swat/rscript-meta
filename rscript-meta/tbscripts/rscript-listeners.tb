@@ -121,6 +121,32 @@ endlet
 
 toolbus(RSCRIPTModuleColorChanger)
 
+process RSCRIPTModuleIconChanger is
+let
+  Event: attribute-changed-event,
+  ModuleId: module-id,
+  Value: term
+in
+  MM-Subscribe-Attribute-Changed(<module-id>,RSCRIPT_NAMESPACE,"status",<term>,error)
+  . MM-Subscribe-Attribute-Changed(<module-id>,RSCRIPT_NAMESPACE,"status",error,<term>)
+  .
+  (
+    rec-note(mm-attribute-changed(Event?))
+    . ACE-GetModuleId(Event, ModuleId?)
+    . ACE-GetNewValue(Event, Value?)
+    .
+    if equal(Value, error) then
+      snd-msg(nav-mark-module-error(ModuleId))
+    else
+      snd-msg(nav-mark-module-normal(ModuleId))
+    fi
+  )
+  *
+  delta
+endlet
+
+toolbus(RSCRIPTModuleIconChanger)
+
 process RSCRIPTModuleVisualizeEditable is
 let
   Event: attribute-changed-event,
