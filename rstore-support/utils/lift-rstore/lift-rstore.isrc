@@ -6,7 +6,9 @@ process RStoreLiftTool is
 let
   AT       : lift-rstore,
   Store     : term,
-  NewStore     : term
+  NewStore     : term,
+  Tuple : term,
+  NewTuple : term
 in
   (
     rec-msg(rs-lift-rstore(Store?)).
@@ -15,6 +17,14 @@ in
     rec-value(AT, lifted-rstore(NewStore?)).
     snd-terminate(AT, "done") .
     snd-msg(rs-lifted-rstore(NewStore))
+  +
+    rec-msg(rs-lift-rtuple(Tuple?)).
+    execute(lift-rstore, AT?).
+    snd-eval(AT, lift-rtuple(Tuple)).
+    rec-value(AT, lifted-rtuple(NewTuple?)).
+    snd-terminate(AT, "done") .
+    snd-msg(rs-lifted-rtuple(NewTuple))
+    
   ) *
   delta
 endlet

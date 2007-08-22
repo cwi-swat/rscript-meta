@@ -1,5 +1,8 @@
 
 
+Wed Aug 22 12:45:09 CEST 2007 <jurgenv@cwi.nl>
+ * utils/lift-rstore/*: added lift-rtuple functionality
+
 Wed Aug 15 10:57:24 CEST 2007 <kooiker@cwi.nl>
  * lib/lift.c: made robust lifting of RStores. The illegal parts of an RStore
    are replaced by default values, and a message is printed on the console.

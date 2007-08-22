@@ -317,7 +317,7 @@ static PRS_RElem RS_liftRElem(RS_RElem in)
   }
 }
 
-static PRS_RTuple RS_liftRTuple(RS_RTuple in)
+PRS_RTuple RS_liftRTuple(RS_RTuple in)
 {
   PRS_OptLayout e = PRS_makeOptLayoutAbsent();
 

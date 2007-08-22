@@ -56,6 +56,22 @@ ATerm lift_rstore(int cid, ATerm in)
 }
 
 /*}}}  */
+/*{{{  ATerm lift_rstore(int cid, ATerm in) */
+
+ATerm lift_rtuple(int cid, ATerm in)
+{
+  ATerm input = ATBunpack(in);
+  PRS_OptLayout e = PRS_makeOptLayoutAbsent();
+  PRS_RTuple result = PRS_makeRTupleRTuple();
+
+  if (RS_isValidRTuple(RS_RTupleFromTerm(input))) {
+    result = RS_liftRTuple(RS_RTupleFromTerm(input));
+  }
+
+  return ATmake("snd-value(lifted-rtuple(<term>))", result);
+}
+
+/*}}}  */
 
 /*{{{  int rec_terminate(int cid) */
 
