@@ -1,5 +1,13 @@
 
 
+Wed Aug 22 15:01:46 CEST 2007 <kooiker@cwi.nl>
+ * src/**/RSotreTracker.java: 
+   - After checking which data has been updated (which is needed to notify
+   visualizations of outdated data), replace the current RStore with the new
+   one
+   - Remove registration of new relations since this is automatically done
+   when the current RStore is replaced by the new one
+
 Tue Aug 14 17:38:22 CEST 2007 <kooiker@cwi.nl>
  * added possibility to get RStore by RStoreId
 

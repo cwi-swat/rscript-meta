@@ -214,7 +214,6 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 							exception);
 		}
 
-		// check parsed RStore result again for safety
 		int rStoreId = -1;
 		if (parsedRStore != null) {
 			// add parsed RStore to loaded RStores so it can be retrieved later
@@ -637,7 +636,7 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 		if (m_earlierLoadedRStoreFilesMap.containsKey(rStoreFileReference)) {
 			m_log.debug("RStore file has been loaded earlier: "
 					+ rStoreFileReference + ". *Updating if needed*");
-
+			
 			// Get the identifier for this earlier loaded RStore
 			Integer idOfEarlierLoadedRStore = m_earlierLoadedRStoreFilesMap
 					.get(rStoreFileReference);
@@ -649,10 +648,10 @@ public class RStoreContainer extends DefaultStudioPlugin implements
 			// Update the Tracker with the newly parsed RStore data
 			List<Integer> updatedFactIdsList = rStoreTrackerForEarlierLoadedRStore
 					.update(rStore);
-
+			
 			// Send updates for changed facts (if any)
 			sendFactUpdatedEvents(idOfEarlierLoadedRStore, updatedFactIdsList);
-
+			
 			result_id = idOfEarlierLoadedRStore.intValue();
 		} else {
 			// find a unique ID for the RStore in the map
