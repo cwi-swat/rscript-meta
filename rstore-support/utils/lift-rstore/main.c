@@ -61,8 +61,10 @@ ATerm lift_rstore(int cid, ATerm in)
 ATerm lift_rtuple(int cid, ATerm in)
 {
   ATerm input = ATBunpack(in);
-  PRS_OptLayout e = PRS_makeOptLayoutAbsent();
-  PRS_RTuple result = PRS_makeRTupleRTuple();
+  RS_RTuple temp = RS_makeRTupleRtuple(RS_makeIdConIdCon("*failed*"),
+				       RS_makeRTypeBool(),
+				       RS_makeRElemBool(RS_makeBoolConFalse()));
+  PRS_RTuple result = RS_liftRTuple(temp);
 
   if (RS_isValidRTuple(RS_RTupleFromTerm(input))) {
     result = RS_liftRTuple(RS_RTupleFromTerm(input));
