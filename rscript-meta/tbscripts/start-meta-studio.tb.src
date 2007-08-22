@@ -12,14 +12,12 @@ process TODO(Msg : str) is printf("TODO: %s\n", Msg)
 
 /* visualizations */
 #include <start-vis.tb>
-#include <vis-plugin-table.tb>
+#include <vis-plugin-generic.tb>
 #include <vis-plugin-charts.tb>
 #include <vis-plugin-graph.tb>
-#include <vis-plugin-csv.tb>
 
 process StartVisPlugin is
-  StartVisPluginTable()
-  . StartVisPluginCsvExport()
+  StartVisPluginGeneric()
   . StartVisPluginCharts()
   . StartVisPluginGraph()
 

@@ -1,5 +1,9 @@
 $Id: ChangeLog 23042 2007-06-14 14:30:23Z kooiker $
 
+Wed Aug 22 11:23:44 CEST 2007 <jurgenv@cwi.nl>
+ * *.pc.in: changed dependency on csv and table vis plugins to 
+   vis-plugin-generic because they have been merged into this new package
+
 Thu Jun 14 16:29:00 CEST 2007 <{kooiker,lankamp}@cwi.nl>
  * tbscripts/sdf-actions.tb: Add ugly hack to fix OpenModuleAction scenario
    not receiving notes for already opened modules.
