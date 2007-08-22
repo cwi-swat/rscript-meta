@@ -20,9 +20,6 @@ import aterm.pure.ATermApplImpl;
 
 /**
  * Keeps track of the Rtuples associated to a RStore. Manages the identifiers.
- * 
- * @Date 2007-03-13
- * @author Ricardo Lindooren
  */
 public class RStoreTracker {
 	private static final Log m_log = LogFactory.getLog(RStoreContainer.class);
@@ -40,9 +37,6 @@ public class RStoreTracker {
 	 * 
 	 * @throws RuntimeException
 	 *             if rStore input is null
-	 * 
-	 * @Date 2007-03-13
-	 * @author Ricardo Lindooren
 	 */
 	public RStoreTracker(RStore rStore) {
 		if (rStore == null) {
@@ -52,6 +46,11 @@ public class RStoreTracker {
 		updateRStore(rStore);
 	}
 
+	/**
+	 * Updates this tracker with the given RStore
+	 * 
+	 * @param rStore
+	 */
 	private void updateRStore(RStore rStore) {
 		m_RStore = rStore;
 
@@ -72,7 +71,7 @@ public class RStoreTracker {
 	}
 
 	/**
-	 * Updates this tracker with new or updated facts
+	 * Updates this tracker with new, deleted or updated facts
 	 * 
 	 * @param updatedRStore
 	 * @return list of ID's of facts that where updated
@@ -132,9 +131,6 @@ public class RStoreTracker {
 	 * Simple getter
 	 * 
 	 * @return the RStore object belonging to this Fact Tracker
-	 * 
-	 * @Date 2007-03-13
-	 * @author Ricardo Lindooren
 	 */
 	public RStore getRStore() {
 		return m_RStore;
@@ -145,9 +141,6 @@ public class RStoreTracker {
 	 * 
 	 * @param id
 	 * @return the RTuple belonging to the id (null if it doesn't exist)
-	 * 
-	 * @Date 2007-03-13
-	 * @author Ricardo Lindooren
 	 */
 	public RTuple getRTuple(int id) {
 		RTuple rTuple = m_loadedRTuplesMap.get(new Integer(id));
@@ -168,10 +161,6 @@ public class RStoreTracker {
 	 * 
 	 * @return A FactInfoList object containing information about all the facts
 	 *         in the RStore.
-	 * 
-	 * @author Ricardo Lindooren
-	 * @author Arend van Beelen (reviewer)
-	 * @date 14-02-2007
 	 */
 	public FactInfoList getFactInfoFromRStore() {
 
@@ -202,9 +191,6 @@ public class RStoreTracker {
 	 * 
 	 * @throws RuntimeException
 	 *             if input is null
-	 * 
-	 * @Date 2007-03-13
-	 * @author Ricardo Lindooren
 	 */
 	public static boolean diffRtuples(RTuple existingRTuple, RTuple newRTuple) {
 		boolean result_not_equal;
@@ -231,8 +217,6 @@ public class RStoreTracker {
 	 * @param rTuple
 	 * @throws RuntimeException
 	 *             if rtuple is null
-	 * 
-	 * @author Ricardo Lindooren
 	 */
 	protected void registerNewRTuple(RTuple rTuple) {
 		if (rTuple == null) {
@@ -284,9 +268,6 @@ public class RStoreTracker {
 	 * @return the identifier (name + "-" + rType)
 	 * @throws RuntimeException
 	 *             if rtuple is null
-	 * 
-	 * @Date 2007-03-13
-	 * @author Ricardo Lindooren
 	 */
 	public static String createIdentifierForRTuple(RTuple rTuple) {
 		if (rTuple == null) {
