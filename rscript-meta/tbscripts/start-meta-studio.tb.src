@@ -17,7 +17,7 @@ process TODO(Msg : str) is printf("TODO: %s\n", Msg)
 #include <vis-plugin-graph.tb>
 
 process StartVisPlugin is
-  StartVisPluginGeneric()
+  StartVisGenericPlugins()
   . StartVisPluginCharts()
   . StartVisPluginGraph()
 
