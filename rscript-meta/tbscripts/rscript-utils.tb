@@ -488,8 +488,13 @@ in
   GetRSCRIPTParsetree(ModuleId, Tree?)
   . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
   . snd-msg(eval-rscript(Tree))
-  . rec-msg(evaluated-rscript(RStore?))
-  . snd-msg(rc-load-rstore(Modulename, RStore))
+  .
+  (
+    rec-msg(evaluated-rscript(RStore?))
+    . snd-msg(rc-load-rstore(Modulename, RStore))
+  +
+    rec-msg(evaluate-rscript-aborted)
+  )
 endlet
 
 process RunRScriptWithRStore(ModuleId : module-id) is
@@ -508,11 +513,16 @@ in
     . snd-msg(rc-get-rstore(RStoreId))
     . rec-msg(rc-rstore(RStoreId, RStore?))
     . snd-msg(eval-rscript-with-rstore(Tree, RStore))
-    . rec-msg(evaluated-rscript-with-rstore(RStore?))
-    . snd-msg(rc-load-rstore(Modulename, RStore))
+    .
+    (
+      rec-msg(evaluated-rscript(RStore?))
+      . snd-msg(rc-load-rstore(Modulename, RStore))
+    +
+      rec-msg(evaluate-rscript-aborted)
+    )
+  )
   +
     rec-msg(fb-no-rstore-selected)
-  )
 endlet
 
 #endif

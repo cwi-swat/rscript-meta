@@ -7,6 +7,9 @@
 #include <pretty-print-utils.tb>
 #include <rscriptcalculator.idef>
 
+process StopScript is
+  snd-note(interrupt-rscript)
+
 process ChangeWorkspaceAction is
 let
   Cancel: bool,

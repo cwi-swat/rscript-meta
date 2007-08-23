@@ -1,5 +1,9 @@
 $Id: ChangeLog 23042 2007-06-14 14:30:23Z kooiker $
 
+Thu Aug 23 10:33:13 CEST 2007 <{jurgenv,kooiker,lankamp}@cwi.nl>
+ * tbscripts/*.tb: added button to kill a runnig script in case the user
+   is fed up with waiting for it.
+
 Wed Aug 22 11:23:44 CEST 2007 <jurgenv@cwi.nl>
  * *.pc.in: changed dependency on csv and table vis plugins to 
    vis-plugin-generic because they have been merged into this new package
