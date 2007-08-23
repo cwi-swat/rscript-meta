@@ -520,9 +520,9 @@ in
     +
       rec-msg(evaluate-rscript-aborted)
     )
-  )
   +
     rec-msg(fb-no-rstore-selected)
+  )
 endlet
 
 #endif
