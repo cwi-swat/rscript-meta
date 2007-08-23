@@ -487,6 +487,7 @@ let
 in
   GetRSCRIPTParsetree(ModuleId, Tree?)
   . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . AddJob("Evaluating RScript...")
   . snd-msg(eval-rscript(Tree))
   .
   (
@@ -495,6 +496,7 @@ in
   +
     rec-msg(evaluate-rscript-aborted)
   )
+  . JobDone("Evaluating RScript...")
 endlet
 
 process RunRScriptWithRStore(ModuleId : module-id) is
@@ -510,6 +512,7 @@ in
   .
   (
     rec-msg(fb-selected-rstoreid(RStoreId?))
+    . AddJob("Evaluating RScript...")
     . snd-msg(rc-get-rstore(RStoreId))
     . rec-msg(rc-rstore(RStoreId, RStore?))
     . snd-msg(eval-rscript-with-rstore(Tree, RStore))
@@ -520,6 +523,7 @@ in
     +
       rec-msg(evaluate-rscript-aborted)
     )
+    . JobDone("Evaluating RScript...")
   +
     rec-msg(fb-no-rstore-selected)
     . snd-msg(show-message-dialog("No RStore selected"))
