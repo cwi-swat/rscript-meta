@@ -184,6 +184,7 @@ let
   Answer     : term,
   Recursive  : bool
 in
+  /*
   AskQuestion("Do you want to recursively close the imported modules?", Answer?)
   . 
   if equal(Answer, cancel) then
@@ -196,6 +197,8 @@ in
     fi 
     . CloseModule(ModuleId, Recursive)
   fi
+  */
+  CloseModule(ModuleId, false)
 endlet
 
 process CloseOtherModulesAction(ModuleId : module-id) is
