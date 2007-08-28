@@ -2,7 +2,6 @@
 
 # Alphabetical list of ToolBus scripts
 TBSCRIPTS = \
-	    parsetable-utils.tb \
 	    rscript-module-actions.tb \
 	    rscript-actions.tb \
 	    rscript-editor-actions.tb \
