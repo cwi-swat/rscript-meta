@@ -1,0 +1,59 @@
+%% This script contains examples of data-structures that can be visualized. The number of 
+%% visualizable data-types per visualization type is limited, and will be expanded in the
+%% future. This simple document enumerates the possibilities of all visualizations.
+
+%% The first three visualizations are "generic" in the sense that they have little
+%% restrictions on the types of data that they can visualize:
+
+%% The Table visualization can show any non-nested data-type:
+int TableExample1 = 1
+str TableExample2 = "Example"
+loc TableExample3 = area-in-file("/etc/fstab",area(0,0,0,0,0,0))
+set[int] TableExample4 = {1,2,3,4,5,6,7,8,9}
+set[str] TableExample5 = {"1","2","3"}
+rel[int,int] TableExample6 = {<1,2>,<2,3>,<3,1>}
+
+%% The Text visualization simply shows the contents of the variable as text. So, it can show everything, even:
+rel[rel[rel[int,int],int],rel[str,str]] TextExample1 = {<{<{<1,2>},1>},{<"1","2">}>}
+
+%% The CSV exporter can export anything the Table may show, exept atomic types:set[int] TableExample4 = {1,2,3,4,5,6,7,8,9}
+set[str] CSVExample1 = {"1","2","3"}
+rel[int,int] CVSExample2 = {<1,2>,<2,3>,<3,1>}
+
+%% The chart visualizations are specific for data that contains scalar numbers.
+
+%% Bar chart only supports two types of relations
+rel[str,int] BarChartExample1 = {<"1",1>,<"2",2>,<"3",3>}
+rel[int,str] BarChartExample2 = {<1,"1">,<2,"2">,<3,"3">}
+
+%% Pie chart only supports two types of relations
+rel[str,int] PieChartExample1 = {<"1",1>,<"2",2>,<"3",3>}
+rel[int,str] PieChartExample2 = {<1,"1">,<2,"2">,<3,"3">}
+
+%% Line chart supports only one type of relation
+rel[int,int] LineChartExample1 = {<1,2>,<2,3>,<3,4>}
+
+%% Scatter chart supports only one type of relation
+rel[int,int] ScatterChartExample1 = {<1,2>,<2,3>,<3,4>}
+
+%% The graph visualization supports three types which range from simple to complicated
+
+%% The first data-type simply takes the strings as node identifiers and node labels, the
+%% first element of a tuple is the 'from' node, and the second is the "to" node for an edge
+%% in the graph.
+rel[str,str] GraphExample1 = {<"a","b">,<"b","c">,<"c","d">}
+
+%% The second data-type makes the nodes clickable by proving location information with every node.
+%% The string values are still used as identifiers and labels. The location of the 'from' tuple
+%% are used to make the nodes clickable. The second locations are not used at all.
+rel[<str,loc>,<str,loc>] GraphExample2 = {<<"a", area-in-file("/etc/fstab",area(0,0,0,0,0,0))>,<"b",area-in-file("/etc/fstab",area(0,0,0,0,0,0))>>,<<"b",area-in-file("/etc/fstab",area(0,0,0,0,0,0))>,<"c",area-in-file("/etc/fstab",area(0,0,0,0,0,0))>>,<<"c",area-in-file("/etc/fstab",area(0,0,0,0,0,0))>,<"d",area-in-file("/etc/fstab",area(0,0,0,0,0,0))>>} 
+
+%% The third data-type makes it possible to change visual aspects of nodes, such as shape and size.
+%% The first string is the identifier and label of the 'from' node, the last string is the identifier is label of the 'to' node.
+%% The first element of the relation contains a map from node properties to values.
+%%
+%% The "shape" attribute deals with values "box", "circle" and "ellipse"
+%% The "width" attribute sets the width of a node to the number of inches in the string value. E.g. "3" represent three inches.
+%% The "height" attributes, guess!
+
+rel[<str,rel[str,str]>,str] GraphExample3 = { <<"a",{<"shape","ellipse">}>,"b">, <<"b",{<"width","3">}>,"c">,<<"c",{<"height","4">}>,"a">}
