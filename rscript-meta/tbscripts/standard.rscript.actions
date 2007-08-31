@@ -11,6 +11,8 @@ configuration([
  action([description(studio-menubar, menu-shortcut([label("Script"), label("New...")], shortcut([M_ALT,M_SHIFT],VK_N), "Create a new script using a file browser")),
            description(studio-toolbar, icon("New Script", "New24.gif"))],
          "NewModuleAction"),
+ action([description(studio-menubar, menu-shortcut([label("Facts"), label("Load RStore...")], shortcut([M_ALT,M_SHIFT],VK_L), "Load an RStore from a file"))],
+         "FBLoadRStoreAction"),
   action([description(studio-menubar, menu([label("Script"), label("Open...")], "Open an existing script using a file browser")),
            description(studio-toolbar, icon("Open Script", "Open24.gif"))],
          "OpenModuleAction"),
