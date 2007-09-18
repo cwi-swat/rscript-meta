@@ -492,4 +492,25 @@ in
   )
 endlet
 
+process TestRScript(ModuleId : module-id) is
+let
+  Modulename: str,
+  Summary: summary,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . AddJob("Running RScript unit tests...")
+  . snd-msg(eval-rscript-testsuite(Tree))
+  .
+  (
+    rec-msg(evaluated-rscript-testsuite(Summary?))
+    . printf("Summary: [%t]\n", Summary)
+    . DisplaySummary(Summary)
+  +
+    rec-msg(eval-rscript-testsuite-aborted)
+  )
+  . JobDone("Running RScript unit tests...")
+endlet
+
 #endif

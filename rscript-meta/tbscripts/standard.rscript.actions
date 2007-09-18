@@ -22,7 +22,7 @@ configuration([
 
   action([description(syntax-editor, menu([label("Script"), label("Run")],"Evaluate RScript"))],
 	 "EditorRunRScriptAction"),
-  action([description(module-popup, menu([label("Run")],"Evaluate rscript"))],
+  action([description(module-popup, menu([label("Run")],"Evaluate RScript"))],
 	 "RunRScriptAction"),
    action([description(syntax-editor, menu([label("Script"), label("Abort script")],"Stop a currently running script"))],
          "StopEditorScriptAction"),
@@ -30,6 +30,10 @@ configuration([
 	 "EditorRunRScriptWithRStoreAction"),
   action([description(module-popup, menu([label("Run with RStore")],"Evaluate RScript with RStore"))],
 	 "RunRScriptWithRStoreAction"),
+  action([description(syntax-editor, menu([label("Script"), label("Test")],"Run RScript Unit Tests"))],
+	 "EditorTestRScriptAction"),
+  action([description(module-popup, menu([label("Test")],"Run RScript Unit Tests"))],
+	 "TestRScriptAction"),
 
   action([description(module-popup, menu([label("Close...")],"Close this script"))],
          "CloseModuleAction"),

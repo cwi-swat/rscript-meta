@@ -19,6 +19,14 @@ in
   . RunRScript(ModuleId)
 endlet
 
+process EditorTestRScriptAction(EditorId : session-id) is
+let
+  ModuleId : module-id
+in
+  GetModuleId(EditorId, ModuleId?)
+  . TestRScript(ModuleId)
+endlet
+
 process EditorRunRScriptWithRStoreAction(EditorId : session-id) is
 let
   ModuleId : module-id
