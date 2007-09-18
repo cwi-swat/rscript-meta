@@ -23,44 +23,6 @@ in
   )
 endlet
 
-
-process DumpParseTable(ModuleId : module-id, Filename : str, Type : term) is
-let
-  Directory: str,
-  Error: term,
-  Extension: str,
-  Id: term,
-  NewFilename: str,
-  NewPath: str,
-  Path: str,
-  Table: term
-in
-  AddJob(Filename)
-  . Id := process-id
-  . snd-msg(get-parsetable(ModuleId, Type))
-  .
-  (
-    rec-msg(parsetable(ModuleId, Type, Table?))
-    . GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
-    .
-    if equal(Filename, "") then
-      TODO("DumpParseTable got empty filename")
-    else
-      NewFilename := Filename
-    fi
-    . snd-msg(io-unpack-and-write-term-in-baf(NewFilename, Table))
-    .
-    (
-      rec-msg(io-file-written)
-    +
-      rec-msg(io-file-not-written(Error?))
-    )
-  +
-    rec-msg(no-parsetable(ModuleId))
-  )
-  . JobDone(Filename)
-endlet
-
 process DumpRScriptDefinition(ModuleId: module-id, Filename: str) is
 let
   Syntax: term,

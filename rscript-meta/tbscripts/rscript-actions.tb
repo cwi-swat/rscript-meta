@@ -149,7 +149,7 @@ in
   if equal(Cancel, true) then
     tau
   else
-    DumpParseTable(ModuleId, Path, trm)
+    DumpParseTable(ModuleId, RSCRIPT_NAMESPACE, Path, trm)
   fi
 endlet
 
@@ -165,7 +165,7 @@ in
   if equal(Cancel, true) then
     tau
   else
-    DumpParseTable(ModuleId, Path, trm)
+    DumpParseTable(ModuleId, RSCRIPT_NAMESPACE, Path, trm)
   fi
 endlet
 
