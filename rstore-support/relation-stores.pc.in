@@ -2,7 +2,7 @@ prefix=@prefix@
 Maintainers=jurgenv@cwi.nl
 
 Name: relation-stores
-Version: 0.1
+Version: 0.1.1
 Description: API's for Rstores.
 Requires: aterm,toolbuslib
 Cflags: -I${prefix}/include
