@@ -1,11 +1,12 @@
 # $Id$
 
+include $(top_srcdir)/Makefile.meta
+
 lib_LTLIBRARIES = libRStoreAPI.la 
 
 pkgdata_DATA = relationstores.jar 
 data_DATA = relationstores.jar
-EXTRA_DIST = relationstores.jar 
-
+EXTRA_DIST += relationstores.jar 
 
 include_HEADERS = \
 	RStore.h \
@@ -25,7 +26,6 @@ libRStoreAPI_la_SOURCES = \
 libRStoreAPI_la_CPPFLAGS = $(ATERM_CFLAGS)
 libRStoreAPI_la_LDFLAGS  = -avoid-version -no-undefined $(AM_LDFLAGS)
 libRStoreAPI_la_LIBADD = $(ATERM_LIBS)
-
 
 if MAINTAINER_MODE
 #CFLAGS += -DDISABLE_DYNAMIC_CHECKING
