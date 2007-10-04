@@ -177,7 +177,7 @@ public class RStoreTrackerTest extends TestCase {
      /*
      * Test method for
      *
-     'nl.dancingbear.visbase.rstorecontainer.RStoreTracker.registerNewRTuple(RTuple)'
+     'nl.cwi.sen1.visbase.rstorecontainer.RStoreTracker.registerNewRTuple(RTuple)'
      */
      public void testRegisterNewRTuple() {
 
