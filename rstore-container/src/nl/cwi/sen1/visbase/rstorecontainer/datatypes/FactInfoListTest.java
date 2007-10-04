@@ -1,9 +1,9 @@
-package nl.dancingbear.visbase.rstorecontainer.datatypes;
+package nl.cwi.sen1.visbase.rstorecontainer.datatypes;
 
 import java.util.List;
 
 import junit.framework.TestCase;
-import nl.dancingbear.visbase.rstorecontainer.RStoreContainer;
+import nl.cwi.sen1.visbase.rstorecontainer.RStoreContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

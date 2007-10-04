@@ -1,4 +1,4 @@
-package nl.dancingbear.visbase.rstorecontainer.datatypes;
+package nl.cwi.sen1.visbase.rstorecontainer.datatypes;
 
 import junit.framework.TestCase;
 

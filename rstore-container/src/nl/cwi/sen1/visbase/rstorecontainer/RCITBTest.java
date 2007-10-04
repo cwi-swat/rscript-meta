@@ -1,11 +1,11 @@
-package nl.dancingbear.visbase.rstorecontainer;
+package nl.cwi.sen1.visbase.rstorecontainer;
 
 import java.io.File;
 import java.net.URL;
 
-import nl.dancingbear.tunit.StackTraceUtil;
-import nl.dancingbear.tunit.TUnitTestCase;
-import nl.dancingbear.tunit.ToolStub;
+import nl.cwi.sen1.tunit.StackTraceUtil;
+import nl.cwi.sen1.tunit.TUnitTestCase;
+import nl.cwi.sen1.tunit.ToolStub;
 import aterm.ATerm;
 import aterm.ATermList;
 

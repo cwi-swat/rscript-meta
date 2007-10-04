@@ -1,10 +1,9 @@
-package nl.dancingbear.visbase.rstorecontainer.datatypes;
+package nl.cwi.sen1.visbase.rstorecontainer.datatypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.dancingbear.visbase.rstorecontainer.RStoreContainer;
-
+import nl.cwi.sen1.visbase.rstorecontainer.RStoreContainer;
 import aterm.ATermList;
 import aterm.pure.PureFactory;
 

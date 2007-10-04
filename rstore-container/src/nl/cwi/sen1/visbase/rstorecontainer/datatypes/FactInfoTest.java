@@ -1,4 +1,4 @@
-package nl.dancingbear.visbase.rstorecontainer.datatypes;
+package nl.cwi.sen1.visbase.rstorecontainer.datatypes;
 
 import junit.framework.TestCase;
 import nl.cwi.sen1.relationstores.Factory;
@@ -8,7 +8,7 @@ import nl.cwi.sen1.relationstores.types.RTuple;
 import nl.cwi.sen1.relationstores.types.RType;
 import nl.cwi.sen1.relationstores.types.RTypeColumnTypes;
 import nl.cwi.sen1.relationstores.types.relem.Tuple;
-import nl.dancingbear.visbase.rstorecontainer.RStoreContainer;
+import nl.cwi.sen1.visbase.rstorecontainer.RStoreContainer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -177,7 +177,7 @@ public class FactInfoTest extends TestCase {
      * Tests the Constructor used to parse RTuple data (this code is actually
      * also indirectly tested from the RStoreContainerTest).
      *
-     * @see nl.dancingbear.visbase.rstorecontainer.RStoreContainerTest
+     * @see nl.cwi.sen1.visbase.rstorecontainer.RStoreContainerTest
      *
      * @author Ricardo Lindooren
      * @author Arend van Beelen (reviewer)

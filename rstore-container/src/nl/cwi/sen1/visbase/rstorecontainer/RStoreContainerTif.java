@@ -2,7 +2,7 @@
 // This file is generated automatically, please do not edit!
 // generation time: Aug 14, 2007 5:22:04 PM
 
-package nl.dancingbear.visbase.rstorecontainer;
+package nl.cwi.sen1.visbase.rstorecontainer;
 
 import aterm.*;
 

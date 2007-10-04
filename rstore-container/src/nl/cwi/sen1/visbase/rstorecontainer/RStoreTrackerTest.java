@@ -1,4 +1,4 @@
-package nl.dancingbear.visbase.rstorecontainer;
+package nl.cwi.sen1.visbase.rstorecontainer;
 
 import junit.framework.TestCase;
 import nl.cwi.sen1.relationstores.Factory;
@@ -10,7 +10,7 @@ import nl.cwi.sen1.relationstores.types.RTupleRtuples;
 import nl.cwi.sen1.relationstores.types.RType;
 import nl.cwi.sen1.relationstores.types.RTypeColumnTypes;
 import nl.cwi.sen1.relationstores.types.relem.Tuple;
-import nl.dancingbear.visbase.rstorecontainer.datatypes.FactInfoList;
+import nl.cwi.sen1.visbase.rstorecontainer.datatypes.FactInfoList;
 import aterm.pure.PureFactory;
 
 /**

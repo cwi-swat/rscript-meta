@@ -1,9 +1,9 @@
-package nl.dancingbear.visbase.rstorecontainer.datatypes;
+package nl.cwi.sen1.visbase.rstorecontainer.datatypes;
 
 import nl.cwi.sen1.relationstores.Factory;
 import nl.cwi.sen1.relationstores.types.RTuple;
 import nl.cwi.sen1.relationstores.types.RType;
-import nl.dancingbear.visbase.rstorecontainer.RStoreContainer;
+import nl.cwi.sen1.visbase.rstorecontainer.RStoreContainer;
 import aterm.ATermAppl;
 import aterm.ATermInt;
 import aterm.ATermList;

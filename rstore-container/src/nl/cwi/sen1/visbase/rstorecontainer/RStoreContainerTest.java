@@ -1,4 +1,4 @@
-package nl.dancingbear.visbase.rstorecontainer;
+package nl.cwi.sen1.visbase.rstorecontainer;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -14,7 +14,7 @@ import nl.cwi.sen1.relationstores.types.RElem;
 import nl.cwi.sen1.relationstores.types.RStore;
 import nl.cwi.sen1.relationstores.types.RTuple;
 import nl.cwi.sen1.relationstores.types.RTupleRtuples;
-import nl.dancingbear.visbase.rstorecontainer.datatypes.FactInfo;
+import nl.cwi.sen1.visbase.rstorecontainer.datatypes.FactInfo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
