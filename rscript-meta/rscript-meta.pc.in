@@ -3,5 +3,5 @@ Maintainers=kooiker@cwi.nl,jurgenv@cwi.nl
 Name: rscript-meta
 Version: 1.0.1
 Description:
-Requires: meta,pgen,rscript,toolbus,config-manager,console-grabber,vis-base,vis-plugin,rstore-container,vis-plugin-charts,vis-plugin-generic,vis-plugin-graph
+Requires: meta,pgen,rscript,toolbus,config-manager,console-grabber,vis-base,vis-plugin,rstore-container,vis-plugin-charts,vis-plugin-generic,vis-plugin-graph,toolbus-ng
 ToolBusFlags=-I${prefix}/share/rscript-meta
