@@ -1,5 +1,9 @@
 
 
+Tue Jan 22 16:47:05 CET 2008 <economop@cwi.nl>
+ * lib/**: regenerated apis with the rejected production removed from
+   basic/RStores.sdf.
+
 Wed Aug 22 12:45:09 CEST 2007 <jurgenv@cwi.nl>
  * utils/lift-rstore/*: added lift-rtuple functionality
 
