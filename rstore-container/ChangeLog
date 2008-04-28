@@ -1,4 +1,6 @@
+Mon Apr 28 16:22:56 2008    <bruntink@cwi.nl>
 
+	* rstore-container.pc.in: Changed dependency on module-support to module-support-java.
 
 Wed Aug 22 15:01:46 CEST 2007 <kooiker@cwi.nl>
  * src/**/RSotreTracker.java: 
