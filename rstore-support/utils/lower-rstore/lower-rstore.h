@@ -9,8 +9,8 @@
 #include <atb-tool.h>
 
 /* Prototypes for functions called from the event handler */
-ATerm lower_rstore(int conn, ATerm);
 void rec_terminate(int conn, ATerm);
+ATerm lower_rstore(int conn, ATerm);
 extern ATerm lower_rstore_handler(int conn, ATerm term);
 extern ATerm lower_rstore_checker(int conn, ATerm sigs);
 
