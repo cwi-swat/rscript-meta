@@ -1,7 +1,7 @@
 prefix=@prefix@
 Maintainers=jurgenv@cwi.nl
 
-Name: relation-stores
+Name: rstore-support
 Version: 0.1.1
 Description: API's for Rstores.
 Requires: aterm,toolbuslib
@@ -9,5 +9,4 @@ Cflags: -I${prefix}/include
 Libs: -L${prefix}/lib -lRStoreAPI
 #uninstalled Libs: -L@abs_top_builddir@/lib -lRStoreAPI
 #uninstalled Cflags: -I@abs_top_builddir@/lib
-Jars=${prefix}/share/relationstores.jar
-ToolBusFlags=-I${prefix}/share/relation-stores
+ToolBusFlags=-I${prefix}/share/rstore-support
