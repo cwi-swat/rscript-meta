@@ -1,4 +1,6 @@
+Wed May  7 13:12:43 2008    <bruntink@cwi.nl>
 
+	* relation-stores.pc.in: Renamed to rstore-support.pc.in and changed names.
 
 Tue Jan 22 16:47:05 CET 2008 <economop@cwi.nl>
  * lib/**: regenerated apis with the rejected production removed from
