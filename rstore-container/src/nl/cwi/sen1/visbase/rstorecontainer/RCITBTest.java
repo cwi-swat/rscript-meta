@@ -80,8 +80,8 @@ public class RCITBTest extends TUnitTestCase {
             ex.printStackTrace();
             fail(ex.toString());
         } finally {
-        	rStoreContainer.disconnect(factory.makeList());
-        	rciTest.disconnect(factory.makeList());
+        	rStoreContainer.disconnect();
+        	rciTest.disconnect();
         }
     }
 
