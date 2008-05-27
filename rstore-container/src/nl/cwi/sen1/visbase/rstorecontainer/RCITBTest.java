@@ -3,9 +3,8 @@ package nl.cwi.sen1.visbase.rstorecontainer;
 import java.io.File;
 import java.net.URL;
 
-import nl.cwi.sen1.tunit.StackTraceUtil;
 import nl.cwi.sen1.tunit.TUnitTestCase;
-import nl.cwi.sen1.tunit.ToolStub;
+import nl.cwi.sen1.tunit.ToolStubNG;
 import aterm.ATerm;
 import aterm.ATermList;
 
@@ -25,11 +24,12 @@ public class RCITBTest extends TUnitTestCase {
       * @date 06-03-2007
      */
     public void testMessages() {
-        try {
-            ToolStub rStoreContainer = createToolStub("rStoreContainer");
-            ToolStub rciTest = createToolStub("rciTest");
+        ToolStubNG rStoreContainer = new ToolStubNG("rStoreContainer", "localhost", getPort(), false);
+        ToolStubNG rciTest = new ToolStubNG("rciTest", "localhost", getPort(), false);
 
-            connectToolStubs();
+        try {
+            rStoreContainer.connect();
+            rciTest.connect();
 
             // test values used in the messages
             String rStoreFile = "awesome.rstore";
@@ -41,12 +41,12 @@ public class RCITBTest extends TUnitTestCase {
             ATerm rcRStoreLoaded = factory.make("rc-rstore-loaded(<str>, <int>)", rStoreFile, new Integer(rStoreId));
 
             rciTest.sendEvent(rcLoadRStore);
-            rciTest.expectAckEvent(rcLoadRStore, 3000);
 
-            rStoreContainer.expectEval(rcLoadRStore, 3000);
-            rStoreContainer.sendValue(rcRStoreLoaded);
+            rStoreContainer.registerForEval(rcLoadRStore, rcRStoreLoaded);
+            rStoreContainer.expectAction();
 
-            rciTest.expectDo(rcRStoreLoaded, 3000);
+            rciTest.registerForDo(rcRStoreLoaded);
+            rciTest.expectAction();
 
             // query for RStore facts
             ATermList emptyList = factory.makeList();
@@ -55,12 +55,11 @@ public class RCITBTest extends TUnitTestCase {
             ATerm rcGetRStoreFactsReply = factory.make("rc-get-rstore-facts(<int>, <list>)", new Integer(rStoreId), emptyList);
 
             rciTest.sendEvent(rcGetRStoreFacts);
-            rciTest.expectAckEvent(rcGetRStoreFacts, 3000);
+            rStoreContainer.registerForEval(rcGetRStoreFacts, rcRStoreFacts);
+            rStoreContainer.expectAction();
 
-            rStoreContainer.expectEval(rcGetRStoreFacts, 3000);
-            rStoreContainer.sendValue(rcRStoreFacts);
-
-            rciTest.expectDo(rcGetRStoreFactsReply, 3000);
+            rciTest.registerForDo(rcGetRStoreFactsReply);
+            rciTest.expectAction();
 
             // query for fact data
             ATerm rcGetFactData = factory.make("rc-get-fact-data(<int>, <int>)", new Integer(rStoreId), new Integer(factId));
@@ -68,17 +67,21 @@ public class RCITBTest extends TUnitTestCase {
             ATerm rcGetFactDataReply = factory.make("rc-get-fact-data(<int>, <int>, <term>)", new Integer(rStoreId), new Integer(factId), emptyList);
 
             rciTest.sendEvent(rcGetFactData);
-            rciTest.expectAckEvent(rcGetFactData, 3000);
 
-            rStoreContainer.expectEval(rcGetFactData, 3000);
-            rStoreContainer.sendValue(rcFactData);
+            rStoreContainer.registerForEval(rcGetFactData, rcFactData);
+            rStoreContainer.expectAction();
 
-            rciTest.expectDo(rcGetFactDataReply, 3000);
-
-            disconnectToolStubs();
+            rciTest.registerForDo(rcGetFactDataReply);
+            rciTest.expectAction();
+            
+            rStoreContainer.waitForCompletion();
+            rciTest.waitForCompletion();            
         } catch (Exception ex) {
-            System.out.println(StackTraceUtil.getStackTrace(ex));
+            ex.printStackTrace();
             fail(ex.toString());
+        } finally {
+        	rStoreContainer.disconnect(factory.makeList());
+        	rciTest.disconnect(factory.makeList());
         }
     }
 
@@ -89,16 +92,17 @@ public class RCITBTest extends TUnitTestCase {
      * @date 06-03-2007
      */
     protected void setUp() {
+    	String topSrcDir = ".";
+
+        System.out.println(topSrcDir);
+         
         try {
-            URL url = this.getClass().getResource("/tbscript/init.tb");
-
-            File file = new File(url.toURI());
-
-            this.startToolbus(file.getParent(), url.getPath(), 7000);
-        } catch (Exception exception) {
-            System.out.println(StackTraceUtil.getStackTrace(exception));
+            startToolbus(topSrcDir + "/tbscript/", topSrcDir + "/tbscript/init.tb");
+        }
+        catch (Exception ex) {
+        	ex.printStackTrace();
             stopToolbus();
-            fail(exception.toString());
+            fail(ex.toString());
         }
     }
 
