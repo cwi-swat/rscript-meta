@@ -1,8 +1,5 @@
 package nl.cwi.sen1.visbase.rstorecontainer;
 
-import java.io.File;
-import java.net.URL;
-
 import nl.cwi.sen1.tunit.TUnitTestCase;
 import nl.cwi.sen1.tunit.ToolStubNG;
 import aterm.ATerm;
