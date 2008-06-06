@@ -4,10 +4,6 @@ include $(top_srcdir)/Makefile.meta
 
 lib_LTLIBRARIES = libRStoreAPI.la 
 
-pkgdata_DATA = relationstores.jar 
-data_DATA = relationstores.jar
-EXTRA_DIST += relationstores.jar 
-
 include_HEADERS = \
 	RStore.h \
 	RStore_dict.h \
@@ -32,7 +28,7 @@ if MAINTAINER_MODE
 
 BASIC_MODULES = RStores StrCon BoolCon NatCon IdentifierCon IntCon Whitespace Locations Areas
 
-api: parsed-api imploded-api java-api
+api: parsed-api imploded-api 
 
 ABS_MODULES = \
 	$(foreach i, \
@@ -49,17 +45,5 @@ parsed-api: RStores.def Makefile
 imploded-api: RStores.def Makefile 
 	sdf2-to-c --imploded --input $< --prefix RS_ --output RStore
 	indent RStore.h
-
-# The java API can not be generated yet because of a bug in apigen
-java-api: RStores.def Makefile
-	sdf2-to-java \
-		--imploded \
-		--verbose \
-		--input $< \
-		--name relationstores \
-		--package nl.cwi.sen1 \
-		--output . \
-		--version ${VERSION}
-	mv relationstores-${VERSION}.jar relationstores.jar
 
 endif
