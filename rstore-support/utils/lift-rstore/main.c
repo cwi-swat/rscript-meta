@@ -134,7 +134,12 @@ int main (int argc, char *argv[])
     }
 
     if (RS_isValidRStore((RS_RStoreFromTerm(input)))) {
-      output = (ATerm) RS_liftRStore(RS_RStoreFromTerm(input));
+      PRS_RStore store = RS_liftRStore(RS_RStoreFromTerm(input));
+      PRS_Start start = PRS_makeStartRStore(PRS_makeOptLayoutAbsent(),
+					  store,
+					  PRS_makeOptLayoutAbsent(),
+					  0);
+      output = PRS_StartToTerm(start);
     }
 
     if(output != NULL) {
@@ -142,7 +147,7 @@ int main (int argc, char *argv[])
 	ATwriteToNamedTextFile(output, output_file_name);
       }
       else {
-	ATwriteToNamedBinaryFile(output, output_file_name);
+	ATwriteToNamedSAFFile(output, output_file_name);
       }
     }
     else {

@@ -129,7 +129,7 @@ int main (int argc, char *argv[])
 	ATwriteToNamedTextFile(output, output_file_name);
       }
       else {
-	ATwriteToNamedBinaryFile(output, output_file_name);
+	ATwriteToNamedSAFFile(output, output_file_name);
       }
     }
     else {

@@ -1,5 +1,9 @@
 
 
+Fri Aug 29 14:33:23 CEST 2008 <jurgenv@cwi.nl>
+ * utils/{lift,lower}-rstore/main.c: adapted output format to output
+   ATerm SAF format for compatibility with Java ATerm tools.
+
 Mon Jun  9 13:25:48 CEST 2008 <jurgenv@cwi.nl>
  * rstore-support.pc.in: Bumped version to 0.2
 
