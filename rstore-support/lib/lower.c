@@ -2,6 +2,13 @@
 #include <ParsedRStore.h>
 #include <assert.h>
 
+static void invalidTerm(const char* msg, ATerm erroneous)
+{
+  ATwarning("lower: %s\n", msg);
+  ATwarning("lower: writing invalid term to .lower.debug.txt\n");
+  ATwriteToNamedSAFFile(erroneous, ".lower.debug.txt");
+}
+
 static RS_IdCon RS_lowerIdCon(PRS_IdCon in)
 {
   RS_IdCon result = NULL;
@@ -25,7 +32,8 @@ static RS_IdCon RS_lowerIdCon(PRS_IdCon in)
     result = RS_makeIdConIdCon(tmp);
   }
   else {
-    ATwarning("lower rstore: this is an invalid IdCon: %t, default\n", in);
+    invalidTerm("invalid IdCon found, defaulting to \"default\"",
+		PRS_IdConToTerm(in));
     result = RS_makeIdConIdCon("default");
   }
 
@@ -39,7 +47,7 @@ static RS_RTypeColumnTypes RS_lowerColumnTypes(PRS_RTypeColumnTypes in)
   RS_RTypeColumnTypes types = RS_makeRTypeColumnTypesEmpty();
 
   if (!PRS_isValidRTypeColumnTypes(in)) {
-    ATwarning("lower rstore: this is not a list of Column types: %t\n", in);
+    invalidTerm("invalid column types", PRS_RTypeColumnTypesToTerm(in));
     return types;
   }
 
@@ -55,7 +63,7 @@ static RS_RTypeColumnTypes RS_lowerColumnTypes(PRS_RTypeColumnTypes in)
 static RS_RType RS_lowerRType(PRS_RType in) 
 {
   if (!PRS_isValidRType(in)) {
-    ATwarning("lower rstore: this is not an rtype: %t, default to bool\n", in);
+    invalidTerm("invalid rtype found, defaulting to bool", PRS_RTypeToTerm(in));
     return RS_makeRTypeBool();
   }
 
@@ -96,7 +104,9 @@ static RS_RType RS_lowerRType(PRS_RType in)
     return RS_makeRTypeParameter(name);
   }
 
-  ATwarning("lower rstore: unknown rtype %t, default to bool\n", in);
+  invalidTerm("Unknown rtype encountered, defaulting to bool", 
+	      PRS_RTypeToTerm(in));
+
   return RS_makeRTypeBool();
 }
 
@@ -108,7 +118,8 @@ static int RS_lowerNatCon(PRS_NatCon in)
     return atoi(ch);
   }
   else {
-    ATwarning("lower rstore: this is not a NatCon: %t, default to -1\n", in);
+    invalidTerm("invalid NatCon encountered, defaulting to -1",
+		PRS_NatConToTerm(in));
   }
 
   return -1;
@@ -131,7 +142,8 @@ static RS_Integer RS_lowerInteger(PRS_Integer in)
     }
   }
   else {
-    ATwarning("lower rstore: this is not a valid Integer: %t, default to -1\n", in);
+    invalidTerm("invalid Integer encountered, defaulting to -1",
+		PRS_IntegerToTerm(in));
     return RS_makeIntegerNegative(RS_makeIntegerNatCon(1));
   }
 }
@@ -188,7 +200,8 @@ static const char *RS_lowerStrCon(PRS_StrCon pStr)
     return result;
   }
   else {
-    ATwarning("lower rstore: this is not a valid StrCon: %t, default to empty string\n", pStr);
+    invalidTerm("invalid StrCon encountered, defaulting to empty string\n", 
+		PRS_StrConToTerm(pStr));
     result[0] = '\0';
     return result;
   }
@@ -205,7 +218,8 @@ static RS_BoolCon RS_lowerBoolCon(PRS_BoolCon in)
     }
   }
   else {
-    ATwarning("lower rstore: this is not a valid BoolCon: %t, default to false\n", in);
+    invalidTerm("invalid BoolCon encountered, defaulting to false\n", 
+		PRS_BoolConToTerm(in));
     return RS_makeBoolConFalse();
   }
 }
@@ -223,7 +237,8 @@ static RS_Area RS_lowerArea(PRS_Area in)
     return RS_makeAreaArea(bl,bc,el,ec,o,l);
   }
   else {
-    ATwarning("lower rstore: this is not a valid Area: %t, default to 0,0,0,0\n", in);
+    invalidTerm("invalid area, defaulting to 0,0,0,0",
+		PRS_AreaToTerm(in));
     return RS_makeAreaArea(0,0,0,0,0,0);
   }
 }
@@ -241,12 +256,14 @@ static RS_Location RS_lowerLocation(PRS_Location in)
       return RS_makeLocationAreaInFile(name, area);
     }
     else {
-      ATwarning("lower rstore: this is not a Location %t, defaulting\n", in);
+      invalidTerm("invalid location found, defaulting to /dev/null",
+		  PRS_LocationToTerm(in));
       return RS_makeLocationFile("/dev/null");  
     }
   }
   else {
-    ATwarning("lower rstore: this is not a Location %t, defaulting\n", in);
+    invalidTerm("invalid location found, defaulting to /dev/null",
+		  PRS_LocationToTerm(in));
     return RS_makeLocationFile("/dev/null");  
   }
 }
@@ -269,7 +286,8 @@ static RS_RElemElements RS_lowerRElemElements(PRS_RElemElements in)
     }
   }
   else {
-    ATwarning("lower rstore: this is not a list of Elements: %t, default to empty\n", in);
+    invalidTerm("invalid list of elements, defaulting to empty list",
+		PRS_RElemElementsToTerm(in));
   }
 
   /* order is irrelevant */
@@ -309,12 +327,14 @@ static RS_RElem RS_lowerRElem(PRS_RElem in)
       return RS_makeRElemTuple(RS_reverseRElemElements(e));
     }
     else {
-      ATwarning("lower rstore: unhandled RElem: %t, default to boolean\n", in);
+      invalidTerm("unhandled relem found, defaulting to boolean false",
+		  PRS_RElemToTerm(in));
       return RS_makeRElemBool(RS_makeBoolConFalse());
     }
   }
   else {
-    ATwarning("lower rstore: this is not an RElem: %t, default to boolean\n", in);
+      invalidTerm("unhandled relem found, defaulting to boolean false",
+		  PRS_RElemToTerm(in));
     return RS_makeRElemBool(RS_makeBoolConFalse());;
   }
 }
@@ -330,7 +350,8 @@ static RS_RTuple RS_lowerRTuple(PRS_RTuple in)
     return RS_makeRTupleRtuple(variable, type, value);
   }
 
-  ATwarning("lower rstore: this is not an RTuple: %t\n, defaulting", in);
+  invalidTerm("invalid RTuple found, defaulting to <\"default\", false>",
+	      PRS_RTupleToTerm(in));
 
   return RS_makeRTupleRtuple(RS_makeIdConIdCon("default"),
 			     RS_makeRTypeBool(),
@@ -348,7 +369,8 @@ static RS_RTupleRtuples RS_lowerRTuples(PRS_RTupleRtuples in)
     }
   }
   else {
-    ATwarning("lower rstore: this is not a list of RTuples: %t\n", in);
+    invalidTerm("invalid list of RTuples found, defaulting to empty",
+		PRS_RTupleRtuplesToTerm(in));
   }
 
   /* order is irrelevant, so no reverse */
@@ -361,7 +383,8 @@ RS_RStore RS_lowerRStore(PRS_RStore in)
     return RS_makeRStoreRstore(RS_lowerRTuples(PRS_getRStoreRtuples(in)));
   }
   else {
-    ATwarning("lower rstore: this is not an rstore: %t\n", in);
+    invalidTerm("invalid rstore found, defaulting to empty",
+		PRS_RStoreToTerm(in));
     return RS_makeRStoreRstore(RS_makeRTupleRtuplesEmpty());
   }
 }
