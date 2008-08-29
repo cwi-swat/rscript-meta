@@ -15,7 +15,7 @@
 /*}}}  */
 /*{{{  globals */
 
-static char myname[]    = "lift-error";
+static char myname[]    = "lift-rstore";
 static char myversion[] = "1.1";
 static char myarguments[] = "hi:o:tV";
 
