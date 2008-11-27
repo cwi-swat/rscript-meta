@@ -2,6 +2,9 @@
 #include <ParsedRStore.h>
 #include <assert.h>
 
+/* BUFSIZ appears to be not large enough on Darwin */
+#define BUFFER_SIZE 8192
+
 static void invalidTerm(const char* msg, ATerm erroneous)
 {
   ATwarning("lower: %s\n", msg);
@@ -19,9 +22,9 @@ static RS_IdCon RS_lowerIdCon(PRS_IdCon in)
     char head = PRS_getLexIdConHead(lex);
     char* tail = PRS_getLexIdConTail(lex);
     int len  = strlen(tail) + 2;
-    static char tmp[BUFSIZ];
+    static char tmp[BUFFER_SIZE];
 
-    if (len + 2 >= BUFSIZ) {
+    if (len + 2 >= BUFFER_SIZE) {
       return RS_makeIdConIdCon("id-too-long");
     }
 
@@ -151,7 +154,7 @@ static RS_Integer RS_lowerInteger(PRS_Integer in)
 
 static const char *RS_lowerStrCon(PRS_StrCon pStr)
 {
-  static char result[BUFSIZ];
+  static char result[BUFFER_SIZE];
   
   if (PRS_isValidStrCon(pStr)) {
     PRS_LexStrCon strcon = PRS_getStrConStrCon(pStr);
@@ -160,7 +163,7 @@ static const char *RS_lowerStrCon(PRS_StrCon pStr)
     int i;
     assert(pStr != NULL);
 
-    if (len >= BUFSIZ - 2) {
+    if (len >= BUFFER_SIZE - 2) {
       ATwarning("PRS_lowerStrCon: insufficient memory to allocate string\n");
       return NULL;
     }

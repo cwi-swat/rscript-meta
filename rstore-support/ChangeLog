@@ -1,4 +1,7 @@
+2008-11-27  Tijs van der Storm  <tvdstorm@MacSen1.local>
 
+  * lib/lower.c: removed dependency on BUFSIZ (it's too small on
+    Darwin); replaced with Linux sized constant.
 
 Fri Aug 29 14:33:23 CEST 2008 <jurgenv@cwi.nl>
  * utils/{lift,lower}-rstore/main.c: adapted output format to output
