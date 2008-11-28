@@ -2,7 +2,7 @@ prefix=@prefix@
 Maintainers=jurgenv@cwi.nl
 
 Name: rstore-support
-Version: 1.0
+Version: 1.1
 Description: API's for Rstores.
 Requires: aterm,toolbuslib
 Cflags: -I${prefix}/include

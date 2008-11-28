@@ -1,3 +1,8 @@
+
+
+Fri Nov 28 10:51:24 CET 2008 <jurgenv@cwi.nl>
+ * Bumped version.
+
 2008-11-27  Tijs van der Storm  <tvdstorm@MacSen1.local>
 
   * lib/lower.c: removed dependency on BUFSIZ (it's too small on
