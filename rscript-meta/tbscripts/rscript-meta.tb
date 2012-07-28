@@ -1,0 +1,19 @@
+#ifndef __RSCRIPT_META__
+#define __RSCRIPT_META__
+
+#include <rstore-actions.tb>
+#include <rscript-module-actions.tb>
+#include <rscript-listeners.tb>
+#include <rscript-actions.tb>
+#include <rscript-utils.tb>
+#include <parsetable-utils.tb>
+#include <rscript-language.tb>
+#include <rscript-editor-actions.tb>
+#include <rscript-progress-listener.tb>
+#include <rscript-editor-listeners.tb>
+#include <rscript-gui-listeners.tb>
+#include <rscript-transactions.tb>
+
+toolbus(SynchronizeModuleSelection(RSCRIPT_NAMESPACE))
+
+#endif /* __RSCRIPT_META__ */

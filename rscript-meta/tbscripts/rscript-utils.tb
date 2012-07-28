@@ -1,0 +1,516 @@
+#ifndef __RSCRIPT_UTILS__
+#define __RSCRIPT_UTILS__
+
+#include <parse-utils.tb>
+#include <error-utils.tb>
+#include <io-utils.tb>
+#include <config-utils.tb>
+
+#define RSCRIPT_TREE_CACHE "rscript-annotated-tree"
+
+process NewModuleContentHandler is
+let
+  ModuleId: str,
+  Pid: int
+in
+  Pid := process-id
+  .
+  (
+    rec-msg(get-module-contents(Pid, ModuleId?))
+    . snd-msg(module-contents(Pid, [""]))
+  +
+    rec-msg(cancel-content-handler(Pid))
+  )
+endlet
+
+process DumpRScriptDefinition(ModuleId: module-id, Filename: str) is
+let
+  Syntax: term,
+  Path: str,
+  Text: str,
+  Error: term,
+  ErrorMessage: str
+in
+  AddJob(Filename)
+  . GetSyntaxDefinition(ModuleId, Syntax?)
+  .
+  if not-equal(Syntax, UNDEFINED) then
+    GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+    . snd-msg(unparse(Syntax))
+    . rec-msg(unparsed-text(Text?))
+    . snd-msg(io-write-text-list(Filename, [Text]))
+    .
+    (
+      rec-msg(io-file-written)
+    +
+      rec-msg(io-file-not-written(Error?))
+    )
+  else
+    tau
+  fi
+  . JobDone(Filename)
+endlet
+
+process GetModules(ModuleIds: list, Modules: list?) is
+let
+  Runner: list,
+  Result: list,
+  ModuleTree: term,
+  ModuleId: module-id,
+  Incomplete: bool
+in
+  Runner := ModuleIds
+  . Result := []
+  .
+  if and(not-equal(Runner, []),not-equal(Incomplete,true)) then
+    ModuleId := first(Runner)
+    . GetRSCRIPTParsetree(ModuleId, ModuleTree?)
+    . 
+    if equal(ModuleTree, UNDEFINED) then
+      Incomplete := true
+    else
+      tau
+    fi
+    . Result := join(ModuleTree, Result) 
+    . Runner := next(Runner) 
+  fi
+  *
+  if or(equal(Runner, []),equal(Incomplete,true)) then
+    tau
+  fi
+  .
+  if equal(Incomplete, true) then
+    Modules := []
+  else
+    Modules := Result
+  fi
+endlet
+
+process GetSyntaxDefinition(ModuleId: module-id, Syntax: term?) is
+let
+  ModuleIds: list,
+  Modules: list,
+  Status: term
+in
+  MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", Status?)
+  .
+  if equal(Status, complete) then
+    MM-GetAllModuleDependencies(ModuleId, ModuleIds?)
+    . ModuleIds := join([ModuleId], ModuleIds)
+    . GetModules(ModuleIds, Modules?)
+    . 
+    if equal(Modules, []) then
+      Syntax := UNDEFINED
+    else
+      snd-msg(sm-make-rscript-definition(Modules))
+      .
+      (
+        rec-msg(sm-rscript-definition(Syntax?))
+      +
+        rec-msg(sm-no-rscript-definition)
+        . Syntax := UNDEFINED
+      )
+    fi
+  else
+    Syntax := UNDEFINED
+  fi
+endlet
+
+process CheckRSCRIPTModule(ModuleId: module-id) is
+let
+  Errors: list,
+  Modulename: str,
+  Summary: summary,
+  Tree: term
+in
+    GetRSCRIPTParsetree(ModuleId, Tree?)
+    .
+    if not-equal(Tree, UNDEFINED) then
+      snd-msg(check-rscript(Tree))
+      . rec-msg(checked-rscript(Summary?))
+      . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+      . ReplaceSummaryInfo(Summary?, "rscript-checker", Modulename)
+      . RemoveSummary("rscript-checker", Modulename)
+      . DisplaySummary(Summary)
+    else 
+      tau
+    fi
+endlet
+
+process GetImportedModulenames(Tree: term, Imports: list?) is
+  tau
+
+process CloseOtherModules(ModuleId: module-id) is
+let
+  Dependencies: list,
+  CloseModules: list,
+  NewTerm: term
+in
+  MM-GetAllModuleDependencies(ModuleId, Dependencies?)
+  . Dependencies := join(Dependencies, [ModuleId])
+  . MM-GetAllModules(CloseModules?)
+  . CloseModules := diff(CloseModules, Dependencies)
+  . CloseModules(CloseModules)
+endlet
+
+process CloseModule(ModuleId: module-id, Recursive: bool) is
+let
+  Dependencies: list,
+  Modulename: str,
+  CloseModules: list,
+  NewTerm: term
+in
+  MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  .
+  if equal(Recursive, true) then
+    MM-GetClosableModules(ModuleId, CloseModules?)
+    .
+    if equal(CloseModules, []) then
+      printf("warning: Unable to close %s, it would break some import(s).\n", Modulename)
+    else
+      CloseModules(CloseModules)
+    fi
+  else
+    MM-GetModuleParents(ModuleId, Dependencies?)
+    .
+    if equal(Dependencies, []) then
+      CloseModules([ModuleId])
+    else
+      printf("warning: Unable to close %s, it would break the import of: %t\n",
+            Modulename, Dependencies)
+    fi
+  fi
+endlet
+
+process CloseModules(CloseModules: list) is
+let
+  ModuleId: module-id,
+  Modules: list
+in
+  Modules := quote(CloseModules)
+  .
+  if not-equal(Modules, []) then
+    ModuleId := first(Modules)
+    . MM-DeleteModule(ModuleId)
+    . Modules := next(Modules)
+  fi
+  *
+  if equal(Modules, []) then
+    tau
+  fi
+endlet
+
+process CancelCreateNewModule(Pid: int, Error: str, Args: list) is
+  snd-note(ui-status(errorf(Error, Args)))
+  . snd-msg(cancel-content-handler(Pid))
+
+process CreateNewModule(Pid: int, Directory: str, Filename: str) is
+let
+  BaseDir: str,
+  Contents: list,
+  Error: term,
+  Extension: str,
+  ModuleId: module-id,
+  Modulename: str,
+  Path: str
+in
+  Modulename := Filename
+  . MM-GetModuleIdByAttribute(RSCRIPT_NAMESPACE, "name", Modulename, ModuleId?)
+  .
+  if equal(ModuleId, UNDEFINED) then
+    BuildPath(Directory, Modulename, RSCRIPT_EXTENSION, Path?)
+    . snd-msg(io-exists-file(Path))
+    .
+    (
+      rec-msg(io-file-exists)
+      . CancelCreateNewModule(Pid, "File %s already exists", [Path])
+    +
+      rec-msg(io-file-not-exists)
+      . snd-msg(get-module-contents(Pid, Modulename))
+      . rec-msg(module-contents(Pid, Contents?))
+      . snd-msg(io-write-text-list(Path, Contents))
+      .
+      (
+        rec-msg(io-file-written)
+        . OpenModule(Modulename, ModuleId?)
+      +
+        rec-msg(io-file-not-written(Error?))
+        . snd-note(ui-status(errorf("%s: %s", [Path, Error])))
+      )
+    )
+  else
+    CancelCreateNewModule(Pid, "Module %s already exists", [Modulename])
+  fi
+endlet
+
+process CopyRScriptModule(SrcModulename: str, Directory: str, Filename: str) is
+let
+  Id: int,
+  Pid: int
+in
+  Id := process-id
+  . snd-note(ui-status(statf(Id, "Copying %s to %s", [SrcModulename, Filename])))
+  . create(CopyRScriptContentHandler(SrcModulename), Pid?)
+  . CreateNewModule(Pid, Directory, Filename)
+  . snd-note(ui-status(endstat(Id)))
+endlet
+
+process CopyRScriptContentHandler(SrcModulename: str) is
+let
+  Contents: str,
+  DestModulename: str,
+  Pid: int,
+  Syntax: term
+in
+  Pid := process-id
+  .
+  (
+    rec-msg(get-module-contents(Pid, DestModulename?))
+    . snd-msg(ts-get-term-value("rscript-tree", SrcModulename))
+    . rec-msg(ts-value("rscript-tree", SrcModulename, Syntax?))
+    . snd-msg(sm-rename-modulename-in-module(Syntax, DestModulename))
+    . rec-msg(sm-modulename-renamed-in-module(Syntax?))
+    . snd-msg(unparse(Syntax))
+    . rec-msg(unparsed-text(Contents?))
+    . snd-msg(module-contents(Pid, [Contents]))
+  +
+    rec-msg(cancel-content-handler(Pid))
+  )
+endlet
+
+process SaveRScriptModules(Modules: list, Status: term?) is
+let
+  Runner: list,
+  Module: str
+in
+  Runner := Modules
+  .
+  if not-equal(Runner, []) then
+    Module := first(Runner)
+    . snd-msg(save-module(Module, rscript))
+    . rec-msg(saved-module(Module, Status?))
+    . Runner := next(Runner)
+  fi
+  *
+  if equal(Runner, []) then
+    tau
+  fi
+endlet
+
+process IsLibraryModule(ModuleId: module-id, LibraryModule: bool?) is
+let
+  Directories: list,
+  Extension: str,
+  Filename: str,
+  Modulename: str,
+  Path: str,
+  Prefix: str
+in
+  snd-msg(cm-get-library-paths)
+  . rec-msg(cm-library-paths(Directories?))
+  . GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+  . snd-msg(io-get-relative-filename(Directories, Path, ".rscript"))
+  . rec-msg(io-filename(Directories, Path, ".rscript", Prefix?, Filename?))
+  .
+  if equal(Filename, "") then
+    LibraryModule := false
+  else
+    LibraryModule := true
+  fi
+endlet
+
+process CreateModule(Modulename: str, ModuleId: module-id?) is
+  MM-GetModuleIdByAttribute(RSCRIPT_NAMESPACE, "name", Modulename, ModuleId?)
+  .
+  if equal(ModuleId, UNDEFINED) then
+    MM-CreateModule(ModuleId?)
+    . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename)
+    . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", unknown)
+  else
+    tau
+  fi
+
+process OpenModule(Modulename: str, ModuleId: module-id?) is
+let
+  Editable: bool,
+  LibraryModule: bool,
+  Path: str
+in
+  CreateModule(Modulename, ModuleId?)
+  . GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+  .
+  if equal(Path, EMPTY_PATH) then
+    LocateFile(Modulename, RSCRIPT_EXTENSION, Path?)
+    .
+    if equal(Path, EMPTY_PATH) then
+      printf("warning: Unable to locate %s\n", Modulename)
+      . BuildPath(".", Modulename, RSCRIPT_EXTENSION, Path?)
+      . SetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path)
+      . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "editable", true)
+      . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", unavailable)
+    else
+      SetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path)
+      . IsLibraryModule(ModuleId, LibraryModule?)
+      . Editable := not(LibraryModule)
+      . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "editable", Editable)
+      . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "status", available)
+    fi
+  else
+    tau
+  fi
+endlet
+
+toolbus(InitCache(RSCRIPT_TREE_CACHE))
+toolbus(ClearCacheHandler(RSCRIPT_TREE_CACHE, RSCRIPT_NAMESPACE, "status", <term>, edited))
+
+process GetRSCRIPTParsetree(ModuleId: module-id, Result: term?) is
+let
+  ParseTable: term,
+  Path: str,
+  Pid: int,
+  Text: str,
+  Type: term,
+  Tree: term
+in
+  snd-msg(tm-request-transaction(rscript-parsing))
+  . GetCachedValue(RSCRIPT_TREE_CACHE, ModuleId, Tree?)
+  .
+  if equal(Tree, UNDEFINED) then
+    Type := rscript
+    . GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+    . ReadText(Path, Text?)
+    .
+    if not-equal(Text, "") then
+      GetParseTable(ModuleId, Type, ParseTable?)
+      .
+      if not-equal(ParseTable, UNDEFINED) then
+        create(ParseTreeHandler(ModuleId, Path), Pid?)
+        . ParseText(Pid, Text, ParseTable, RSCRIPT_TOPSORT, on)
+        .
+        (
+          rec-msg(parse-handler-done(Pid, ModuleId, Tree?))
+          . AnnotateTree(Tree, Path, Result?)
+          . PutCachedValue(RSCRIPT_TREE_CACHE, ModuleId, Result)
+        +
+          rec-msg(parse-handler-done(Pid))
+          . Result := UNDEFINED
+        )
+      else
+        Result := UNDEFINED
+      fi
+    else
+      Result := UNDEFINED
+    fi
+  else
+    Result := Tree
+  fi
+  . snd-msg(tm-end-transaction(rscript-parsing))
+endlet
+
+process RSCRIPTIdentifyModule(ModuleId: module-id, ResultStatus: term?) is
+let
+  Tree: term,
+  Path: str,
+  Directory: str,
+  Filename: str
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  .
+  if not-equal(Tree, UNDEFINED) then
+    /*GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+    . snd-msg(io-get-path-directory(Path))
+    . rec-msg(io-directory(Path, Directory?))
+    . snd-msg(sm-get-module-path(Directory, Modulename))
+    . rec-msg(sm-module-path(Directory?))
+    . BuildPath(Directory, Modulename, RSCRIPT_EXTENSION, File?)
+    .
+    if equal(File, Path) then
+      MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename)
+      . ResultStatus := identified
+    else
+      printf("error: Module %s should be in a file named %s\n", Modulename, File)
+      . ResultStatus := error
+    fi*/
+    GetModulePath(ModuleId, RSCRIPT_NAMESPACE, Path?)
+    . snd-msg(io-get-path-filename(Path))
+    . rec-msg(io-filename(Path, Filename?))
+    . MM-SetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Filename)
+    . ResultStatus := identified
+  else
+    tau
+  fi
+endlet
+
+process RunRScript(ModuleId : module-id) is
+let
+  Modulename: str,
+  RStore: rstore,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . AddJob("Evaluating RScript...")
+  . snd-msg(eval-rscript(Tree))
+  .
+  (
+    rec-msg(evaluated-rscript(RStore?))
+    . snd-msg(rc-load-rstore(Modulename, RStore))
+  +
+    rec-msg(evaluate-rscript-aborted)
+  )
+  . JobDone("Evaluating RScript...")
+endlet
+
+process RunRScriptWithRStore(ModuleId : module-id) is
+let
+  Modulename: str,
+  RStore: rstore,
+  RStoreId: int,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . snd-msg(fb-get-selected-rstoreid)
+  .
+  (
+    rec-msg(fb-selected-rstoreid(RStoreId?))
+    . AddJob("Evaluating RScript...")
+    . snd-msg(rc-get-rstore(RStoreId))
+    . rec-msg(rc-rstore(RStoreId, RStore?))
+    . snd-msg(eval-rscript-with-rstore(Tree, RStore))
+    .
+    (
+      rec-msg(evaluated-rscript(RStore?))
+      . snd-msg(rc-load-rstore(Modulename, RStore))
+    +
+      rec-msg(evaluate-rscript-aborted)
+    )
+    . JobDone("Evaluating RScript...")
+  +
+    rec-msg(fb-no-rstore-selected)
+    . snd-msg(show-message-dialog("No RStore selected"))
+  )
+endlet
+
+process TestRScript(ModuleId : module-id) is
+let
+  Modulename: str,
+  Summary: summary,
+  Tree: term
+in
+  GetRSCRIPTParsetree(ModuleId, Tree?)
+  . MM-GetAttribute(ModuleId, RSCRIPT_NAMESPACE, "name", Modulename?)
+  . AddJob("Running RScript unit tests...")
+  . snd-msg(eval-rscript-testsuite(Tree))
+  .
+  (
+    rec-msg(evaluated-rscript-testsuite(Summary?))
+    . printf("Summary: [%t]\n", Summary)
+    . DisplaySummary(Summary)
+  +
+    rec-msg(eval-rscript-testsuite-aborted)
+  )
+  . JobDone("Running RScript unit tests...")
+endlet
+
+#endif
