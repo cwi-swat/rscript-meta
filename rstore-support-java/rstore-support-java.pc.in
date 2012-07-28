@@ -1,0 +1,12 @@
+prefix=@prefix@
+Maintainers=jurgenv@cwi.nl
+
+Name: rstore-support-java
+Version: 1.1
+Description:
+Requires: aterm-java
+JarFile=rstore-support-java.jar
+Jars=${prefix}/share/rstore-support-java.jar
+Packages=nl.cwi.sen1.relationstores,nl.cwi.sen1.relationstores.types,nl.cwi.sen1.relationstores.types.area,nl.cwi.sen1.relationstores.types.boolcon,nl.cwi.sen1.relationstores.types.idcon,nl.cwi.sen1.relationstores.types.integer,nl.cwi.sen1.relationstores.types.location,nl.cwi.sen1.relationstores.types.natcon,nl.cwi.sen1.relationstores.types.relem,nl.cwi.sen1.relationstores.types.rstore,nl.cwi.sen1.relationstores.types.rtuple,nl.cwi.sen1.relationstores.types.rtype,nl.cwi.sen1.relationstores.types.strchar,nl.cwi.sen1.relationstores.types.strcon
+MainClass=
+TestClass=
