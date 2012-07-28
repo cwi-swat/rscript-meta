@@ -1,0 +1,27 @@
+Wed May  7 11:49:32 2008    <bruntink@cwi.nl>
+
+	* rstore-container.pc.in: Changed dependency on relation-stores to rstore-support-java.
+
+Mon Apr 28 16:22:56 2008    <bruntink@cwi.nl>
+
+	* rstore-container.pc.in: Changed dependency on module-support to module-support-java.
+
+Wed Aug 22 15:01:46 CEST 2007 <kooiker@cwi.nl>
+ * src/**/RSotreTracker.java: 
+   - After checking which data has been updated (which is needed to notify
+   visualizations of outdated data), replace the current RStore with the new
+   one
+   - Remove registration of new relations since this is automatically done
+   when the current RStore is replaced by the new one
+
+Tue Aug 14 17:38:22 CEST 2007 <kooiker@cwi.nl>
+ * added possibility to get RStore by RStoreId
+
+Wed Mar 21 15:08:35 CET 2007 <jurgenv@cwi.nl>
+ * added possibility to load RStore without first writing it to disk.
+
+Tue Mar 20 08:50:25 CET 2007 <jurgenv@cwi.nl>
+ * fixed distcheck
+
+Tue Mar 20 08:27:41 CET 2007 <jurgenv@cwi.nl>
+ * *: initial import from Dancing Bear project

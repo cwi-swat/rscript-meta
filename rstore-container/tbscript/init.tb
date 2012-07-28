@@ -1,0 +1,8 @@
+#include <rci.tb>
+#include <rci-test.tb>
+
+toolbus(NOTIFY-START)
+
+process NOTIFY-START is
+        printf("Toolbus started...\n")
+
