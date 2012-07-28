@@ -1,0 +1,12 @@
+prefix=@prefix@
+Maintainers=jurgenv@cwi.nl
+
+Name: rstore-support
+Version: 1.1
+Description: API's for Rstores.
+Requires: aterm,toolbuslib
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lRStoreAPI
+#uninstalled Libs: -L@abs_top_builddir@/lib -lRStoreAPI
+#uninstalled Cflags: -I@abs_top_builddir@/lib
+ToolBusFlags=-I${prefix}/share/rstore-support

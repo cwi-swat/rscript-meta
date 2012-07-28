@@ -1,0 +1,14 @@
+package 
+identification
+   name=relation-stores
+   version=1.0
+   location=http://www.cwi.nl/projects/MetaEnv/
+   info=http://www.cwi.nl/projects/MetaEnv/
+   description='An API for relation stores'
+
+
+   keywords=Fact representation, relations, bags
+
+configuration interface
+
+requires

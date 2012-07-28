@@ -1,0 +1,66 @@
+
+
+Fri Nov 28 10:51:24 CET 2008 <jurgenv@cwi.nl>
+ * Bumped version.
+
+2008-11-27  Tijs van der Storm  <tvdstorm@MacSen1.local>
+
+  * lib/lower.c: removed dependency on BUFSIZ (it's too small on
+    Darwin); replaced with Linux sized constant.
+
+Fri Aug 29 14:33:23 CEST 2008 <jurgenv@cwi.nl>
+ * utils/{lift,lower}-rstore/main.c: adapted output format to output
+   ATerm SAF format for compatibility with Java ATerm tools.
+ * lib/lower.c: improved error handling of lowering by printing erroneous
+   terms to a debug file and printing a readable message.
+
+Mon Jun  9 13:25:48 CEST 2008 <jurgenv@cwi.nl>
+ * rstore-support.pc.in: Bumped version to 0.2
+
+Wed May  7 13:12:43 2008    <bruntink@cwi.nl>
+
+	* relation-stores.pc.in: Renamed to rstore-support.pc.in and changed names.
+
+Tue Jan 22 16:47:05 CET 2008 <economop@cwi.nl>
+ * lib/**: regenerated apis with the rejected production removed from
+   basic/RStores.sdf.
+
+Wed Aug 22 12:45:09 CEST 2007 <jurgenv@cwi.nl>
+ * utils/lift-rstore/*: added lift-rtuple functionality
+
+Wed Aug 15 10:57:24 CEST 2007 <kooiker@cwi.nl>
+ * lib/lift.c: made robust lifting of RStores. The illegal parts of an RStore
+   are replaced by default values, and a message is printed on the console.
+
+Thu Apr 12 20:24:45 CEST 2007 <jurgenv@cwi.nl>
+ * lib/lower.c: made lowering robust against RStores containing more 
+   than just RStore syntax (i.e. unreduced functions). The illegal parts
+   of an RStore are replaced by default values, and a message is printed
+   on the console.
+
+Wed Mar 21 13:04:59 CET 2007 <jurgenv@cwi.nl>
+ * utils/lower-rstore: made a ToolBus tool out of it, and made robust
+   against input from Start constructors, or RStores directly.
+
+Tue Mar 13 12:17:11 CET 2007 <jurgenv@cwi.nl>
+ * lib/lower.c: added mapping from parsed rstores to ATerm rstores.
+ * lib/**: regenerated apis with new apigen
+ * utils/lower-rstore: added commandline tool for lowering RSTores
+
+2007-02-12    <{kooiker,storm}@cwi.nl>
+	* Moved to new build-environment.
+
+2006-12-15    <storm@cwi.nl>
+	* Fix: the relationstores.jar wasn't under svn. Now it is.
+
+2006-12-14    <storm@cwi.nl>
+	* lib/Makefile.am (java-api): enabled this target and regenerated
+	API after name-clashes were fixed in the RStores grammar.
+
+	* Fix: fixed Makefile.am to accomodate new RStore
+	syntax. Regenerated the API accordingly.
+
+Wed Feb 15 17:01:40 CET 2006 <jurgenv@cwi.nl>
+ * Initial empty package. Will contain the data API of RStores,
+   a generic representation format for typed relational data and
+   such.
